@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Boarding-House-Management-System</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+    <link rel="stylesheet" href="{% static 'tables/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+    <style type="text/css">
+        td p {
+            margin: -0.3rem;
+            font-size: 0.9rem;
+        }
+
+        aside.main-sidebar {
+            background-color: #05445E;
+            color: #ddd;
+        }
+
+        nav ul li a p {
+            color: #ddd;
+        }
+
+        nav ul li a i {
+            color: #ddd;
+        }
+    </style>
+    {% block style %}
+    	
+    {% endblock %}
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    {% include 'base/navbar.html' %}
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    {% include 'base/side-bar.html' %}
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-dark">
+                            {% block page-title %}
+                            Dashboard
+                            {% endblock %}
+                        </h1>
+                    </div><!-- /.col -->
+
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        {% block content %}
+
+        {% endblock %}
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+        <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong>
+        All rights reserved.
+        <div class="float-right d-none d-sm-inline-block">
+            <b>Version</b> 3.0.4
+        </div>
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery -->
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- ChartJS -->
+<script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
+<!-- overlayScrollbars -->
+<script src="{% static 'plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'js/adminlte.js' %}"></script>
+<!-- DataTables  & Plugins -->
+<script src="{% static 'tables/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'tables/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'tables/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'tables/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script>
+    $(function () {
+        $("#example1").DataTable();
+    });
+</script>
+{% block js %}
+	
+{% endblock %}
+
+</body>
+
+</html>

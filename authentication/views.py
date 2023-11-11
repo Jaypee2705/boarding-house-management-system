@@ -17,9 +17,6 @@ from authentication.forms import UserRegistrationForm
 
 # Create your views here.
 
-@login_required(login_url='login')
-def homepage(request):
-    return render(request, 'homepage.html')
 
 
 def register(request):

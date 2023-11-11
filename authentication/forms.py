@@ -4,22 +4,22 @@ from django.forms import forms
 
 
 # uncomment this if you want to change the class/design of the login form
-# class UserLoginForm(AuthenticationForm):
-#     class Meta:
-#         model = User
-#         fields = ['username', 'password']
-#     def __init__(self, *args, **kwargs):
-#         super(UserLoginForm, self).__init__(*args, **kwargs)
-#         self.fields['username'].widget.attrs.update({
-#             'class': 'form-control',
-#             'placeholder': 'Username',
-#             'required': 'True'
-#         })
-#         self.fields['password'].widget.attrs.update({
-#             'class': 'form-control',
-#             'placeholder': 'Password',
-#             'required': 'True'
-#         })
+class UserLoginForm(AuthenticationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+    def __init__(self, *args, **kwargs):
+        super(UserLoginForm, self).__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Username',
+            'required': 'True'
+        })
+        self.fields['password'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Password',
+            'required': 'True'
+        })
 
 
 # Customizing Registration Form from UserCreationForm
