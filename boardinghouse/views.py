@@ -7,3 +7,11 @@ def boardinghouse(request):
 
 def rooms(request):
     return render(request, 'boardinghouse/rooms.html')
+
+
+def beds(request):
+    return render(request, 'boardinghouse/beds.html')
+
+
+def beds_assignment(request):
+    return render(request, 'boardinghouse/beds_assignment.html')
