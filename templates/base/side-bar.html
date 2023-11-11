@@ -78,7 +78,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="./notice.html" class="nav-link">
+                    <a href="{% url 'notice' %} " class="nav-link" id="nav-notice">
                         <i class="nav-icon fa fa-bell"></i>
                         <p>
                             Notice Board
@@ -86,16 +86,16 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="./suggestions.html" class="nav-link">
+                    <a href="{% url 'feedbacks' %}" class="nav-link" id="nav-feedbacks">
                         <i class="nav-icon fa fa-file-invoice"></i>
                         <p>
-                            Suggestions
+                            Feedbacks
                         </p>
                     </a>
                 </li>
                 <li class="nav-header">REPORTS</li>
                 <li class="nav-item">
-                    <a href="./income-report.html" class="nav-link">
+                    <a href="{% url 'income' %}" class="nav-link" id="nav-income">
                         <i class="nav-icon fa fa-chart-bar"></i>
                         <p>
                             Income Report
@@ -103,7 +103,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="./collectibles.html" class="nav-link">
+                    <a href="{% url 'collectibles' %}" class="nav-link" id="nav-collectibles">
                         <i class="nav-icon fa fa-table"></i>
                         <p>
                             Collectibles

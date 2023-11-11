@@ -7,3 +7,11 @@ def utility_bill(request):
 
 def payments(request):
     return render(request, 'payments/payments.html')
+
+
+def income(request):
+    return render(request, 'payments/income.html')
+
+
+def collectibles(request):
+    return render(request, 'payments/collectibles.html')

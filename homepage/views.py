@@ -11,3 +11,11 @@ def homepage(request):
 
 def dashboard(request):
     return render(request, 'dashboard/dashboard.html')
+
+
+def notice(request):
+    return render(request, 'dashboard/notice.html')
+
+
+def feedbacks(request):
+    return render(request, 'dashboard/feedbacks.html')
