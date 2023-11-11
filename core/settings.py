@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'authentication.apps.AuthenticationConfig',
     'homepage.apps.HomepageConfig',
     'tenants.apps.TenantsConfig',
+    'boardinghouse.apps.BoardinghouseConfig'
 ]
 
 MIDDLEWARE = [
