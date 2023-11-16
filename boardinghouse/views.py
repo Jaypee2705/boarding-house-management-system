@@ -8,6 +8,8 @@ def boardinghouse(request):
 def rooms(request):
     return render(request, 'boardinghouse/rooms.html')
 
+def manage_rooms(request):
+    return render(request, 'boardinghouse/manage_rooms.html')
 
 def beds(request):
     return render(request, 'boardinghouse/beds.html')
