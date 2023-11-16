@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from .forms import BoardingHouseForms
-from .models import BoardingHouse
+from .forms import BoardingHouseForms, RoomForm
+from .models import BoardingHouse, Room
 
 
 # Create your views here.
@@ -33,7 +33,28 @@ def boardinghouse(request):
 
 
 def rooms(request):
-    return render(request, 'boardinghouse/rooms.html')
+    rooms = Room.objects.all()
+
+    if request.method == "POST":
+        forms = RoomForm(request.POST, request.FILES)
+        if forms.is_valid():
+            room = forms.save(commit=False)
+            room.save()
+            messages.success(request, 'Room has been added successfully')
+            print('Room has been added successfully')
+            return redirect('rooms')
+        else:
+            messages.error(request, 'Error adding room')
+            print('Error adding room', forms.errors)
+            return redirect('rooms')
+    else:
+        forms = RoomForm()
+
+
+    return render(request, 'boardinghouse/rooms.html',{
+        'rooms': rooms,
+        'form': forms,
+    })
 
 def manage_rooms(request):
     return render(request, 'boardinghouse/manage_rooms.html')

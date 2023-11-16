@@ -18,3 +18,21 @@ class BoardingHouse(models.Model):
 
 
 
+class Room(models.Model):
+    boardinghouse = models.ForeignKey(BoardingHouse, related_name='rooms', on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    num_bed = models.IntegerField()
+
+    male_female_choices = (
+        ("For Male Only", "For Male Only"),
+        ("For Female Only", "For Female Only"),
+        ("For Both Male and Female", "For Both Male and Female")
+    )
+    male_female = models.CharField(choices=male_female_choices, max_length=50)
+    vacant = models.BooleanField(default=True)
+    image = models.ImageField(upload_to='room', blank=True)
+
+
+    def __str__(self):
+        return self.name

@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% block page-title %}
-Rooms Listings
+    Rooms Listings
 {% endblock %}
 
 {% block style %}
@@ -9,12 +9,141 @@ Rooms Listings
 {% endblock %}
 
 {% block js %}
-<script>
-    // add active class to nav-dashboard
-    document.getElementById("nav-room-listings").className += " active";
+    <script>
+        // add active class to nav-dashboard
+        document.getElementById("nav-room-listings").className += " active";
     </script>
 {% endblock %}
 
-{% block content %}
 
+{% block modal %}
+    <div class="col-sm-6">
+        <div class="float-sm-right">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal">
+                Add Rooms
+            </button>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block content %}
+    <section class="content">
+        <div class="container-fluid">
+
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" role="alert">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+            {% endif %}
+
+
+
+            <div class="card card-info elevation-2">
+                <br>
+                <div class="col-md-12 table-responsive">
+                    <table id="example1" class="table table-bordered table-hover">
+                        <thead class="btn-cancel">
+                        <tr>
+                            <th>Boarding House</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Beds</th>
+                            <th>Male/Female</th>
+                            <th>Vacant</th>
+                            <th>Image</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for room in rooms %}
+
+                            <tr>
+                                <td>{{ room.boardinghouse.name }}</td>
+                                <td>{{ room.name }}</td>
+                                <td>{{ room.price }}</td>
+                                <td>{{ room.num_bed }}</td>
+                                <td>{{ room.male_female }}</td>
+                                <td>{{ room.vacant }}</td>
+                                <td><img src="{{ room.image.url }}" height="60" style="border: 2px solid gray">
+                                </td>
+                                <td class="text-right">
+                                    <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
+                                       data-target="#edit"><i
+                                            class="fa fa-edit"></i></a>
+                                    <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#delete"><i
+                                            class="fa fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add Room</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="id_name">Boarding House: </label>
+                                {{ form.boardinghouse }}
+                            </div>
+
+                            <div class="col-6">
+                                <label for="id_name">Room Name: </label>
+                                {{ form.name }}
+                            </div>
+                            <div class="col-6">
+                                <label for="id_name">Rent price: </label>
+                                {{ form.price }}
+                            </div>
+
+                            <div class="col-6">
+                                <label for="id_name">Number of Bed: </label>
+                                {{ form.num_bed }}
+                            </div>
+
+                            <div class="col-6">
+                                <label for="id_name">Vacant: </label>
+                                {{ form.vacant }}
+                            </div>
+
+                            <div class="col-12">
+                                <label for="id_name">Male/Female: </label>
+                                {{ form.male_female }}
+                            </div>
+                            <div class="col-12">
+                                <label for="id_name">Image: </label>
+                                {{ form.image }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" name="button" value="add_rooms">Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
