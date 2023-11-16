@@ -15,36 +15,54 @@
     </script>
 {% endblock %}
 
+{% block modal %}
+    <div class="col-sm-6">
+        <div class="float-sm-right">
+            <button type="button" class="btn btn-primary" onclick="myFunctionModal()" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal">
+                Add Tenant
+            </button>
+        </div>
+    </div>
+{% endblock %}
+
 
 {% block content %}
-    <div style="margin-bottom: 10px">
-        <a class="btn btn-sm elevation-2" href="{% url 'add_tenants' %}"
-           style="margin-top: 20px;margin-left: 10px;background-color: #05445E;color: #ddd;"><i
-                class="fa fa-user-plus"></i>
-            Add New</a>
-    </div>
+
     <section class="content">
         <div class="container-fluid">
+
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message}}
+                </div>
+
+                {% endfor %}
+            {% endif %}
+
             <div class="card card-info elevation-2">
                 <br>
                 <div class="col-md-12 table-responsive">
                     <table id="example1" class="table table-bordered table-hover">
                         <thead class="btn-cancel">
                         <tr>
-                            <th>Profile</th>
-                            <th>Tenant Info</th>
+                            <th>Tenant Name</th>
+                            <th>Contact Number</th>
+                            <th>Email</th>
                             <th>Address</th>
                             <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
+                        {% for tenant in tenants %}
+
+
+
                         <tr>
-                            <td><img src="../assets/img/profile.png" width="50" alt="User Image"></td>
-                            <td>
-                                <p class="info">Name: <b>James Andress</b></p>
-                                <p class="info"><small>Contact: <b>098733526171</b></small></p>
-                                <p class="info"><small>Email: <b>james@gmail.com</b></small></p>
-                            </td>
+                            <td>{{ tenant.name.get_full_name }}</td>
+                            <td>sda</td>
+                            <td>{{ tenant.name.email }}</td>
                             <td>Pasig, Metro Manila</td>
                             <td class="text-right">
                                 <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
@@ -54,42 +72,48 @@
                                         class="fa fa-trash-alt"></i></a>
                             </td>
                         </tr>
-                        <tr>
-                            <td><img src="../assets/img/profile.png" width="50" alt="User Image"></td>
-                            <td>
-                                <p class="info">Name: <b>John Doe</b></p>
-                                <p class="info"><small>Contact: <b>098733526171</b></small></p>
-                                <p class="info"><small>Email: <b>john@gmail.com</b></small></p>
-                            </td>
-                            <td>Makati, Metro Manila</td>
-                            <td class="text-right">
-                                <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
-                                   data-target="#edit"><i
-                                        class="fa fa-user-edit"></i></a>
-                                <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#delete"><i
-                                        class="fa fa-trash-alt"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><img src="../assets/img/profile.png" width="50" alt="User Image"></td>
-                            <td>
-                                <p class="info">Name: <b>Juan Luna</b></p>
-                                <p class="info"><small>Contact: <b>098733526171</b></small></p>
-                                <p class="info"><small>Email: <b>juan@gmail.com</b></small></p>
-                            </td>
-                            <td>Mandaluyong, Metro Manila</td>
-                            <td class="text-right">
-                                <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
-                                   data-target="#edit"><i
-                                        class="fa fa-user-edit"></i></a>
-                                <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#delete"><i
-                                        class="fa fa-trash-alt"></i></a>
-                            </td>
-                        </tr>
+
+                        {% endfor %}
+
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </section>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add Boarding House</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="id_name">Name: </label>
+                                <select class="form-select" aria-label="Default select example" required name="user">
+                                    <option value="" selected disabled>Open this select menu</option>
+                                    {% for user in users %}
+                                    	<option value="{{ user.id }}">{{ user.get_full_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" name="button" value="add_bhouse">Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -1,8 +1,31 @@
-from django.shortcuts import render
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from .models import Tenant
 
 # Create your views here.
+
+
+
 def tenants_profile(request):
-    return render(request, 'tenants/tenants_profile.html')
+    # get all Users that is not a superuser and staff
+    users = User.objects.filter(tenant__isnull=True).exclude(is_superuser=True).exclude(is_staff=True)
+    tenants = Tenant.objects.all()
+    if request.method == "POST":
+        name = request.POST.get('user')
+        user_instance = User.objects.get(id=name)
+        # create tenant object
+        tenant = Tenant(name=user_instance)
+        tenant.save()
+        messages.success(request, 'Tenant added successfully!')
+        return redirect('tenants_profile')
+
+
+    return render(request, 'tenants/tenants_profile.html',{
+        'users': users,
+        'tenants': tenants
+
+    })
 
 
 def add_tenants(request):
