@@ -29,9 +29,30 @@ def boardinghouse(request):
     else:
         forms = BoardingHouseForms()
 
-    return render(request, 'boardinghouse/boardinghouse.html',{
+    return render(request, 'boardinghouse/boardinghouse.html', {
         'form': forms,
         'boardinghouses': boardinghouses,
+    })
+
+
+def boardinghouse_detail(request, id):
+    boardinghouse = BoardingHouse.objects.get(id=id)
+    form = BoardingHouseForms(instance=boardinghouse)
+    if request.method == "POST":
+        form = BoardingHouseForms(request.POST, request.FILES, instance=boardinghouse)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Boarding House has been updated successfully')
+            print('Boarding House has been updated successfully')
+            return redirect('boardinghouse_detail', id=id)
+        else:
+            messages.error(request, 'Error updating boarding house')
+            print('Error updating boarding house', form.errors)
+            return redirect('boardinghouse_detail', id=id)
+
+    return render(request, 'boardinghouse/boardinghouse_detail.html', {
+        'boardinghouse': boardinghouse,
+        'form': form,
     })
 
 
@@ -53,14 +74,13 @@ def rooms(request):
     else:
         forms = RoomForm()
 
-
-    return render(request, 'boardinghouse/rooms.html',{
+    return render(request, 'boardinghouse/rooms.html', {
         'rooms': rooms,
         'form': forms,
     })
 
-def manage_rooms(request):
 
+def manage_rooms(request):
     tenants = Tenant.objects.filter(owner=request.user, room__isnull=False)
     users = Tenant.objects.filter(owner=request.user, room__isnull=True)
     rooms = Room.objects.filter(boardinghouse__owner=request.user)
@@ -83,13 +103,13 @@ def manage_rooms(request):
             print('Error adding tenant', e)
             return redirect('manage_rooms')
 
-
-    return render(request, 'boardinghouse/manage_rooms.html',{
+    return render(request, 'boardinghouse/manage_rooms.html', {
 
         'tenants': tenants,
         'users': users,
         'rooms': rooms,
     })
+
 
 def beds(request):
     return render(request, 'boardinghouse/beds.html')

@@ -30,7 +30,7 @@
         map.addLayer(layer);
 
 
-        let marker = null;
+        let marker = L.marker([{{ boardinghouse.latitude }}, {{ boardinghouse.longitude }}]).addTo(map);
         map.on('click', (event) => {
 
             if (marker !== null) {
@@ -63,14 +63,7 @@
 {% endblock %}
 
 {% block modal %}
-    <div class="col-sm-6">
-        <div class="float-sm-right">
-            <button type="button" class="btn btn-primary" onclick="myFunctionModal()" data-bs-toggle="modal"
-                    data-bs-target="#exampleModal">
-                Add Boarding House
-            </button>
-        </div>
-    </div>
+
 {% endblock %}
 
 {% block content %}
@@ -81,9 +74,9 @@
 
             {% if messages %}
                 {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}" role="alert">
-                    {{ message}}
-                </div>
+                    <div class="alert alert-{{ message.tags }}" role="alert">
+                        {{ message }}
+                    </div>
 
                 {% endfor %}
             {% endif %}
@@ -92,61 +85,16 @@
 
             <div class="card card-info elevation-2">
                 <br>
-                <div class="col-md-12 table-responsive">
-                    <table id="example1" class="table table-bordered table-hover">
-                        <thead class="btn-cancel">
-                        <tr>
-                            <th>Name</th>
-                            <th>Address</th>
-                            <th>Beds</th>
-                            <th>Baths</th>
-                            <th>Image</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for boardinghouse in boardinghouses %}
-
-                            <tr>
-                                <td>{{ boardinghouse.name }}</td>
-                                <td>{{ boardinghouse.address }}</td>
-                                <td>{{ boardinghouse.num_beds}}</td>
-                                <td>{{ boardinghouse.num_baths}}</td>
-                                <td><img src="{{ boardinghouse.image.url }}" height="60" style="border: 2px solid gray"></td>
-                                <td class="text-right">
-                                    <a class="btn btn-sm btn-success" href="{% url 'boardinghouse_detail' boardinghouse.id %}"><i
-                                            class="fa fa-eye"></i></a>
-                                    <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#delete"><i
-                                            class="fa fa-trash-alt"></i></a>
-                                </td>
-                            </tr>
-
-                        {% endfor %}
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add Boarding House</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="modal-body">
+                    <div class="col-md-12">
                         <div class="row">
                             <div class="col-12">
                                 <label for="id_name">Name: </label>
                                 {{ form.name }}
                             </div>
                         </div>
+                        <br>
                         <div class="row">
                             <div class="col-6">
                                 <label for="id_name">Number of Beds: </label>
@@ -157,24 +105,28 @@
                                 {{ form.num_baths }}
                             </div>
                         </div>
+                        <br>
                         <div class="row">
                             <div class="col-12">
                                 <label for="id_name">Description: </label>
                                 {{ form.description }}
                             </div>
                         </div>
+                        <br>
                         <div class="row">
                             <div class="col-12">
                                 <label for="id_name">Address: </label>
                                 {{ form.address }}
                             </div>
                         </div>
+                        <br>
                         <div class="row">
                             <div class="col-12">
                                 <label for="id_name">Image: </label>
                                 {{ form.image }}
                             </div>
                         </div>
+                        <br>
                         <div class="mb-3 form-group">
                             <h5>Boarding House Location</h5>
                             <span>Click on the map to select the coordinates of your Boarding House </span>
@@ -184,24 +136,27 @@
                             <br>
                             <div class="row">
                                 <div class="col">
-                                    <label for="latitude" class="form-label">Latitude</label>
+                                    <label for="id_name" class="form-label">Latitude</label>
                                     {{ form.latitude }}
                                 </div>
                                 <div class="col">
-                                    <label for="longitude" class="form-label">Longitude</label>
+                                    <label for="id_name" class="form-label">Longitude</label>
                                     {{ form.longitude }}
                                 </div>
+
+
                             </div>
+
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" name="button" value="add_bhouse">Save changes
-                        </button>
+                        <div class="text-center align-content-center">
+                            <button type="submit" class="btn btn-primary" name="button" value="add_bhouse">Save changes
+                            </button>
+                        </div>
+                        <br>
                     </div>
                 </form>
             </div>
         </div>
-    </div>
+    </section>
 
 {% endblock %}
