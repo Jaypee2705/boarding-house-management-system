@@ -1,12 +1,138 @@
 {% extends 'base/base.html' %}
 {% block page-title %}
-	Room Management
+    Room Management
 {% endblock %}
 
 
 {% block js %}
-<script>
-    // add active class to nav-dashboard
-    document.getElementById("nav-room-management").className += " active";
+    <script>
+        // add active class to nav-dashboard
+        document.getElementById("nav-room-management").className += " active";
     </script>
+{% endblock %}
+
+
+{% block modal %}
+    <div class="col-sm-6">
+        <div class="float-sm-right">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal">
+                Assign Rooms
+            </button>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block content %}
+
+    <section class="content">
+        <div class="container-fluid">
+
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" role="alert">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+            {% endif %}
+
+
+
+            <div class="card card-info elevation-2">
+                <br>
+                <div class="col-md-12 table-responsive">
+                    <table id="example1" class="table table-bordered table-hover">
+                        <thead class="btn-cancel">
+                        <tr>
+                            <th>Tenant Name</th>
+                            <th>Boarding House</th>
+                            <th>Room Number</th>
+                            <th>Date Started</th>
+                            <th>Actions</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for tenant in tenants %}
+
+
+
+                            <tr>
+                                <td>{{ tenant.name }}</td>
+                                <td>{{ tenant.room.boardinghouse.name }}</td>
+                                <td>{{ tenant.room }}</td>
+                                <td>{{ tenant.date_start }}</td>
+
+                                <td class="text-right">
+                                    <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
+                                       data-target="#edit"><i
+                                            class="fa fa-edit"></i></a>
+                                    <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#delete"><i
+                                            class="fa fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add Boarding House</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+
+                        <label for="id_name">Name:</label>
+                        <select name="name" class="form-control" required="" id="id_name">
+                            <option value="" selected="" disabled>---------</option>
+                            {% for user in users %}
+                            	<option value="{{ user.id }}">{{ user.name.get_full_name }}</option>
+                            {% endfor %}
+                        </select>
+
+
+                        <label for="id_room">Room:</label>
+                        <select name="room" class="form-control" required="true" id="id_room">
+                            <option value="" selected="" disabled>---------</option>
+                            {% for room in rooms %}
+                            	 <option value="{{ room.id }}">{{ room }}</option>
+                            {% endfor %}
+
+
+
+                        </select>
+
+
+                        <label for="id_date_start">Date start:</label>
+
+
+                        <input type="date" name="date_start" class="form-control" required="" id="id_date_start">
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" name="button" value="add_bhouse">Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

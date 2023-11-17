@@ -16,6 +16,7 @@ def tenants_profile(request):
         user_instance = User.objects.get(id=name)
         # create tenant object
         tenant = Tenant(name=user_instance)
+        tenant.owner = request.user
         tenant.save()
         messages.success(request, 'Tenant added successfully!')
         return redirect('tenants_profile')

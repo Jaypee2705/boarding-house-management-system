@@ -1,6 +1,7 @@
 from django import forms
 
 from boardinghouse.models import BoardingHouse, Room
+from tenants.models import Tenant
 
 
 class BoardingHouseForms(forms.ModelForm):
@@ -18,10 +19,11 @@ class BoardingHouseForms(forms.ModelForm):
             'image': forms.FileInput(attrs={'class': 'form-control', 'required': 'true'}),
         }
 
+
 class RoomForm(forms.ModelForm):
     class Meta:
         model = Room
-        fields = ('boardinghouse', 'name', 'price', 'num_bed', 'male_female','vacant', 'image')
+        fields = ('boardinghouse', 'name', 'price', 'num_bed', 'male_female', 'vacant', 'image')
         widgets = {
             'boardinghouse': forms.Select(attrs={'class': 'form-control', 'required': 'true'}),
             'name': forms.TextInput(attrs={'class': 'form-control', 'required': 'true'}),
@@ -31,3 +33,5 @@ class RoomForm(forms.ModelForm):
             'vacant': forms.NumberInput(attrs={'class': 'form-control', 'required': 'true'}),
             'image': forms.FileInput(attrs={'class': 'form-control', 'required': 'true'}),
         }
+
+

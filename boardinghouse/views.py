@@ -1,5 +1,8 @@
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
+
+from tenants.models import Tenant
 from .forms import BoardingHouseForms, RoomForm
 from .models import BoardingHouse, Room
 
@@ -57,7 +60,36 @@ def rooms(request):
     })
 
 def manage_rooms(request):
-    return render(request, 'boardinghouse/manage_rooms.html')
+
+    tenants = Tenant.objects.filter(owner=request.user, room__isnull=False)
+    users = Tenant.objects.filter(owner=request.user, room__isnull=True)
+    rooms = Room.objects.filter(boardinghouse__owner=request.user)
+
+    if request.method == "POST":
+        name = request.POST.get('name')
+        room = request.POST.get('room')
+        date = request.POST.get('date_start')
+        try:
+            tenant = Tenant.objects.get(id=name)
+            room = Room.objects.get(id=room)
+            tenant.room = room
+            tenant.date_start = date
+            tenant.save()
+            messages.success(request, 'Tenant has been added successfully')
+            print('Tenant has been added successfully')
+            return redirect('manage_rooms')
+        except Exception as e:
+            messages.error(request, 'Error adding tenant')
+            print('Error adding tenant', e)
+            return redirect('manage_rooms')
+
+
+    return render(request, 'boardinghouse/manage_rooms.html',{
+
+        'tenants': tenants,
+        'users': users,
+        'rooms': rooms,
+    })
 
 def beds(request):
     return render(request, 'boardinghouse/beds.html')
