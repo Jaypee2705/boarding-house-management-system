@@ -16,7 +16,7 @@
     <div class="col-sm-6">
         <div class="float-sm-right">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#exampleModal">
+                    data-bs-target="#asignRoom">
                 Assign Rooms
             </button>
         </div>
@@ -67,9 +67,8 @@
                                 <td>{{ tenant.date_start }}</td>
 
                                 <td class="text-right">
-                                    <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
-                                       data-target="#edit"><i
-                                            class="fa fa-edit"></i></a>
+                                    <button type="button" name="button" value="edit_room" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                            data-bs-target="#edit"><i class="fa fa-edit"></i></button>
                                     <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#delete"><i
                                             class="fa fa-trash-alt"></i></a>
                                 </td>
@@ -86,7 +85,7 @@
     </section>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -104,6 +103,57 @@
                             	<option value="{{ user.id }}">{{ user.name.get_full_name }}</option>
                             {% endfor %}
                         </select>
+
+
+                        <label for="id_room">Room:</label>
+                        <select name="room" class="form-control" required="true" id="id_room">
+                            <option value="" selected="" disabled>---------</option>
+                            {% for room in rooms %}
+                            	 <option value="{{ room.id }}">{{ room }}</option>
+                            {% endfor %}
+
+
+
+                        </select>
+
+
+                        <label for="id_date_start">Date start:</label>
+
+
+                        <input type="date" name="date_start" class="form-control" required="" id="id_date_start">
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" name="button" value="add_bhouse">Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="asignRoom" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Assign Room</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+
+                        <label for="id_name">Name:</label>
+                        <select name="name" class="form-control" required="" id="id_name">
+                            <option value="" selected="" disabled>---------</option>
+                            {% for user in users %}
+                            	<option value="{{ user.id }}">{{ user.name.get_full_name }}</option>
+                            {% endfor %}
+                        </select>
+
 
 
                         <label for="id_room">Room:</label>
