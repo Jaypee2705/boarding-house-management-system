@@ -52,30 +52,25 @@ Collectibles
                         <thead class="btn-cancel">
                         <tr>
                             <th>Tenant </th>
-                            <th>Tenant</th>
                             <th>Room</th>
-                            <th>Amount</th>
-                            <th>Note</th>
-                            <th>Actions</th>
+                            <th>Monthly Due</th>
+                            <th>Previous Balance</th>
+                            <th>Total Due</th>
+                            <th>Amount Paid</th>
+                            <th>Current Balance</th>
 
                         </tr>
                         </thead>
                         <tbody>
-                        {% for payment in payments %}
+                        {% for collectibles in collectibles_lists %}
                             <tr>
-                                <td>{{ payment.date }}</td>
-                                <td>{{ payment.tenant }}</td>
-                                <td>{{ payment.room }}</td>
-                                <td>{{ payment.amount }}</td>
-                                <td>{{ payment.note }}</td>
-
-                                <td class="text-right">
-                                    <button type="button" name="button" value="edit_room" class="btn btn-sm btn-warning"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#edit"><i class="fa fa-edit"></i></button>
-                                    <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#delete"><i
-                                            class="fa fa-trash-alt"></i></a>
-                                </td>
+                                <td>{{ collectibles.tenant }}</td>
+                                <td>{{ collectibles.room }}</td>
+                                <td>{{ collectibles.monthly_due }}</td>
+                                <td>{{ collectibles.previous_balance }}</td>
+                                <td>{{ collectibles.total_due }}0</td>
+                                <td>{{ collectibles.amount_paid }}0</td>
+                                <td>{{ collectibles.current_balance }}</td>
                             </tr>
 
                         {% endfor %}
