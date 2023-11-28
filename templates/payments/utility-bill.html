@@ -15,6 +15,97 @@ Utility Bills
     </script>
 {% endblock %}
 
+
+{% block modal %}
+    <div class="col-sm-6">
+        <div class="float-sm-right">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#addUtilityBills">
+                Add Utility Bills
+            </button>
+        </div>
+    </div>
+{% endblock %}
+
+
+
 {% block content %}
+
+    <section class="content">
+        <div class="container-fluid">
+
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" role="alert">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+            {% endif %}
+
+
+
+            <div class="card card-info elevation-2">
+                <br>
+                <div class="col-md-12 table-responsive">
+                    <table id="example1" class="table table-bordered table-hover">
+                        <thead class="btn-cancel">
+                        <tr>
+                            <th>Room</th>
+                            <th>Bills</th>
+                            <th>Rate</th>
+                            <th>Actions</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for bill in bills %}
+                            <tr>
+                                <td>{{ bill.room }}</td>
+                                <td>{{ bill.bills }}</td>
+                                <td>{{ bill.rate }}</td>
+
+                                <td class="text-right">
+                                    <button type="button" name="button" value="edit_room" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                            data-bs-target="#edit"><i class="fa fa-edit"></i></button>
+                                    <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#delete"><i
+                                            class="fa fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addUtilityBills" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add Utility Bills</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        {{ form }}
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" name="button" value="add_bhouse">Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
