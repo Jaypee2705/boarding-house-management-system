@@ -2,8 +2,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from homepage.forms import FeedbackForms
-from homepage.models import Feedback
+from homepage.forms import FeedbackForms, NoticeForms
+from homepage.models import Feedback, Notice
 
 
 # Create your views here.
@@ -18,7 +18,27 @@ def dashboard(request):
 
 
 def notice(request):
-    return render(request, 'dashboard/notice.html')
+    notices = Notice.objects.filter(boardinghouse__owner=request.user)
+
+    if request.method == "POST":
+        form = NoticeForms(request.POST)
+        if form.is_valid():
+            notice = form.save(commit=False)
+            notice.save()
+            messages.success(request, 'Notice Submitted Successfully')
+            return redirect('notice')
+        else:
+            messages.error(request, 'Notice Submission Failed')
+            return redirect('notice')
+    else:
+        form = NoticeForms()
+
+
+    return render(request, 'dashboard/notice.html',{
+        'notices': notices,
+        'form': form,
+
+    })
 
 
 def feedbacks(request):

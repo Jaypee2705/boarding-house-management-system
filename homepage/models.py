@@ -10,3 +10,13 @@ class Feedback(models.Model):
 
     def __str__(self):
         return self.user.get_full_name()
+
+
+class Notice(models.Model):
+    title = models.CharField(max_length=100)
+    notice = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+    boardinghouse = models.ForeignKey('boardinghouse.BoardingHouse', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
