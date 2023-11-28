@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from tenants.models import Tenant
 from .forms import BoardingHouseForms, RoomForm
@@ -11,7 +11,7 @@ from .models import BoardingHouse, Room
 
 
 def boardinghouse(request):
-    boardinghouses = BoardingHouse.objects.all()
+    boardinghouses = BoardingHouse.objects.filter(owner=request.user)
 
     if request.method == 'POST':
         forms = BoardingHouseForms(request.POST, request.FILES)
@@ -36,7 +36,7 @@ def boardinghouse(request):
 
 
 def boardinghouse_detail(request, id):
-    boardinghouse = BoardingHouse.objects.get(id=id)
+    boardinghouse = get_object_or_404(BoardingHouse, id=id, owner=request.user)
     form = BoardingHouseForms(instance=boardinghouse)
     if request.method == "POST":
         form = BoardingHouseForms(request.POST, request.FILES, instance=boardinghouse)
@@ -57,7 +57,7 @@ def boardinghouse_detail(request, id):
 
 
 def rooms(request):
-    rooms = Room.objects.all()
+    rooms = Room.objects.filter(owner=request.user)
 
     if request.method == "POST":
         forms = RoomForm(request.POST, request.FILES)
@@ -83,7 +83,7 @@ def rooms(request):
 def manage_rooms(request):
     tenants = Tenant.objects.filter(owner=request.user, room__isnull=False)
     users = Tenant.objects.filter(owner=request.user, room__isnull=True)
-    rooms = Room.objects.filter(boardinghouse__owner=request.user)
+    rooms = Room.objects.filter(boardinghouse__owner=request.user, owner=request.user)
 
     if request.method == "POST":
         name = request.POST.get('name')

@@ -32,6 +32,7 @@ class Room(models.Model):
     male_female = models.CharField(choices=male_female_choices, max_length=50)
     vacant = models.BooleanField(default=True)
     image = models.ImageField(upload_to='room', blank=True)
+    owner = models.ForeignKey('auth.User', related_name='rooms', on_delete=models.CASCADE)
 
 
     def __str__(self):

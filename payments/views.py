@@ -8,8 +8,8 @@ from payments.models import Bills
 
 # Create your views here.
 def utility_bill(request):
-    rooms = Room.objects.all()
-    bills = Bills.objects.all()
+    rooms = Room.objects.filter(owner=request.user)
+    bills = Bills.objects.filter(room__owner=request.user)
 
     if request.method == "POST":
         form = BillsForm(request.POST)
