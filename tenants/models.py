@@ -7,4 +7,7 @@ class Tenant(models.Model):
     room = models.ForeignKey('boardinghouse.Room', on_delete=models.CASCADE, null=True, blank=True)
     date_start = models.DateField()
 
+    def __str__(self):
+        return self.name.get_full_name()
+
 
