@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib import messages
 from django.shortcuts import render, redirect
 
@@ -56,7 +58,54 @@ def payments(request):
 
 
 def income(request):
-    return render(request, 'payments/income.html')
+
+
+    """
+    [
+        {
+            month: 'January',
+            income: 10000,
+        },
+        {
+            month: 'February',
+            income: 10000,
+        }
+
+    ]
+    """
+    # create a list of dictionaries of names of the months and income
+    # get all the months of payments
+    payments = Payments.objects.filter(room__owner=request.user)
+    months = []
+    for payment in payments:
+        total_amount = 0
+        tempdict = {}
+        if not any(payment.date.strftime('%B') in d['month'] for d in months):
+
+            tempdict["month"] = payment.date.strftime('%B')
+            months.append(tempdict)
+        else:
+            pass
+
+    # get the total amount of payments per month
+    for month in months:
+        total_amount = 0
+        for payment in payments:
+            if month["month"] == payment.date.strftime('%B'):
+                total_amount += float(payment.amount)
+        month["income"] = total_amount
+
+
+
+
+
+
+
+    return render(request, 'payments/income.html',{
+        # 'income_list': income_list,
+        'months': months,
+
+    })
 
 
 def collectibles(request):

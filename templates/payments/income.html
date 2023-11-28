@@ -47,19 +47,10 @@ Income Report
                         </tr>
                         </thead>
                         <tbody>
-                        {% for payment in payments %}
+                        {% for month in months %}
                             <tr>
-                                <td>{{ payment.date }}</td>
-                                <td>{{ payment.tenant }}</td>
-
-
-                                <td class="text-right">
-                                    <button type="button" name="button" value="edit_room" class="btn btn-sm btn-warning"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#edit"><i class="fa fa-edit"></i></button>
-                                    <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#delete"><i
-                                            class="fa fa-trash-alt"></i></a>
-                                </td>
+                                <td>{{ month.month }}</td>
+                                <td>{{ month.income }}</td>
                             </tr>
 
                         {% endfor %}
