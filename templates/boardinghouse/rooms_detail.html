@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% block page-title %}
-    My Listings
+    {{ room.boardinghouse.name }} - {{ room.name }}
 {% endblock %}
 
 {% block style %}
@@ -13,7 +13,10 @@
 {% endblock %}
 
 {% block js %}
-
+<script>
+        // add active class to nav-dashboard
+        document.getElementById("nav-room-listings").className += " active";
+    </script>
 {% endblock %}
 
 {% block modal %}
@@ -79,6 +82,8 @@
                         <div class="text-center align-content-center">
                             <button type="submit" class="btn btn-primary" name="button" value="add_bhouse">Save changes
                             </button>
+                            <a class="btn btn-secondary" href="{% url 'rooms' %}" > Back to Rooms
+                            </a>
                         </div>
                         <br>
                     </div>

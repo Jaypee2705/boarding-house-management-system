@@ -13,6 +13,21 @@ Feedbacks
     // add active class to nav-dashboard
     document.getElementById("nav-feedbacks").className += " active";
     </script>
+     <script>
+        {#        when delete button in action clicked, get the username of user#}
+        $(document).on('click', '.delete', function () {
+            var id = $(this).closest('tr').find('td:nth-child(1)').text();
+            $('#delete_id').val(id);
+        });
+        {#        when delete button in action clicked, get the username of user#}
+        $(document).on('click', '.edit', function () {
+            var text = $(this).closest('tr').find('td:nth-child(3)').text();
+            var id = $(this).closest('tr').find('td:nth-child(1)').text();
+            $('#edit_feedback').val(text);
+            $('#edit_id').val(id);
+        });
+    </script>
+
 {% endblock %}
 
 
@@ -51,6 +66,7 @@ Feedbacks
                     <table id="example1" class="table table-bordered table-hover">
                         <thead class="btn-cancel">
                         <tr>
+                            <th hidden>id</th>
                             <th>Date</th>
                             <th>Feedback</th>
                             <th>Actions</th>
@@ -63,14 +79,15 @@ Feedbacks
 
 
                             <tr>
+                                <td hidden>{{ feedback.id }}</td>
                                 <td>{{ feedback.date }}</td>
                                 <td>{{ feedback.feedback }}</td>
 
                                 <td class="text-right">
-                                    <button type="button" name="button" value="edit_room" class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                            data-bs-target="#edit"><i class="fa fa-edit"></i></button>
-                                    <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#delete"><i
-                                            class="fa fa-trash-alt"></i></a>
+                                    <button type="button" class="btn btn-sm btn-warning edit" data-bs-toggle="modal"
+                                            data-bs-target="#editFeedback"><i class="fa fa-edit"></i></button>
+                                    <button type="button" class="btn btn-sm btn-danger delete" data-bs-toggle="modal" data-bs-target="#deleteFeedback"><i
+                                            class="fa fa-trash-alt"></i></button>
                                 </td>
                             </tr>
 
@@ -99,7 +116,54 @@ Feedbacks
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" name="button" value="add_bhouse">Save changes
+                        <button type="submit" class="btn btn-primary" name="button" value="add">Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editFeedback" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add Feedback</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <input type="text" name="edit_id" id="edit_id" hidden>
+                        <label for="edit_feedback">Feedback:</label>
+                        <textarea name="edit_feedback" cols="40" rows="10" class="form-control" required="" id="edit_feedback" spellcheck="false"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" name="button" value="edit">Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteFeedback" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Feedback</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this feedback?</p>
+                        <input type="text" name="delete_id" id="delete_id" hidden>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" name="button" value="delete">Save changes
                         </button>
                     </div>
                 </form>

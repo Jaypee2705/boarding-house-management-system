@@ -10,58 +10,73 @@
 
 {% block js %}
     <script>
-    // add active class to nav-dashboard
-    document.getElementById("nav-dashboard").className += " active";
+        // add active class to nav-dashboard
+        document.getElementById("nav-dashboard").className += " active";
     </script>
 {% endblock %}
 
 {% block content %}
+    {% if request.user.is_superuser %}
     <section class="content">
         <div class="container-fluid">
             <!-- Small boxes (Stat box) -->
             <div class="row">
-                <div class="col-lg-4 col-12">
+                <div class="col-lg-3 col-12">
                     <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>150</h3>
+                            <h3>{{ tenants_count }}</h3>
 
                             <p>Number of Tenants</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-bag"></i>
                         </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{% url 'tenants_profile' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-12">
+                    <!-- small box -->
+                    <div class="small-box bg-secondary">
+                        <div class="inner">
+                            <h3>{{ owner }}</h3>
+
+                            <p>Number of Owners</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                        <a href="{% url 'users' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-4 col-12">
+                <div class="col-lg-3 col-12">
                     <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3>53<sup style="font-size: 20px"></sup></h3>
+                            <h3>{{ boardinghouses_count }}<sup style="font-size: 20px"></sup></h3>
 
-                            <p>Number of Rooms</p>
+                            <p>Number of Boarding Houses</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{% url 'boardinghouse' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-4 col-12">
+                <div class="col-lg-3 col-12">
                     <!-- small box -->
                     <div class="small-box bg-warning">
                         <div class="inner">
-                            <h3>44</h3>
+                            <h3>{{ rooms_count }}</h3>
 
-                            <p>Number of Beds</p>
+                            <p>Number of Rooms</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-person-add"></i>
                         </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{% url 'rooms' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
@@ -69,4 +84,10 @@
 
         </div><!-- /.container-fluid -->
     </section>
+
+    {% elif request.user.is_staff %}
+
+
+    {% endif %}
+
 {% endblock %}

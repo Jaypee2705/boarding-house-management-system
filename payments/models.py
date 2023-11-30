@@ -19,6 +19,7 @@ class Payments(models.Model):
     amount = models.CharField(max_length=100)
     date = models.DateField(auto_now_add=True)
     note = models.CharField(max_length=100, blank=True, null=True)
+    mode = models.CharField(max_length=100, blank=True, null=True)
 
 
     def __str__(self):

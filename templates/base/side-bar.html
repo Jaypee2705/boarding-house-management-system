@@ -21,9 +21,27 @@
                         </p>
                     </a>
                 </li>
+
+                {% if request.user.is_superuser %}
+                    <li class="nav-header">ADMIN</li>
+                    <li class="nav-item">
+                        <a href="{% url 'users' %}" class="nav-link" id="nav-users">
+                            <i class="nav-icon fa fa-users"></i>
+                            <p>
+                                Users
+                            </p>
+                        </a>
+                    </li>
+
+
+                {% endif %}
+
+
+                {% if request.user.is_superuser or request.user.is_staff %}
+                <li class="nav-header">BOARDINGHOUSE</li>
                 <li class="nav-item">
                     <a href="{% url 'tenants_profile' %}" class="nav-link" id="nav-tenants">
-                        <i class="nav-icon fa fa-users"></i>
+                        <i class="nav-icon fa fa-user"></i>
                         <p>
                             Tenants Profile
                         </p>
@@ -70,6 +88,8 @@
                         </p>
                     </a>
                 </li>
+            {% endif %}
+
                 <li class="nav-item">
                     <a href="{% url 'payments' %}" class="nav-link" id="payments">
                         <i class="nav-icon fa fa-file-invoice"></i>
@@ -78,6 +98,7 @@
                         </p>
                     </a>
                 </li>
+            {% if request.user.is_superuser or request.user.is_staff %}
                 <li class="nav-item">
                     <a href="{% url 'income' %}" class="nav-link" id="nav-income">
                         <i class="nav-icon fa fa-chart-bar"></i>
@@ -86,6 +107,7 @@
                         </p>
                     </a>
                 </li>
+            {% endif %}
                 <li class="nav-header">GENERAL</li>
                 <li class="nav-item">
                     <a href="{% url 'notice' %} " class="nav-link" id="nav-notice">

@@ -15,14 +15,38 @@ def utility_bill(request):
     bills = Bills.objects.filter(room__owner=request.user)
 
     if request.method == "POST":
-        form = BillsForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Utility bill added successfully')
-            return redirect('utility-bill')
-        else:
-            messages.error(request, 'Error adding utility bill')
-            return redirect('utility-bill')
+        if "button" in request.POST:
+            if request.POST.get("button") == "add_utility":
+                form = BillsForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, 'Utility bill added successfully')
+                    return redirect('utility-bill')
+                else:
+                    messages.error(request, 'Error adding utility bill')
+                    return redirect('utility-bill')
+            elif request.POST.get("button") == "delete_utility":
+                try:
+                    bill = Bills.objects.get(id=request.POST.get('id_delete'))
+                    bill.delete()
+                    messages.success(request, 'Utility bill deleted successfully')
+                    return redirect('utility-bill')
+                except:
+                    messages.error(request, 'Error deleting utility bill')
+                    return redirect('utility-bill')
+            elif request.POST.get("button") == "edit_utility":
+                try:
+                    room = Room.objects.get(id=request.POST.get('edit_room'))
+                    bill = Bills.objects.get(id=request.POST.get('edit_id'))
+                    bill.room = room
+                    bill.bills = request.POST.get('edit_bills')
+                    bill.rate = request.POST.get('edit_rate')
+                    bill.save()
+                    messages.success(request, 'Utility bill edited successfully')
+                    return redirect('utility-bill')
+                except:
+                    messages.error(request, 'Error editing utility bill')
+                    return redirect('utility-bill')
     else:
         form = BillsForm()
 
@@ -35,23 +59,62 @@ def utility_bill(request):
 
 
 def payments(request):
-    payments = Payments.objects.filter(room__owner=request.user)
-
+    if request.user.is_superuser or request.user.is_staff:
+        payments = Payments.objects.filter(room__owner=request.user)
+    else:
+        tenant = Tenant.objects.get(name__id=request.user.id)
+        payments = Payments.objects.filter(tenant=tenant)
     if request.method == "POST":
-        form = PaymentsForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Payment added successfully')
-            return redirect('payments')
-        else:
-            messages.error(request, 'Error adding payment')
-            return redirect('payments')
+        if "button" in request.POST:
+            if request.POST.get("button") == 'add_payment':
+
+                form = PaymentsForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, 'Payment added successfully')
+                    return redirect('payments')
+                else:
+                    messages.error(request, 'Error adding payment')
+                    return redirect('payments')
+            elif request.POST.get("button") == 'delete_payment':
+                try:
+                    payment = Payments.objects.get(id=request.POST.get('id_delete'))
+                    payment.delete()
+                    messages.success(request, 'Payment deleted successfully')
+                    return redirect('payments')
+                except:
+                    messages.error(request, 'Error deleting payment')
+                    return redirect('payments')
     else:
         form = PaymentsForm()
 
 
     return render(request, 'payments/payments.html',{
         'payments': payments,
+        'form': form,
+
+    })
+
+
+def payments_info(request, id):
+    payment = Payments.objects.get(id=id)
+
+    form = PaymentsForm(instance=payment)
+
+    if request.method == "POST":
+        form = PaymentsForm(request.POST, instance=payment)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Payment edited successfully')
+            return redirect('payments')
+        else:
+            messages.error(request, 'Error editing payment')
+            return redirect('payments')
+
+
+
+    return render(request, 'payments/payments-info.html',{
+        'payment': payment,
         'form': form,
 
     })
@@ -109,7 +172,7 @@ def income(request):
 
 
 def collectibles(request):
-    tenants = Tenant.objects.filter(room__isnull=False)
+    tenants = Tenant.objects.filter(room__isnull=False, owner=request.user)
 
     """
     [

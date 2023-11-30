@@ -17,10 +17,11 @@ class BillsForm(forms.ModelForm):
 class PaymentsForm(forms.ModelForm):
     class Meta:
         model = Payments
-        fields = ['room', 'tenant', 'amount', 'note']
+        fields = ['room', 'tenant', 'amount', 'note', 'mode']
         widgets = {
             'room': forms.Select(attrs={'class': 'form-control'}),
             'tenant': forms.Select(attrs={'class': 'form-control'}),
             'amount': forms.NumberInput(attrs={'class': 'form-control'}),
             'note': forms.TextInput(attrs={'class': 'form-control'}),
+            'mode': forms.TextInput(attrs={'class': 'form-control'}),
         }
