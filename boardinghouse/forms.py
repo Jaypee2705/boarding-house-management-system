@@ -14,8 +14,8 @@ class BoardingHouseForms(forms.ModelForm):
             'address': forms.TextInput(attrs={'class': 'form-control', 'required': 'true'}),
             'num_beds': forms.NumberInput(attrs={'class': 'form-control', 'required': 'true'}),
             'num_baths': forms.NumberInput(attrs={'class': 'form-control', 'required': 'true'}),
-            'latitude': forms.NumberInput(attrs={'class': 'form-control', 'required': 'true', 'disabled': 'true'}),
-            'longitude': forms.NumberInput(attrs={'class': 'form-control', 'required': 'true', 'disabled': 'true'}),
+            'latitude': forms.NumberInput(attrs={'class': 'form-control', 'required': 'true'}),
+            'longitude': forms.NumberInput(attrs={'class': 'form-control', 'required': 'true'}),
             'image': forms.FileInput(attrs={'class': 'form-control', 'required': 'true'}),
         }
 
@@ -30,7 +30,7 @@ class RoomForm(forms.ModelForm):
             'price': forms.NumberInput(attrs={'class': 'form-control', 'required': 'true'}),
             'num_bed': forms.NumberInput(attrs={'class': 'form-control', 'required': 'true'}),
             'male_female': forms.Select(attrs={'class': 'form-control', 'required': 'true'}),
-            'vacant': forms.NumberInput(attrs={'class': 'form-control', 'required': 'true'}),
+            'vacant': forms.NumberInput(attrs={'class': 'form-control' }),
             'image': forms.FileInput(attrs={'class': 'form-control', 'required': 'true'}),
         }
 

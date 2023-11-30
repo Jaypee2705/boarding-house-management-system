@@ -15,17 +15,40 @@ def boardinghouse(request):
 
     if request.method == 'POST':
         forms = BoardingHouseForms(request.POST, request.FILES)
-        if forms.is_valid():
-            boardinghouse = forms.save(commit=False)
-            boardinghouse.owner = request.user
-            boardinghouse.save()
-            messages.success(request, 'Boarding House has been added successfully')
-            print('Boarding House has been added successfully')
-            return redirect('boardinghouse')
-        else:
-            messages.error(request, 'Error adding boarding house')
-            print('Error adding boarding house', forms.errors)
-            return redirect('boardinghouse')
+        print("button" in request.POST)
+
+        if "button" in request.POST:
+            print(request.POST.get('button'))
+            if request.POST.get('button') == 'add_bhouse':
+                try:
+                    if forms.is_valid():
+                        boardinghouse = forms.save(commit=False)
+                        boardinghouse.owner = request.user
+                        boardinghouse.save()
+                        messages.success(request, 'Boarding House has been added successfully')
+                        print('Boarding House has been added successfully')
+                        return redirect('boardinghouse')
+                    else:
+                        messages.error(request, 'Error adding boarding house')
+                        print('Error adding boarding house', forms.errors)
+                        return redirect('boardinghouse')
+                except Exception as e:
+                    messages.error(request, 'Error adding boarding house')
+                    print('Error adding boarding house', e)
+                    return redirect('boardinghouse')
+
+            elif request.POST.get('button') == 'delete_bhouse':
+                try:
+                    id = request.POST.get('delete_id')
+                    boardinghouse = get_object_or_404(BoardingHouse, id=id, owner=request.user)
+                    boardinghouse.delete()
+                    messages.success(request, 'Boarding House has been deleted successfully')
+                    print('Boarding House has been deleted successfully')
+                    return redirect('boardinghouse')
+                except Exception as e:
+                    messages.error(request, 'Error deleting boarding house')
+                    print('Error deleting boarding house', e)
+                    return redirect('boardinghouse')
     else:
         forms = BoardingHouseForms()
 
@@ -61,22 +84,61 @@ def rooms(request):
 
     if request.method == "POST":
         forms = RoomForm(request.POST, request.FILES)
-        if forms.is_valid():
-            room = forms.save(commit=False)
-            room.save()
-            messages.success(request, 'Room has been added successfully')
-            print('Room has been added successfully')
-            return redirect('rooms')
-        else:
-            messages.error(request, 'Error adding room')
-            print('Error adding room', forms.errors)
-            return redirect('rooms')
+        if "button" in request.POST:
+            if request.POST.get("button") == "add_room":
+                if forms.is_valid():
+                    room = forms.save(commit=False)
+                    room.owner = request.user
+                    room.save()
+                    messages.success(request, 'Room has been added successfully')
+                    print('Room has been added successfully')
+                    return redirect('rooms')
+                else:
+                    messages.error(request, 'Error adding room')
+                    print('Error adding room', forms.errors)
+                    return redirect('rooms')
+            elif request.POST.get("button") == "delete_room":
+                try:
+                    id = request.POST.get('delete_id')
+                    room = get_object_or_404(Room, id=id, owner=request.user)
+                    room.delete()
+                    messages.success(request, 'Room has been deleted successfully')
+                    print('Room has been deleted successfully')
+                    return redirect('rooms')
+                except Exception as e:
+                    messages.error(request, 'Error deleting room')
+                    print('Error room', e)
+                    return redirect('rooms')
+
     else:
         forms = RoomForm()
 
     return render(request, 'boardinghouse/rooms.html', {
         'rooms': rooms,
         'form': forms,
+    })
+
+
+def rooms_detail(request, id):
+    room = get_object_or_404(Room, id=id, owner=request.user)
+    form = RoomForm(instance=room)
+
+    if request.method == "POST":
+        form = RoomForm(request.POST, request.FILES, instance=room)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Room has been updated successfully')
+            print('Room has been updated successfully')
+            return redirect('rooms_detail', id=id)
+        else:
+            messages.error(request, 'Error updating room')
+            print('Error updating room', form.errors)
+            return redirect('rooms_detail', id=id)
+
+
+    return render(request, 'boardinghouse/rooms_detail.html',{
+        'room': room,
+        'form': form,
     })
 
 
