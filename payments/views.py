@@ -15,14 +15,38 @@ def utility_bill(request):
     bills = Bills.objects.filter(room__owner=request.user)
 
     if request.method == "POST":
-        form = BillsForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Utility bill added successfully')
-            return redirect('utility-bill')
-        else:
-            messages.error(request, 'Error adding utility bill')
-            return redirect('utility-bill')
+        if "button" in request.POST:
+            if request.POST.get("button") == "add_utility":
+                form = BillsForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, 'Utility bill added successfully')
+                    return redirect('utility-bill')
+                else:
+                    messages.error(request, 'Error adding utility bill')
+                    return redirect('utility-bill')
+            elif request.POST.get("button") == "delete_utility":
+                try:
+                    bill = Bills.objects.get(id=request.POST.get('id_delete'))
+                    bill.delete()
+                    messages.success(request, 'Utility bill deleted successfully')
+                    return redirect('utility-bill')
+                except:
+                    messages.error(request, 'Error deleting utility bill')
+                    return redirect('utility-bill')
+            elif request.POST.get("button") == "edit_utility":
+                try:
+                    room = Room.objects.get(id=request.POST.get('edit_room'))
+                    bill = Bills.objects.get(id=request.POST.get('edit_id'))
+                    bill.room = room
+                    bill.bills = request.POST.get('edit_bills')
+                    bill.rate = request.POST.get('edit_rate')
+                    bill.save()
+                    messages.success(request, 'Utility bill edited successfully')
+                    return redirect('utility-bill')
+                except:
+                    messages.error(request, 'Error editing utility bill')
+                    return redirect('utility-bill')
     else:
         form = BillsForm()
 
