@@ -2,9 +2,10 @@ from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
-from homepage.forms import FeedbackForms, NoticeForms
+from homepage.forms import FeedbackForms, NoticeForms, UserForm
 from homepage.models import Feedback, Notice
 
 
@@ -128,3 +129,79 @@ def feedbacks(request):
         'feedbacks': feedbacks,
         'form': form,
     })
+
+
+def users(request):
+    users = User.objects.all()
+
+    form = UserForm()
+
+    if request.method == "POST":
+        if "button" in request.POST:
+            if request.POST.get("button") == "add":
+                form = UserForm(request.POST)
+                if form.is_valid():
+                    user = form.save(commit=False)
+                    user.set_password("@default123")
+
+                    role = request.POST.get("role")
+                    if role == "admin":
+                        user.is_superuser = True
+                        user.is_staff = True
+                    elif role == "manager":
+                        user.is_superuser = False
+                        user.is_staff = True
+                    else:
+                        user.is_superuser = False
+                        user.is_staff = False
+                    user.save()
+                    messages.success(request, 'User Added Successfully')
+                    return redirect('users')
+                else:
+                    messages.error(request, 'User Addition Failed')
+                    print(form.errors)
+                    return redirect('users')
+            elif request.POST.get("button") == "delete":
+                try:
+                    user = User.objects.get(id=request.POST.get("delete_id"))
+                    user.delete()
+                    messages.success(request, 'User Deleted Successfully')
+                    return redirect('users')
+                except Exception as e:
+                    messages.error(request, 'User Deletion Failed')
+                    print(e)
+                    return redirect('users')
+            elif request.POST.get("button") == "edit":
+                try:
+                    user = User.objects.get(id=request.POST.get("edit_id"))
+                    user.first_name = request.POST.get("edit_first_name")
+                    user.last_name = request.POST.get("edit_last_name")
+                    user.email = request.POST.get("edit_email")
+                    user.username = request.POST.get("edit_username")
+                    role = request.POST.get("edit_role")
+                    if role == "admin":
+                        user.is_superuser = True
+                        user.is_staff = True
+                    elif role == "owner":
+                        user.is_superuser = False
+                        user.is_staff = True
+                    else:
+                        user.is_superuser = False
+                        user.is_staff = False
+
+                    user.save()
+                    messages.success(request, 'User Updated Successfully')
+                    return redirect('users')
+                except Exception as e:
+                    messages.error(request, 'User Update Failed')
+                    print(e)
+                    return redirect('users')
+
+    return render(request,'dashboard/users.html', {
+        'users': users,
+        'form': form,
+    })
+
+
+def user_detail(request):
+    return None
