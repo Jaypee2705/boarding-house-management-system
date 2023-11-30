@@ -84,16 +84,32 @@ def rooms(request):
 
     if request.method == "POST":
         forms = RoomForm(request.POST, request.FILES)
-        if forms.is_valid():
-            room = forms.save(commit=False)
-            room.save()
-            messages.success(request, 'Room has been added successfully')
-            print('Room has been added successfully')
-            return redirect('rooms')
-        else:
-            messages.error(request, 'Error adding room')
-            print('Error adding room', forms.errors)
-            return redirect('rooms')
+        if "button" in request.POST:
+            if request.POST.get("button") == "add_room":
+                if forms.is_valid():
+                    room = forms.save(commit=False)
+                    room.owner = request.user
+                    room.save()
+                    messages.success(request, 'Room has been added successfully')
+                    print('Room has been added successfully')
+                    return redirect('rooms')
+                else:
+                    messages.error(request, 'Error adding room')
+                    print('Error adding room', forms.errors)
+                    return redirect('rooms')
+            elif request.POST.get("button") == "delete_room":
+                try:
+                    id = request.POST.get('delete_id')
+                    room = get_object_or_404(Room, id=id, owner=request.user)
+                    room.delete()
+                    messages.success(request, 'Room has been deleted successfully')
+                    print('Room has been deleted successfully')
+                    return redirect('rooms')
+                except Exception as e:
+                    messages.error(request, 'Error deleting room')
+                    print('Error room', e)
+                    return redirect('rooms')
+
     else:
         forms = RoomForm()
 
