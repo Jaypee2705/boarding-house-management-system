@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -82,16 +84,43 @@ def feedbacks(request):
     feedbacks = Feedback.objects.filter(user=request.user)
 
     if request.method == "POST":
-        form = FeedbackForms(request.POST)
-        if form.is_valid():
-            feedback = form.save(commit=False)
-            feedback.user = request.user
-            feedback.save()
-            messages.success(request, 'Feedback Submitted Successfully')
-            return redirect('feedbacks')
-        else:
-            messages.error(request, 'Feedback Submission Failed')
-            return redirect('feedbacks')
+        if "button" in request.POST:
+            if request.POST.get("button") == "add":
+
+
+                form = FeedbackForms(request.POST)
+                if form.is_valid():
+                    feedback = form.save(commit=False)
+                    feedback.user = request.user
+                    feedback.save()
+                    messages.success(request, 'Feedback Submitted Successfully')
+                    return redirect('feedbacks')
+                else:
+                    messages.error(request, 'Feedback Submission Failed')
+                    return redirect('feedbacks')
+            elif request.POST.get("button") == "delete":
+                try:
+                    feedback = Feedback.objects.get(id=request.POST.get("delete_id"))
+                    feedback.delete()
+                    messages.success(request, 'Feedback Deleted Successfully')
+                    return redirect('feedbacks')
+                except Exception as e:
+                    messages.error(request, 'Feedback Deletion Failed')
+                    print(e)
+                    return redirect('feedbacks')
+            elif request.POST.get("button") == "edit":
+                try:
+                    feedback = Feedback.objects.get(id=request.POST.get("edit_id"))
+                    feedback.feedback = request.POST.get("edit_feedback")
+                    feedback.date = datetime.now()
+                    feedback.save()
+                    messages.success(request, 'Feedback Updated Successfully')
+                    return redirect('feedbacks')
+                except Exception as e:
+                    messages.error(request, 'Feedback Update Failed')
+                    print(e)
+                    return redirect('feedbacks')
+
     else:
         form = FeedbackForms()
 
