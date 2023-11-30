@@ -22,14 +22,27 @@ def notice(request):
 
     if request.method == "POST":
         form = NoticeForms(request.POST)
-        if form.is_valid():
-            notice = form.save(commit=False)
-            notice.save()
-            messages.success(request, 'Notice Submitted Successfully')
-            return redirect('notice')
-        else:
-            messages.error(request, 'Notice Submission Failed')
-            return redirect('notice')
+        if "button" in request.POST:
+            if request.POST.get("button") == "add_notice":
+
+                if form.is_valid():
+                    notice = form.save(commit=False)
+                    notice.save()
+                    messages.success(request, 'Notice Submitted Successfully')
+                    return redirect('notice')
+                else:
+                    messages.error(request, 'Notice Submission Failed')
+                    return redirect('notice')
+            elif request.POST.get("button") == "delete_notice":
+                try:
+                    notice = Notice.objects.get(id=request.POST.get("delete_id"))
+                    notice.delete()
+                    messages.success(request, 'Notice Deleted Successfully')
+                    return redirect('notice')
+                except Exception as e:
+                    messages.error(request, 'Notice Deletion Failed')
+                    print(e)
+                    return redirect('notice')
     else:
         form = NoticeForms()
 
@@ -38,6 +51,30 @@ def notice(request):
         'notices': notices,
         'form': form,
 
+    })
+
+
+
+
+def notice_detail(request, id):
+    notice = Notice.objects.get(id=id)
+
+    form = NoticeForms(instance=notice)
+
+    if request.method == "POST":
+        form = NoticeForms(request.POST, instance=notice)
+        if form.is_valid():
+            notice = form.save(commit=False)
+            notice.save()
+            messages.success(request, 'Notice Updated Successfully')
+            return redirect('notice')
+        else:
+            messages.error(request, 'Notice Update Failed')
+            return redirect('notice')
+
+    return render(request, 'dashboard/notice_detail.html',{
+        'notice': notice,
+        'form': form,
     })
 
 
