@@ -15,17 +15,40 @@ def boardinghouse(request):
 
     if request.method == 'POST':
         forms = BoardingHouseForms(request.POST, request.FILES)
-        if forms.is_valid():
-            boardinghouse = forms.save(commit=False)
-            boardinghouse.owner = request.user
-            boardinghouse.save()
-            messages.success(request, 'Boarding House has been added successfully')
-            print('Boarding House has been added successfully')
-            return redirect('boardinghouse')
-        else:
-            messages.error(request, 'Error adding boarding house')
-            print('Error adding boarding house', forms.errors)
-            return redirect('boardinghouse')
+        print("button" in request.POST)
+
+        if "button" in request.POST:
+            print(request.POST.get('button'))
+            if request.POST.get('button') == 'add_bhouse':
+                try:
+                    if forms.is_valid():
+                        boardinghouse = forms.save(commit=False)
+                        boardinghouse.owner = request.user
+                        boardinghouse.save()
+                        messages.success(request, 'Boarding House has been added successfully')
+                        print('Boarding House has been added successfully')
+                        return redirect('boardinghouse')
+                    else:
+                        messages.error(request, 'Error adding boarding house')
+                        print('Error adding boarding house', forms.errors)
+                        return redirect('boardinghouse')
+                except Exception as e:
+                    messages.error(request, 'Error adding boarding house')
+                    print('Error adding boarding house', e)
+                    return redirect('boardinghouse')
+
+            elif request.POST.get('button') == 'delete_bhouse':
+                try:
+                    id = request.POST.get('delete_id')
+                    boardinghouse = get_object_or_404(BoardingHouse, id=id, owner=request.user)
+                    boardinghouse.delete()
+                    messages.success(request, 'Boarding House has been deleted successfully')
+                    print('Boarding House has been deleted successfully')
+                    return redirect('boardinghouse')
+                except Exception as e:
+                    messages.error(request, 'Error deleting boarding house')
+                    print('Error deleting boarding house', e)
+                    return redirect('boardinghouse')
     else:
         forms = BoardingHouseForms()
 

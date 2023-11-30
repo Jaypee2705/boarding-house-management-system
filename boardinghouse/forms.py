@@ -14,8 +14,8 @@ class BoardingHouseForms(forms.ModelForm):
             'address': forms.TextInput(attrs={'class': 'form-control', 'required': 'true'}),
             'num_beds': forms.NumberInput(attrs={'class': 'form-control', 'required': 'true'}),
             'num_baths': forms.NumberInput(attrs={'class': 'form-control', 'required': 'true'}),
-            'latitude': forms.NumberInput(attrs={'class': 'form-control', 'required': 'true', 'disabled': 'true'}),
-            'longitude': forms.NumberInput(attrs={'class': 'form-control', 'required': 'true', 'disabled': 'true'}),
+            'latitude': forms.NumberInput(attrs={'class': 'form-control', 'required': 'true'}),
+            'longitude': forms.NumberInput(attrs={'class': 'form-control', 'required': 'true'}),
             'image': forms.FileInput(attrs={'class': 'form-control', 'required': 'true'}),
         }
 
