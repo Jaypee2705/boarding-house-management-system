@@ -10,7 +10,7 @@ from .models import Tenant
 def tenants_profile(request):
     # get all Users that is not a superuser and staff
     users = User.objects.filter(tenant__isnull=True).exclude(is_superuser=True).exclude(is_staff=True)
-    tenants = Tenant.objects.all()
+    tenants = Tenant.objects.filter(owner=request.user)
     if request.method == "POST":
         name = request.POST.get('user')
         user_instance = User.objects.get(id=name)

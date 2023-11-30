@@ -16,6 +16,7 @@
 {% endblock %}
 
 {% block content %}
+    {% if request.user.is_superuser %}
     <section class="content">
         <div class="container-fluid">
             <!-- Small boxes (Stat box) -->
@@ -83,4 +84,10 @@
 
         </div><!-- /.container-fluid -->
     </section>
+
+    {% elif request.user.is_staff %}
+
+
+    {% endif %}
+
 {% endblock %}

@@ -169,7 +169,7 @@ def income(request):
 
 
 def collectibles(request):
-    tenants = Tenant.objects.filter(room__isnull=False)
+    tenants = Tenant.objects.filter(room__isnull=False, owner=request.user)
 
     """
     [

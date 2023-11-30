@@ -16,6 +16,8 @@ from tenants.models import Tenant
 def homepage(request):
     if request.user.is_superuser:
         return redirect('dashboard')
+    elif request.user.is_staff:
+        return redirect('dashboard')
 
 
 def dashboard(request):
