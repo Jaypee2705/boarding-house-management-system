@@ -1,0 +1,62 @@
+{% extends 'base/base.html' %}
+
+{% block page-title %}
+    {{ payment.tenant.name.get_full_name }} - {{ payment.room.name}}
+{% endblock %}
+
+{% block style %}
+    <style>
+        #map {
+            height: 300px;
+        }
+    </style>
+{% endblock %}
+
+{% block js %}
+    <script>
+        // add active class to nav-dashboard
+        document.getElementById("payments").className += " active";
+    </script>
+{% endblock %}
+
+{% block modal %}
+
+{% endblock %}
+
+{% block content %}
+
+    <section class="content">
+        <div class="container-fluid">
+
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" role="alert">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+            {% endif %}
+
+
+
+            <div class="card card-info elevation-2">
+                <br>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="col-md-12">
+                        {{ form }}
+                        <div class="text-center align-content-center">
+                            <button type="submit" class="btn btn-primary" name="button" value="add_bhouse">Save changes
+                            </button>
+                            <a class="btn btn-secondary" href="{% url 'payments' %}"> Back to Payments
+                            </a>
+                        </div>
+                        <br>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

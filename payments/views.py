@@ -62,20 +62,56 @@ def payments(request):
     payments = Payments.objects.filter(room__owner=request.user)
 
     if request.method == "POST":
-        form = PaymentsForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Payment added successfully')
-            return redirect('payments')
-        else:
-            messages.error(request, 'Error adding payment')
-            return redirect('payments')
+        if "button" in request.POST:
+            if request.POST.get("button") == 'add_payment':
+
+                form = PaymentsForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, 'Payment added successfully')
+                    return redirect('payments')
+                else:
+                    messages.error(request, 'Error adding payment')
+                    return redirect('payments')
+            elif request.POST.get("button") == 'delete_payment':
+                try:
+                    payment = Payments.objects.get(id=request.POST.get('id_delete'))
+                    payment.delete()
+                    messages.success(request, 'Payment deleted successfully')
+                    return redirect('payments')
+                except:
+                    messages.error(request, 'Error deleting payment')
+                    return redirect('payments')
     else:
         form = PaymentsForm()
 
 
     return render(request, 'payments/payments.html',{
         'payments': payments,
+        'form': form,
+
+    })
+
+
+def payments_info(request, id):
+    payment = Payments.objects.get(id=id)
+
+    form = PaymentsForm(instance=payment)
+
+    if request.method == "POST":
+        form = PaymentsForm(request.POST, instance=payment)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Payment edited successfully')
+            return redirect('payments')
+        else:
+            messages.error(request, 'Error editing payment')
+            return redirect('payments')
+
+
+
+    return render(request, 'payments/payments-info.html',{
+        'payment': payment,
         'form': form,
 
     })
