@@ -59,8 +59,11 @@ def utility_bill(request):
 
 
 def payments(request):
-    payments = Payments.objects.filter(room__owner=request.user)
-
+    if request.user.is_superuser or request.user.is_staff:
+        payments = Payments.objects.filter(room__owner=request.user)
+    else:
+        tenant = Tenant.objects.get(name__id=request.user.id)
+        payments = Payments.objects.filter(tenant=tenant)
     if request.method == "POST":
         if "button" in request.POST:
             if request.POST.get("button") == 'add_payment':

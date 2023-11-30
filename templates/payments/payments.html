@@ -22,16 +22,22 @@
     </script>
 {% endblock %}
 
+
+
+
 {% block modal %}
-    <div class="col-sm-6">
-        <div class="float-sm-right">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#addPayment">
-                Add Payments
-            </button>
+    {% if request.user.is_superuser or request.user.is_staff %}
+        <div class="col-sm-6">
+            <div class="float-sm-right">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#addPayment">
+                    Add Payments
+                </button>
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}
+
 
 
 
@@ -79,9 +85,13 @@
                                 <td>{{ payment.note }}</td>
 
                                 <td class="text-right">
-                                    <a type="button"  class="btn btn-sm btn-primary" href="{% url 'payments-info' payment.id %}"><i class="fa fa-eye"></i></a>
-                                    <a class="btn btn-sm btn-danger delete" href="#" data-bs-toggle="modal" data-bs-target="#deletePayment"><i
+                                    <a type="button" class="btn btn-sm btn-primary"
+                                       href="{% url 'payments-info' payment.id %}"><i class="fa fa-eye"></i></a>
+                                    {% if request.user.is_superuser or request.user.is_staff %}
+                                    <a class="btn btn-sm btn-danger delete" href="#" data-bs-toggle="modal"
+                                       data-bs-target="#deletePayment"><i
                                             class="fa fa-trash-alt"></i></a>
+                                    {% endif %}
                                 </td>
                             </tr>
 

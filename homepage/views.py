@@ -18,6 +18,8 @@ def homepage(request):
         return redirect('dashboard')
     elif request.user.is_staff:
         return redirect('dashboard')
+    elif request.user.is_active:
+        return redirect('dashboard')
 
 
 def dashboard(request):
@@ -39,7 +41,12 @@ def dashboard(request):
 
 
 def notice(request):
-    notices = Notice.objects.filter(boardinghouse__owner=request.user)
+    if request.user.is_superuser or request.user.is_staff:
+        notices = Notice.objects.filter(boardinghouse__owner=request.user)
+    else:
+        user = User.objects.get(id=request.user.id)
+        tenant_instance = Tenant.objects.get(name__id=user.id)
+        notices = Notice.objects.filter(boardinghouse = tenant_instance.room.boardinghouse)
 
     if request.method == "POST":
         form = NoticeForms(request.POST)

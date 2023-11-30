@@ -47,8 +47,10 @@
                     <div class="col-md-12">
                         {{ form }}
                         <div class="text-center align-content-center">
+                            {% if request.user.is_superuser or request.user.is_staff %}
                             <button type="submit" class="btn btn-primary" name="button" value="add_bhouse">Save changes
                             </button>
+                            {% endif %}
                             <a class="btn btn-secondary" href="{% url 'payments' %}"> Back to Payments
                             </a>
                         </div>
