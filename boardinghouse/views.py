@@ -148,22 +148,65 @@ def manage_rooms(request):
     rooms = Room.objects.filter(boardinghouse__owner=request.user, owner=request.user)
 
     if request.method == "POST":
-        name = request.POST.get('name')
-        room = request.POST.get('room')
-        date = request.POST.get('date_start')
-        try:
-            tenant = Tenant.objects.get(id=name)
-            room = Room.objects.get(id=room)
-            tenant.room = room
-            tenant.date_start = date
-            tenant.save()
-            messages.success(request, 'Tenant has been added successfully')
-            print('Tenant has been added successfully')
-            return redirect('manage_rooms')
-        except Exception as e:
-            messages.error(request, 'Error adding tenant')
-            print('Error adding tenant', e)
-            return redirect('manage_rooms')
+        if "button" in request.POST:
+            if request.POST.get("button") == "add_assignment":
+                name = request.POST.get('name')
+                room = request.POST.get('room')
+                date = request.POST.get('date_start')
+                try:
+                    tenant = Tenant.objects.get(id=name)
+                    room = Room.objects.get(id=room)
+                    tenant.room = room
+                    tenant.date_start = date
+                    tenant.save()
+                    messages.success(request, 'Tenant has been added successfully')
+                    print('Tenant has been added successfully')
+                    return redirect('manage_rooms')
+                except Exception as e:
+                    messages.error(request, 'Error adding tenant')
+                    print('Error adding tenant', e)
+                    return redirect('manage_rooms')
+            elif request.POST.get("button") == "delete_assignment":
+                try:
+                    id = request.POST.get('id_delete')
+                    print(id)
+                    tenant = get_object_or_404(Tenant, id=id, owner=request.user)
+                    tenant.room = None
+                    tenant.save()
+                    messages.success(request, 'Tenant has been deleted successfully')
+                    print('Tenant has been deleted successfully')
+                    return redirect('manage_rooms')
+                except Exception as e:
+                    messages.error(request, 'Error deleting tenant')
+                    print('Error deleting tenant', e)
+                    return redirect('manage_rooms')
+            elif request.POST.get("button") == "edit_assignment":
+                try:
+                    name = request.POST.get("name")
+                    room = request.POST.get("room")
+                    room = get_object_or_404(Room, id=room, owner=request.user)
+                    date = request.POST.get("date_start")
+
+                    tenant = get_object_or_404(Tenant, name__username=name, owner=request.user)
+                    tenant.room = room
+                    tenant.date_start = date
+                    tenant.save()
+                    messages.success(request, 'Tenant has been edited successfully')
+                    print('Tenant has been edited successfully')
+                    return redirect('manage_rooms')
+
+
+
+                except Exception as e:
+                    messages.error(request, 'Error editing tenant')
+                    print('Error editing tenant', e)
+                    return redirect('manage_rooms')
+
+
+
+
+
+
 
     return render(request, 'boardinghouse/manage_rooms.html', {
 
@@ -172,6 +215,11 @@ def manage_rooms(request):
         'rooms': rooms,
     })
 
+def manage_rooms_detail(request, id):
+
+
+
+    return render(request, 'boardinghouse/manage_rooms_detail.html')
 
 def beds(request):
     return render(request, 'boardinghouse/beds.html')
@@ -179,3 +227,5 @@ def beds(request):
 
 def beds_assignment(request):
     return render(request, 'boardinghouse/beds_assignment.html')
+
+
