@@ -5,8 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
+from boardinghouse.models import BoardingHouse, Room
 from homepage.forms import FeedbackForms, NoticeForms, UserForm
 from homepage.models import Feedback, Notice
+from tenants.models import Tenant
 
 
 # Create your views here.
@@ -17,7 +19,21 @@ def homepage(request):
 
 
 def dashboard(request):
-    return render(request, 'dashboard/dashboard.html')
+    tenants = Tenant.objects.all()
+    tenants_count = tenants.count()
+    boardinghouses = BoardingHouse.objects.all()
+    boardinghouses_count = boardinghouses.count()
+    rooms = Room.objects.all()
+    rooms_count = rooms.count()
+    owner = User.objects.filter(is_superuser=False, is_staff=True).count()
+
+    return render(request, 'dashboard/dashboard.html',{
+        'tenants_count': tenants_count,
+        'boardinghouses_count': boardinghouses_count,
+        'rooms_count': rooms_count,
+        'owner': owner,
+
+    })
 
 
 def notice(request):
