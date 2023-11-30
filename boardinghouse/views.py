@@ -103,6 +103,29 @@ def rooms(request):
     })
 
 
+def rooms_detail(request, id):
+    room = get_object_or_404(Room, id=id, owner=request.user)
+    form = RoomForm(instance=room)
+
+    if request.method == "POST":
+        form = RoomForm(request.POST, request.FILES, instance=room)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Room has been updated successfully')
+            print('Room has been updated successfully')
+            return redirect('rooms_detail', id=id)
+        else:
+            messages.error(request, 'Error updating room')
+            print('Error updating room', form.errors)
+            return redirect('rooms_detail', id=id)
+
+
+    return render(request, 'boardinghouse/rooms_detail.html',{
+        'room': room,
+        'form': form,
+    })
+
+
 def manage_rooms(request):
     tenants = Tenant.objects.filter(owner=request.user, room__isnull=False)
     users = Tenant.objects.filter(owner=request.user, room__isnull=True)

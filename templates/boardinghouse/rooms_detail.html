@@ -1,0 +1,90 @@
+{% extends 'base/base.html' %}
+
+{% block page-title %}
+    My Listings
+{% endblock %}
+
+{% block style %}
+    <style>
+        #map {
+            height: 300px;
+        }
+    </style>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}
+
+{% block modal %}
+
+{% endblock %}
+
+{% block content %}
+
+    <section class="content">
+        <div class="container-fluid">
+
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" role="alert">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+            {% endif %}
+
+
+
+            <div class="card card-info elevation-2">
+                <br>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="id_name">Boarding House: </label>
+                                {{ form.boardinghouse }}
+                            </div>
+
+                            <div class="col-6">
+                                <label for="id_name">Room Name: </label>
+                                {{ form.name }}
+                            </div>
+                            <div class="col-6">
+                                <label for="id_name">Rent price: </label>
+                                {{ form.price }}
+                            </div>
+
+                            <div class="col-6">
+                                <label for="id_name">Number of Bed: </label>
+                                {{ form.num_bed }}
+                            </div>
+
+                            <div class="col-6">
+                                <label for="id_name">Vacant: </label>
+                                {{ form.vacant }}
+                            </div>
+
+                            <div class="col-12">
+                                <label for="id_name">Male/Female: </label>
+                                {{ form.male_female }}
+                            </div>
+                            <div class="col-12">
+                                <label for="id_name">Image: </label>
+                                {{ form.image }}
+                            </div>
+                        </div>
+                        <div class="text-center align-content-center">
+                            <button type="submit" class="btn btn-primary" name="button" value="add_bhouse">Save changes
+                            </button>
+                        </div>
+                        <br>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

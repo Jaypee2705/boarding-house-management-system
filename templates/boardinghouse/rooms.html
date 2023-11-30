@@ -73,9 +73,8 @@
                                 <td><img src="{{ room.image.url }}" height="60" style="border: 2px solid gray">
                                 </td>
                                 <td class="text-right">
-                                    <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
-                                       data-target="#edit"><i
-                                            class="fa fa-edit"></i></a>
+                                    <a class="btn btn-sm btn-success" href="{% url 'room_detail' room.id %}" ><i
+                                            class="fa fa-eye"></i></a>
                                     <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#delete"><i
                                             class="fa fa-trash-alt"></i></a>
                                 </td>
