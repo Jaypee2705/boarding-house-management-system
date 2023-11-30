@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% block page-title %}
-    My Listings
+    {{ boardinghouse.name }}
 {% endblock %}
 
 {% block style %}
@@ -151,7 +151,10 @@
                         <div class="text-center align-content-center">
                             <button type="submit" class="btn btn-primary" name="button" value="add_bhouse">Save changes
                             </button>
+                            <a class="btn btn-secondary" href="{% url 'boardinghouse' %}" > Back to Listings
+                            </a>
                         </div>
+
                         <br>
                     </div>
                 </form>
