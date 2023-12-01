@@ -256,3 +256,11 @@ def bhouse_listings_detail(request, id):
         'bhouse': bhouse,
         'rooms': rooms,
     })
+
+
+def room_listings(request):
+    rooms = Room.objects.all()
+
+    return render(request, 'landing_page/room_listings.html',{
+        'rooms': rooms,
+    })

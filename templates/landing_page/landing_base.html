@@ -51,7 +51,7 @@
                 <ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu float-end">
                     <li class="nav-home"><a href="{% url 'landing_page' %}">Home</a></li>
                     <li class="nav-bhouse"><a href="{% url 'bhouse_listings' %}">Boarding Houses</a></li>
-                    <li class="nav-rooms"><a href="services.html">Rooms</a></li>
+                    <li class="nav-rooms"><a href="{% url 'room_listings' %}">Rooms</a></li>
                     {% if request.user.is_authenticated %}
                         <li><a href="{% url 'homepage' %}">Dashboard</a></li>
                     {% else %}
