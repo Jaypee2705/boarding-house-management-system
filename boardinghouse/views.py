@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -9,7 +10,7 @@ from .models import BoardingHouse, Room
 
 # Create your views here.
 
-
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def boardinghouse(request):
     boardinghouses = BoardingHouse.objects.filter(owner=request.user)
 
@@ -57,7 +58,7 @@ def boardinghouse(request):
         'boardinghouses': boardinghouses,
     })
 
-
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def boardinghouse_detail(request, id):
     boardinghouse = get_object_or_404(BoardingHouse, id=id, owner=request.user)
     form = BoardingHouseForms(instance=boardinghouse)
@@ -78,7 +79,7 @@ def boardinghouse_detail(request, id):
         'form': form,
     })
 
-
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def rooms(request):
     rooms = Room.objects.filter(owner=request.user)
 
@@ -118,7 +119,7 @@ def rooms(request):
         'form': forms,
     })
 
-
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def rooms_detail(request, id):
     room = get_object_or_404(Room, id=id, owner=request.user)
     form = RoomForm(instance=room)
@@ -141,7 +142,7 @@ def rooms_detail(request, id):
         'form': form,
     })
 
-
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def manage_rooms(request):
     tenants = Tenant.objects.filter(owner=request.user, room__isnull=False)
     users = Tenant.objects.filter(owner=request.user, room__isnull=True)
@@ -215,6 +216,7 @@ def manage_rooms(request):
         'rooms': rooms,
     })
 
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def manage_rooms_detail(request, id):
 
 

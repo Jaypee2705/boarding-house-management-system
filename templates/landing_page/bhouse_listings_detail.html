@@ -1,0 +1,187 @@
+{% extends 'landing_page/landing_base.html' %}
+{% load static %}
+
+{% block js %}
+    <script>
+        // Get all elements with class 'nav-bhouse'
+        var elements = document.getElementsByClassName('nav-bhouse');
+
+        // Loop through each element and add 'active' to its class
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].classList.add('active');
+        }
+    </script>
+    <script>
+
+        let mapOptions = {
+            center: [{{ bhouse.latitude }}, {{ bhouse.longitude }}],
+            zoom: 17
+        }
+
+        let map = new L.map('map', mapOptions);
+
+        let layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+        map.addLayer(layer);
+
+
+        let marker = L.marker([{{ bhouse.latitude }}, {{ bhouse.longitude }}]).addTo(map);
+
+
+        map.invalidateSize();
+
+
+    </script>
+    <script>
+        function myFunctionModal() {
+
+            document.getElementById('exampleModal').style.display = 'block';
+
+            setTimeout(function () {
+                map.invalidateSize();
+            }, 10);
+
+        }
+
+    </script>
+{% endblock %}
+
+
+{% block content %}
+    <div class="hero page-inner overlay" style="background-image: url('images/hero_bg_3.jpg');">
+
+        <div class="container">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-lg-9 text-center mt-5">
+                    <h1 class="heading" data-aos="fade-up">{{ bhouse.name }}</h1>
+
+                    <nav aria-label="breadcrumb" data-aos="fade-up" data-aos-delay="200">
+                        <ol class="breadcrumb text-center justify-content-center">
+                            <li class="breadcrumb-item "><a href="{% url 'landing_page' %}">Home</a></li>
+                            <li class="breadcrumb-item "><a href="{% url 'bhouse_listings' %}">Boarding Houses</a></li>
+                            <li class="breadcrumb-item active text-white-50" aria-current="page">{{ bhouse.name }}
+                            </li>
+                        </ol>
+                    </nav>
+
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <div class="section">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-lg-7">
+                    <div class="img-property-slide-wrap">
+                        <div class="img-property-slide">
+                            <img src="{{ bhouse.image.url }}" alt="Image" class="img-fluid-1">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <h2 class="heading text-primary">{{ bhouse.name }}</h2>
+                    <p class="meta">{{ bhouse.address }}</p>
+                    <p class="text-black-50">{{ bhouse.description }}</p>
+                    <div class="specs d-flex mb-4  align-center text-center">
+                        <span class="d-block d-flex align-items-center me-3">
+												<span class="icon-bed me-2"></span>
+												<span class="caption">{{ bhouse.num_beds }} beds</span>
+											</span>
+                        <span class="d-block d-flex align-items-center">
+												<span class="icon-bath me-2"></span>
+												<span class="caption">{{ bhouse.num_baths }} baths</span>
+											</span>
+                    </div>
+
+                    <div class="d-block agent-box p-5 align-content-center text-center">
+                        <div class="text">
+                            <h3 class="mb-0">{{ bhouse.owner.get_full_name }}</h3>
+                            <div class="meta mb-0">Owner</div>
+                            <div class="meta mb-0">{{ bhouse.owner.email }}</div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section-1">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div id="map">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="container">
+            <div class="row mb-5 align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="font-weight-bold text-primary heading">{{ bhouse.name }} Rooms</h2>
+                </div>
+                <div class="col-lg-6 text-lg-end">
+                    <p><a href="#" target="_blank" class="btn btn-primary text-white py-3 px-4">View other rooms</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-12">
+
+
+                    <div class="property-slider-wrap">
+
+
+                        <div class="property-slider">
+
+                            {% for room in rooms %}
+                                <div class="property-item">
+
+                                    <a href="property-single.html" class="img">
+                                        <img src="{{ room.image.url }}" alt="Image"
+                                             class="img-fluid">
+                                    </a>
+
+                                    <div class="property-content">
+                                        <div>
+                                            <span class="city d-block mb-3">{{ room.name }}</span>
+                                            <span class="d-block mb-2 text-black-50">{{ room.boardinghouse }}</span>
+                                            <span class="d-block mb-2 text-black-50">{{ room.boardinghouse.address }}</span>
+
+                                            <div class="specs d-flex mb-4">
+											<span class="d-block d-flex align-items-center me-3">
+												<span class="icon-bed me-2"></span>
+												<span class="caption">{{ room.num_bed }} beds</span>
+											</span>
+                                                <span class="d-block d-flex align-items-center">
+												<span class="icon-user me-2"></span>
+												<span class="caption">{{ room.male_female }} </span>
+											</span>
+                                            </div>
+
+                                            <a href="{% url 'room_listings_detail' room.id %}" class="btn btn-primary py-2 px-3">See
+                                                details</a>
+                                        </div>
+                                    </div>
+                                </div> <!-- .item -->
+                            {% endfor %}
+                        </div>
+
+
+                        <div id="property-nav" class="controls" tabindex="0" aria-label="Carousel Navigation">
+                            <span class="prev" data-controls="prev" aria-controls="property" tabindex="-1">Prev</span>
+                            <span class="next" data-controls="next" aria-controls="property" tabindex="-1">Next</span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

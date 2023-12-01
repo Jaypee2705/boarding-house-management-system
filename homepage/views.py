@@ -1,9 +1,9 @@
 from datetime import datetime
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from boardinghouse.models import BoardingHouse, Room
 from homepage.forms import FeedbackForms, NoticeForms, UserForm
@@ -21,7 +21,7 @@ def homepage(request):
     elif request.user.is_active:
         return redirect('dashboard')
 
-
+@user_passes_test(lambda u: u.is_authenticated )
 def dashboard(request):
     tenants = Tenant.objects.all()
     tenants_count = tenants.count()
@@ -39,7 +39,7 @@ def dashboard(request):
 
     })
 
-
+@user_passes_test(lambda u: u.is_authenticated)
 def notice(request):
     if request.user.is_superuser or request.user.is_staff:
         notices = Notice.objects.filter(boardinghouse__owner=request.user)
@@ -83,7 +83,7 @@ def notice(request):
 
 
 
-
+@user_passes_test(lambda u: u.is_authenticated)
 def notice_detail(request, id):
     notice = Notice.objects.get(id=id)
 
@@ -105,7 +105,7 @@ def notice_detail(request, id):
         'form': form,
     })
 
-
+@user_passes_test(lambda u: u.is_authenticated)
 def feedbacks(request):
     feedbacks = Feedback.objects.filter(user=request.user)
 
@@ -155,7 +155,7 @@ def feedbacks(request):
         'form': form,
     })
 
-
+@user_passes_test(lambda u: u.is_superuser)
 def users(request):
     users = User.objects.all()
 
@@ -227,6 +227,49 @@ def users(request):
         'form': form,
     })
 
-
+@user_passes_test(lambda u: u.is_superuser )
 def user_detail(request):
     return None
+
+
+def landing_page(request):
+    boardinghouses = BoardingHouse.objects.all()
+    return render(request, 'landing_page/landing_page.html',{
+        'boardinghouses': boardinghouses,
+    })
+
+
+def bhouse_listings(request):
+    boardinghouses = BoardingHouse.objects.all()
+
+    return render(request, 'landing_page/bhouse_listings.html',{
+        'boardinghouses': boardinghouses,
+    })
+
+
+def bhouse_listings_detail(request, id):
+    bhouse = get_object_or_404(BoardingHouse, id=id)
+    rooms = Room.objects.filter(boardinghouse=bhouse)
+
+
+    return render(request, 'landing_page/bhouse_listings_detail.html',{
+        'bhouse': bhouse,
+        'rooms': rooms,
+    })
+
+
+def room_listings(request):
+    rooms = Room.objects.all()
+
+    return render(request, 'landing_page/room_listings.html',{
+        'rooms': rooms,
+    })
+
+
+def room_listings_detail(request, id):
+    room = get_object_or_404(Room, id=id)
+    bhouse = BoardingHouse.objects.get(id=room.boardinghouse.id)
+    return render(request, 'landing_page/room_listings_detail.html',{
+        'room': room,
+        'bhouse': bhouse,
+    })

@@ -1,6 +1,7 @@
 import datetime
 
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
 
 from boardinghouse.models import Room
@@ -10,6 +11,8 @@ from tenants.models import Tenant
 
 
 # Create your views here.
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def utility_bill(request):
     rooms = Room.objects.filter(owner=request.user)
     bills = Bills.objects.filter(room__owner=request.user)
@@ -58,6 +61,7 @@ def utility_bill(request):
     })
 
 
+@user_passes_test(lambda u: u.is_authenticated)
 def payments(request):
     if request.user.is_superuser or request.user.is_staff:
         payments = Payments.objects.filter(room__owner=request.user)
@@ -95,7 +99,7 @@ def payments(request):
 
     })
 
-
+@user_passes_test(lambda u: u.is_authenticated)
 def payments_info(request, id):
     payment = Payments.objects.get(id=id)
 
@@ -119,7 +123,7 @@ def payments_info(request, id):
 
     })
 
-
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def income(request):
 
 
@@ -170,7 +174,7 @@ def income(request):
 
     })
 
-
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def collectibles(request):
     tenants = Tenant.objects.filter(room__isnull=False, owner=request.user)
 
