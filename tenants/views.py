@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from .models import Tenant
@@ -6,7 +7,7 @@ from .models import Tenant
 # Create your views here.
 
 
-
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def tenants_profile(request):
     # get all Users that is not a superuser and staff
     users = User.objects.filter(tenant__isnull=True).exclude(is_superuser=True).exclude(is_staff=True)
@@ -28,6 +29,6 @@ def tenants_profile(request):
 
     })
 
-
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def add_tenants(request):
     return render(request, 'tenants/add_tenants.html')
