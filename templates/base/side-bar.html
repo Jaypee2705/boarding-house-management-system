@@ -21,6 +21,14 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{% url 'landing_page' %}" class="nav-link">
+                        <i class="nav-icon fa fa-arrow-left"></i>
+                        <p>
+                            Back to landing page
+                        </p>
+                    </a>
+                </li>
 
                 {% if request.user.is_superuser %}
                     <li class="nav-header">ADMIN</li>
@@ -38,57 +46,57 @@
 
 
                 {% if request.user.is_superuser or request.user.is_staff %}
-                <li class="nav-header">BOARDINGHOUSE</li>
-                <li class="nav-item">
-                    <a href="{% url 'tenants_profile' %}" class="nav-link" id="nav-tenants">
-                        <i class="nav-icon fa fa-user"></i>
-                        <p>
-                            Tenants Profile
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'boardinghouse' %}" class="nav-link" id="nav-listings">
-                        <i class="nav-icon fa fa-home"></i>
-                        <p>
-                            Boarding House listings
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'rooms' %}" class="nav-link" id="nav-room-listings">
-                        <i class="nav-icon fa fa-home"></i>
-                        <p>
-                            Room listings
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'manage_rooms' %}" class="nav-link" id="nav-room-management">
-                        <i class="nav-icon fa fa-home"></i>
-                        <p>
-                            Room Management
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-header">PAYMENTS</li>
-                <li class="nav-item">
-                    <a href="{% url 'utility-bill' %}" class="nav-link" id="nav-utility-bills">
-                        <i class="nav-icon fa fa-money-bill"></i>
-                        <p>
-                            Utility Bills
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'collectibles' %}" class="nav-link" id="nav-collectibles">
-                        <i class="nav-icon fa fa-table"></i>
-                        <p>
-                            Collectibles
-                        </p>
-                    </a>
-                </li>
-            {% endif %}
+                    <li class="nav-header">BOARDINGHOUSE</li>
+                    <li class="nav-item">
+                        <a href="{% url 'tenants_profile' %}" class="nav-link" id="nav-tenants">
+                            <i class="nav-icon fa fa-user"></i>
+                            <p>
+                                Tenants Profile
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'boardinghouse' %}" class="nav-link" id="nav-listings">
+                            <i class="nav-icon fa fa-home"></i>
+                            <p>
+                                Boarding House listings
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'rooms' %}" class="nav-link" id="nav-room-listings">
+                            <i class="nav-icon fa fa-home"></i>
+                            <p>
+                                Room listings
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'manage_rooms' %}" class="nav-link" id="nav-room-management">
+                            <i class="nav-icon fa fa-home"></i>
+                            <p>
+                                Room Management
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-header">PAYMENTS</li>
+                    <li class="nav-item">
+                        <a href="{% url 'utility-bill' %}" class="nav-link" id="nav-utility-bills">
+                            <i class="nav-icon fa fa-money-bill"></i>
+                            <p>
+                                Utility Bills
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'collectibles' %}" class="nav-link" id="nav-collectibles">
+                            <i class="nav-icon fa fa-table"></i>
+                            <p>
+                                Collectibles
+                            </p>
+                        </a>
+                    </li>
+                {% endif %}
 
                 <li class="nav-item">
                     <a href="{% url 'payments' %}" class="nav-link" id="payments">
@@ -98,16 +106,16 @@
                         </p>
                     </a>
                 </li>
-            {% if request.user.is_superuser or request.user.is_staff %}
-                <li class="nav-item">
-                    <a href="{% url 'income' %}" class="nav-link" id="nav-income">
-                        <i class="nav-icon fa fa-chart-bar"></i>
-                        <p>
-                            Income Report
-                        </p>
-                    </a>
-                </li>
-            {% endif %}
+                {% if request.user.is_superuser or request.user.is_staff %}
+                    <li class="nav-item">
+                        <a href="{% url 'income' %}" class="nav-link" id="nav-income">
+                            <i class="nav-icon fa fa-chart-bar"></i>
+                            <p>
+                                Income Report
+                            </p>
+                        </a>
+                    </li>
+                {% endif %}
                 <li class="nav-header">GENERAL</li>
                 <li class="nav-item">
                     <a href="{% url 'notice' %} " class="nav-link" id="nav-notice">
