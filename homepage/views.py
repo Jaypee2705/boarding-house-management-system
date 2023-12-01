@@ -3,7 +3,7 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from boardinghouse.models import BoardingHouse, Room
 from homepage.forms import FeedbackForms, NoticeForms, UserForm
@@ -244,4 +244,15 @@ def bhouse_listings(request):
 
     return render(request, 'landing_page/bhouse_listings.html',{
         'boardinghouses': boardinghouses,
+    })
+
+
+def bhouse_listings_detail(request, id):
+    bhouse = get_object_or_404(BoardingHouse, id=id)
+    rooms = Room.objects.filter(boardinghouse=bhouse)
+
+
+    return render(request, 'landing_page/bhouse_listings_detail.html',{
+        'bhouse': bhouse,
+        'rooms': rooms,
     })

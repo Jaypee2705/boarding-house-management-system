@@ -5,6 +5,7 @@ from homepage import views
 urlpatterns = [
     path('', views.landing_page, name='landing_page'),
     path('listings/bhouse/', views.bhouse_listings, name='bhouse_listings'),
+    path('listings/bhouse/<int:id>/', views.bhouse_listings_detail, name='bhouse_detail_detail'),
 
 
 

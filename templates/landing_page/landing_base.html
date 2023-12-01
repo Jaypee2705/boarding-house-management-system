@@ -21,7 +21,14 @@
     <link rel="stylesheet" href="{% static 'landing/css/tiny-slider.css' %}">
     <link rel="stylesheet" href="{% static 'landing/css/aos.css' %}">
     <link rel="stylesheet" href="{% static 'landing/css/style.css' %}">
-
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <style>
+        #map {
+            height: 300px;
+        }
+    </style>
     <title>Bulan Boarding House Management System</title>
 </head>
 <body>
@@ -46,9 +53,9 @@
                     <li class="nav-bhouse"><a href="{% url 'bhouse_listings' %}">Boarding Houses</a></li>
                     <li class="nav-rooms"><a href="services.html">Rooms</a></li>
                     {% if request.user.is_authenticated %}
-                    <li><a href="{% url 'homepage' %}">Dashboard</a></li>
+                        <li><a href="{% url 'homepage' %}">Dashboard</a></li>
                     {% else %}
-                    <li><a href="{% url 'login' %}">Login/Signup</a></li>
+                        <li><a href="{% url 'login' %}">Login/Signup</a></li>
                     {% endif %}
                 </ul>
 
@@ -64,7 +71,7 @@
 </nav>
 
 {% block content %}
-	
+
 {% endblock %}
 
 
@@ -159,9 +166,13 @@
 <script src="{% static 'landing/js/navbar.js' %}"></script>
 <script src="{% static 'landing/js/counter.js' %}"></script>
 <script src="{% static 'landing/js/custom.js' %}"></script>
+ <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
 
 {% block js %}
-	
+
 {% endblock %}
 </body>
 </html>
