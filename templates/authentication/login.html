@@ -27,30 +27,51 @@
                 <div class="alert alert-danger">{{ form.non_field_errors }}</div>
 
             {% endif %}
-            <form method="post">
-                {% csrf_token %}
-                <div class="input-group mb-3">
-                    {{ form.username }}
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <span class="fas fa-user"></span>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" role="alert">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+            {% endif %}
+            {% block form %}
+
+
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        {{ form.username }}
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user"></span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="input-group mb-3">
-                    {{ form.password }}
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <span class="fas fa-lock"></span>
+                    <div class="text-right">
+                        <a href="{% url 'password_reset' %}" tabindex="-1">Forgot Password?</a>
+                    </div>
+                    <div class="input-group mb-3">
+                        {{ form.password }}
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-6 offset-3">
-                        <button type="submit" class="btn btn-block btn-info">Login</button>
+
+                    <br>
+                    <div class="row">
+                        <div class="col-6 offset-3">
+                            <button type="submit" class="btn btn-block btn-info">Login</button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                    <div class="text-center align-center">
+                        <p>Not registered yet? <a href="{% url 'register' %}">Create an account</a></p>
+                    </div>
+                </form>
+            {% endblock %}
         </div>
         <!-- /.card-body -->
     </div>

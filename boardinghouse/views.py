@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 
-from homepage.models import Feedback
+from homepage.models import Feedback, Notice
 from tenants.models import Tenant
 from .forms import BoardingHouseForms, RoomForm
 from .models import BoardingHouse, Room

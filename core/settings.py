@@ -150,3 +150,13 @@ LOGIN_REDIRECT_URL = "homepage"
 LOGOUT_REDIRECT_URL = "landing_page"
 
 # AUTH_USER_MODEL = 'authentication.Users'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'jaypeedionela55@gmail.com'
+EMAIL_HOST_PASSWORD = 'ghjiuylotauqmtjx'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+DEFAULT_FROM_EMAIL = 'noreply_bbh<no_reply@bbh.com>'

@@ -26,6 +26,12 @@ def register(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
+
+            role = request.POST.get('role')
+            if role == 'Owner':
+                user.is_staff = True
+                user.is_superuser = False
+
             user.is_active = False
             user.save()
 

@@ -1,0 +1,44 @@
+{% extends 'authentication/login.html' %}
+
+
+{% block form %}
+    <form method="post">
+                    {% csrf_token %}
+
+    <div class="input-group mb-3">
+        {{ form.first_name }}
+    </div>
+    <div class="input-group mb-3">
+        {{ form.last_name }}
+    </div>
+    <div class="input-group mb-3">
+        {{ form.username }}
+        {{ form.username.help_text }}
+    </div>
+    <div class="input-group mb-3">
+        {{ form.email }}
+    </div>
+    <div class="input-group mb-3">
+        {{ form.password1 }}
+        {{ form.password1.help_text }}
+    </div>
+    <div class="input-group mb-3">
+        {{ form.password2 }}
+        {{ form.password2.help_text }}
+    </div>
+    <div class="input-group mb-3">
+        <select class="form-control" aria-label="Default select example" name="role" id="role" required>
+            <option value="Tenant">Tenant</option>
+            <option value="Owner">Owner</option>
+        </select>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-6 offset-3">
+            <button type="submit" class="btn btn-block btn-info">Register</button>
+        </div>
+    </div>
+    <div class="text-center align-center">
+        <p>Already have an account? <a href="{% url 'login' %}">login you account</a></p>
+    </div>
+{% endblock %}

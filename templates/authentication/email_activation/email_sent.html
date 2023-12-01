@@ -1,0 +1,9 @@
+{% extends 'authentication/login.html' %}
+
+
+{% block form %}
+
+    <h1>Thank you for registering. We sent you an email to activate your account</h1>
+
+    <a href="{% url 'login' %}">Go back to login page</a>
+{% endblock %}
