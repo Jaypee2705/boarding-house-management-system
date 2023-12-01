@@ -264,3 +264,12 @@ def room_listings(request):
     return render(request, 'landing_page/room_listings.html',{
         'rooms': rooms,
     })
+
+
+def room_listings_detail(request, id):
+    room = get_object_or_404(Room, id=id)
+    bhouse = BoardingHouse.objects.get(id=room.boardinghouse.id)
+    return render(request, 'landing_page/room_listings_detail.html',{
+        'room': room,
+        'bhouse': bhouse,
+    })
