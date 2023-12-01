@@ -58,6 +58,7 @@ def boardinghouse(request):
         'form': forms,
         'boardinghouses': boardinghouses,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
 
     })
 
@@ -81,6 +82,7 @@ def boardinghouse_detail(request, id):
         'boardinghouse': boardinghouse,
         'form': form,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
 
     })
 
@@ -123,6 +125,7 @@ def rooms(request):
         'rooms': rooms,
         'form': forms,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
 
     })
 
@@ -148,6 +151,7 @@ def rooms_detail(request, id):
         'room': room,
         'form': form,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
 
     })
 
@@ -224,6 +228,7 @@ def manage_rooms(request):
         'users': users,
         'rooms': rooms,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
 
     })
 

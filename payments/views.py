@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
 
 from boardinghouse.models import Room
-from homepage.models import Feedback
+from homepage.models import Feedback, Notice
 from payments.forms import BillsForm, PaymentsForm
 from payments.models import Bills, Payments
 from tenants.models import Tenant
@@ -99,6 +99,7 @@ def payments(request):
         'payments': payments,
         'form': form,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
 
     })
 
@@ -124,6 +125,7 @@ def payments_info(request, id):
         'payment': payment,
         'form': form,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
 
     })
 

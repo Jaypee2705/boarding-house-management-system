@@ -39,17 +39,22 @@ def dashboard(request):
         'rooms_count': rooms_count,
         'owner': owner,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
 
     })
 
 @user_passes_test(lambda u: u.is_authenticated)
 def notice(request):
+
     if request.user.is_superuser or request.user.is_staff:
         notices = Notice.objects.filter(boardinghouse__owner=request.user)
     else:
         user = User.objects.get(id=request.user.id)
         tenant_instance = Tenant.objects.get(name__id=user.id)
         notices = Notice.objects.filter(boardinghouse = tenant_instance.room.boardinghouse)
+        for noti in notices:
+            noti.is_viewed = True
+            noti.save()
 
     if request.method == "POST":
         form = NoticeForms(request.POST)
@@ -81,6 +86,7 @@ def notice(request):
         'notices': notices,
         'form': form,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
 
     })
 
@@ -107,6 +113,7 @@ def notice_detail(request, id):
         'notice': notice,
         'form': form,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
+
     })
 
 @user_passes_test(lambda u: u.is_authenticated)
@@ -165,6 +172,7 @@ def feedbacks(request):
         'feedbacks': feedbacks,
         'form': form,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
 
     })
 
