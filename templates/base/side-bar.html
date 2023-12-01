@@ -1,11 +1,11 @@
 {% load static %}
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index.html" class="brand-link">
-        <img src="{% static 'img/BBHMS logo 5.png' %}" alt="Logo" width="130" style="margin-left: 40px;margin-bottom:-20px;margin-top:-15px"
-             style="opacity: .8">
+<div class="text-center">
+    <a href="{% url 'homepage' %}" class="brand-link">
+        <img src="{% static 'img/BBHMS logo 5.png' %}" alt="Logo" style="height: 50px">
     </a>
-
+</div>
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Sidebar Menu -->
@@ -21,17 +21,7 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{% url 'landing_page' %}" class="nav-link">
-                        <i class="nav-icon fa fa-arrow-left"></i>
-                        <p>
-                            Back to landing page
-                        </p>
-                    </a>
-                </li>
-
                 {% if request.user.is_superuser %}
-                    <li class="nav-header">ADMIN</li>
                     <li class="nav-item">
                         <a href="{% url 'users' %}" class="nav-link" id="nav-users">
                             <i class="nav-icon fa fa-users"></i>
@@ -43,10 +33,34 @@
 
 
                 {% endif %}
+                <li class="nav-item">
+                    <a href="{% url 'notice' %} " class="nav-link" id="nav-notice">
+                        <i class="nav-icon fa fa-bell"></i>
+                        <p>
+                            Notice Board
+                            {% if not request.user.is_superuser and notice != 0 %}
+                                <span class="badge badge-danger">{{ notice }}</span>
+                            {% endif %}
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'feedbacks' %}" class="nav-link" id="nav-feedbacks">
+                        <i class="nav-icon fa fa-file-invoice"></i>
+                        <p>
+                            Feedbacks
+                            {% if request.user.is_superuser and feedback != 0 %}
+                                <span class="badge badge-danger">{{ feedback }}</span>
+                            {% endif %}
+                        </p>
+                    </a>
+                </li>
+
+
 
 
                 {% if request.user.is_superuser or request.user.is_staff %}
-                    <li class="nav-header">BOARDINGHOUSE</li>
+                    <hr>
                     <li class="nav-item">
                         <a href="{% url 'tenants_profile' %}" class="nav-link" id="nav-tenants">
                             <i class="nav-icon fa fa-user"></i>
@@ -79,7 +93,7 @@
                             </p>
                         </a>
                     </li>
-                    <li class="nav-header">PAYMENTS</li>
+                    <hr>
                     <li class="nav-item">
                         <a href="{% url 'utility-bill' %}" class="nav-link" id="nav-utility-bills">
                             <i class="nav-icon fa fa-money-bill"></i>
@@ -116,29 +130,15 @@
                         </a>
                     </li>
                 {% endif %}
-                <li class="nav-header">GENERAL</li>
                 <li class="nav-item">
-                    <a href="{% url 'notice' %} " class="nav-link" id="nav-notice">
-                        <i class="nav-icon fa fa-bell"></i>
+                    <a href="{% url 'landing_page' %}" class="nav-link">
+                        <i class="nav-icon fa fa-arrow-left"></i>
                         <p>
-                            Notice Board
-                            {% if not request.user.is_superuser and notice != 0%}
-                            <span class="badge badge-danger">{{ notice }}</span>
-                            {% endif %}
+                            Back to landing page
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{% url 'feedbacks' %}" class="nav-link" id="nav-feedbacks">
-                        <i class="nav-icon fa fa-file-invoice"></i>
-                        <p>
-                            Feedbacks
-                            {% if request.user.is_superuser and feedback != 0%}
-                            <span class="badge badge-danger">{{ feedback }}</span>
-                            {% endif %}
-                        </p>
-                    </a>
-                </li>
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
