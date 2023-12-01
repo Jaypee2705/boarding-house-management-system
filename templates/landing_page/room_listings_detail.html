@@ -56,9 +56,9 @@
 
                     <nav aria-label="breadcrumb" data-aos="fade-up" data-aos-delay="200">
                         <ol class="breadcrumb text-center justify-content-center">
-                            <li class="breadcrumb-item "><a href="index.html">Home</a></li>
-                            <li class="breadcrumb-item "><a href="properties.html">Properties</a></li>
-                            <li class="breadcrumb-item "><a href="properties.html">{{ bhouse.name }}</a></li>
+                            <li class="breadcrumb-item "><a href="{% url 'landing_page' %}">Home</a></li>
+                            <li class="breadcrumb-item "><a href="{% url 'room_listings' %}">Rooms</a></li>
+                            <li class="breadcrumb-item "><a href="{% url 'bhouse_detail_detail' bhouse.id %}">{{ bhouse.name }}</a></li>
                             <li class="breadcrumb-item active text-white-50" aria-current="page">{{ room.name }}
                             </li>
                         </ol>
