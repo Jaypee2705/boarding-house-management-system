@@ -1,0 +1,106 @@
+{% extends 'landing_page/landing_base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="hero">
+
+
+        <div class="hero-slide">
+            <div class="img overlay" style="background-image: url('{% static 'landing/images/hero_bg_3.jpg' %}')"></div>
+            <div class="img overlay" style="background-image: url('{% static 'landing/images/hero_bg_2.jpg' %}')"></div>
+            <div class="img overlay" style="background-image: url('{% static 'landing/images/hero_bg_1.jpg' %}')"></div>
+        </div>
+
+        <div class="container">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-lg-9 text-center">
+                    <h1 class="heading" data-aos="fade-up">Easiest way to find and manage your boarding house in the
+                        municipality of Bulan, Sorsogon</h1>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="section">
+        <div class="container">
+            <div class="row mb-5 align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="font-weight-bold text-primary heading">Popular Boarding Houses</h2>
+                </div>
+                <div class="col-lg-6 text-lg-end">
+                    <p><a href="#" target="_blank" class="btn btn-primary text-white py-3 px-4">View all boarding
+                        houses</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-12">
+
+
+                    <div class="property-slider-wrap">
+
+
+                        <div class="property-slider">
+
+                            {% for boardinghouse in boardinghouses %}
+                                <div class="property-item">
+
+                                    <a href="property-single.html" class="img">
+                                        <img src="{{ boardinghouse.image.url }}" alt="Image"
+                                             class="img-fluid">
+                                    </a>
+
+                                    <div class="property-content">
+                                        <div>
+                                            <span class="city d-block mb-3">{{ boardinghouse.name }}</span>
+                                            <span class="d-block mb-2 text-black-50">{{ boardinghouse.address}}</span>
+
+                                            <div class="specs d-flex mb-4">
+											<span class="d-block d-flex align-items-center me-3">
+												<span class="icon-bed me-2"></span>
+												<span class="caption">{{ boardinghouse.num_beds }} beds</span>
+											</span>
+                                                <span class="d-block d-flex align-items-center">
+												<span class="icon-bath me-2"></span>
+												<span class="caption">{{ boardinghouse.num_baths }} baths</span>
+											</span>
+                                            </div>
+
+                                            <a href="property-single.html" class="btn btn-primary py-2 px-3">See
+                                                details</a>
+                                        </div>
+                                    </div>
+                                </div> <!-- .item -->
+                            {% endfor %}
+                        </div>
+
+
+                        <div id="property-nav" class="controls" tabindex="0" aria-label="Carousel Navigation">
+                            <span class="prev" data-controls="prev" aria-controls="property" tabindex="-1">Prev</span>
+                            <span class="next" data-controls="next" aria-controls="property" tabindex="-1">Next</span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="section-1">
+        <div class="row justify-content-center footer-cta" data-aos="fade-up">
+            <div class="col-lg-7 mx-auto text-center">
+                <h2 class="mb-4 ">Want to add your boarding house in our listings?</h2>
+                <p><a href="{% url 'boardinghouse' %}" target="_blank" class="btn btn-primary text-white py-3 px-4">Add your boarding house now</a>
+                </p>
+            </div> <!-- /.col-lg-7 -->
+        </div> <!-- /.row -->
+    </div>
+
+{% endblock %}

@@ -230,3 +230,10 @@ def users(request):
 
 def user_detail(request):
     return None
+
+
+def landing_page(request):
+    boardinghouses = BoardingHouse.objects.all()
+    return render(request, 'landing_page/landing_page.html',{
+        'boardinghouses': boardinghouses,
+    })

@@ -147,6 +147,6 @@ MESSAGE_TAGS = {
 ## Auth infos
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "homepage"
-LOGOUT_REDIRECT_URL = "login"
+LOGOUT_REDIRECT_URL = "landing_page"
 
 # AUTH_USER_MODEL = 'authentication.Users'
