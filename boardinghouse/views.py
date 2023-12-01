@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 
+from homepage.models import Feedback
 from tenants.models import Tenant
 from .forms import BoardingHouseForms, RoomForm
 from .models import BoardingHouse, Room
@@ -56,6 +57,8 @@ def boardinghouse(request):
     return render(request, 'boardinghouse/boardinghouse.html', {
         'form': forms,
         'boardinghouses': boardinghouses,
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+
     })
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
@@ -77,6 +80,8 @@ def boardinghouse_detail(request, id):
     return render(request, 'boardinghouse/boardinghouse_detail.html', {
         'boardinghouse': boardinghouse,
         'form': form,
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+
     })
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
@@ -117,6 +122,8 @@ def rooms(request):
     return render(request, 'boardinghouse/rooms.html', {
         'rooms': rooms,
         'form': forms,
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+
     })
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
@@ -140,6 +147,8 @@ def rooms_detail(request, id):
     return render(request, 'boardinghouse/rooms_detail.html',{
         'room': room,
         'form': form,
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+
     })
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
@@ -214,6 +223,8 @@ def manage_rooms(request):
         'tenants': tenants,
         'users': users,
         'rooms': rooms,
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+
     })
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)

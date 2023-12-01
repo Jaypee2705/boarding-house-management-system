@@ -2,6 +2,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
+
+from homepage.models import Feedback
 from .models import Tenant
 
 # Create your views here.
@@ -25,7 +27,8 @@ def tenants_profile(request):
 
     return render(request, 'tenants/tenants_profile.html',{
         'users': users,
-        'tenants': tenants
+        'tenants': tenants,
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
 
     })
 

@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
 
 from boardinghouse.models import Room
+from homepage.models import Feedback
 from payments.forms import BillsForm, PaymentsForm
 from payments.models import Bills, Payments
 from tenants.models import Tenant
@@ -57,6 +58,7 @@ def utility_bill(request):
         'rooms': rooms,
         'form': form,
         'bills': bills,
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
 
     })
 
@@ -96,6 +98,7 @@ def payments(request):
     return render(request, 'payments/payments.html',{
         'payments': payments,
         'form': form,
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
 
     })
 
@@ -120,6 +123,7 @@ def payments_info(request, id):
     return render(request, 'payments/payments-info.html',{
         'payment': payment,
         'form': form,
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
 
     })
 
@@ -171,6 +175,7 @@ def income(request):
     return render(request, 'payments/income.html',{
         # 'income_list': income_list,
         'months': months,
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
 
     })
 
@@ -241,4 +246,6 @@ def collectibles(request):
     return render(request, 'payments/collectibles.html',{
         'tenants': tenants,
         'collectibles_lists': collectibles_lists,
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+
     })

@@ -6,6 +6,7 @@ class Feedback(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     feedback = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
+    is_viewed = models.BooleanField(default=False)
 
 
     def __str__(self):

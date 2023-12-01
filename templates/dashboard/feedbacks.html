@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% block page-title %}
-Feedbacks
+    Feedbacks
 {% endblock %}
 
 {% block style %}
@@ -9,11 +9,11 @@ Feedbacks
 {% endblock %}
 
 {% block js %}
-<script>
-    // add active class to nav-dashboard
-    document.getElementById("nav-feedbacks").className += " active";
+    <script>
+        // add active class to nav-dashboard
+        document.getElementById("nav-feedbacks").className += " active";
     </script>
-     <script>
+    <script>
         {#        when delete button in action clicked, get the username of user#}
         $(document).on('click', '.delete', function () {
             var id = $(this).closest('tr').find('td:nth-child(1)').text();
@@ -32,14 +32,18 @@ Feedbacks
 
 
 {% block modal %}
-    <div class="col-sm-6">
-        <div class="float-sm-right">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#addFeedback">
-                Add Feedback
-            </button>
+    {% if not request.user.is_superuser %}
+
+
+        <div class="col-sm-6">
+            <div class="float-sm-right">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#addFeedback">
+                    Add Feedback
+                </button>
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}
 
 
@@ -69,7 +73,12 @@ Feedbacks
                             <th hidden>id</th>
                             <th>Date</th>
                             <th>Feedback</th>
-                            <th>Actions</th>
+                            {% if request.user.is_superuser %}
+                                <th>User</th>
+                            {% endif %}
+                            {% if not request.user.is_superuser %}
+                                <th>Actions</th>
+                            {% endif %}
 
                         </tr>
                         </thead>
@@ -82,13 +91,21 @@ Feedbacks
                                 <td hidden>{{ feedback.id }}</td>
                                 <td>{{ feedback.date }}</td>
                                 <td>{{ feedback.feedback }}</td>
+                                {% if request.user.is_superuser %}
+                                    <th>{{ feedback.user.get_full_name }}</th>
+                                {% endif %}
 
-                                <td class="text-right">
-                                    <button type="button" class="btn btn-sm btn-warning edit" data-bs-toggle="modal"
-                                            data-bs-target="#editFeedback"><i class="fa fa-edit"></i></button>
-                                    <button type="button" class="btn btn-sm btn-danger delete" data-bs-toggle="modal" data-bs-target="#deleteFeedback"><i
-                                            class="fa fa-trash-alt"></i></button>
-                                </td>
+                                {% if not request.user.is_superuser %}
+
+                                    <td class="text-right">
+                                        <button type="button" class="btn btn-sm btn-warning edit" data-bs-toggle="modal"
+                                                data-bs-target="#editFeedback"><i class="fa fa-edit"></i></button>
+                                        <button type="button" class="btn btn-sm btn-danger delete"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteFeedback"><i
+                                                class="fa fa-trash-alt"></i></button>
+                                    </td>
+                                {% endif %}
                             </tr>
 
                         {% endfor %}
@@ -136,7 +153,8 @@ Feedbacks
                     <div class="modal-body">
                         <input type="text" name="edit_id" id="edit_id" hidden>
                         <label for="edit_feedback">Feedback:</label>
-                        <textarea name="edit_feedback" cols="40" rows="10" class="form-control" required="" id="edit_feedback" spellcheck="false"></textarea>
+                        <textarea name="edit_feedback" cols="40" rows="10" class="form-control" required=""
+                                  id="edit_feedback" spellcheck="false"></textarea>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

@@ -130,6 +130,9 @@
                         <i class="nav-icon fa fa-file-invoice"></i>
                         <p>
                             Feedbacks
+                            {% if request.user.is_superuser and feedback != 0%}
+                            <span class="badge badge-danger">{{ feedback }}</span>
+                            {% endif %}
                         </p>
                     </a>
                 </li>

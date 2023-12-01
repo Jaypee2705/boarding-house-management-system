@@ -31,11 +31,14 @@ def dashboard(request):
     rooms_count = rooms.count()
     owner = User.objects.filter(is_superuser=False, is_staff=True).count()
 
+
+
     return render(request, 'dashboard/dashboard.html',{
         'tenants_count': tenants_count,
         'boardinghouses_count': boardinghouses_count,
         'rooms_count': rooms_count,
         'owner': owner,
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
 
     })
 
@@ -74,10 +77,10 @@ def notice(request):
     else:
         form = NoticeForms()
 
-
     return render(request, 'dashboard/notice.html',{
         'notices': notices,
         'form': form,
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
 
     })
 
@@ -103,11 +106,19 @@ def notice_detail(request, id):
     return render(request, 'dashboard/notice_detail.html',{
         'notice': notice,
         'form': form,
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
     })
 
 @user_passes_test(lambda u: u.is_authenticated)
 def feedbacks(request):
-    feedbacks = Feedback.objects.filter(user=request.user)
+
+    if request.user.is_superuser or request.user.is_staff:
+        feedbacks = Feedback.objects.all()
+        for feeds in feedbacks:
+            feeds.is_viewed = True
+            feeds.save()
+    else:
+        feedbacks = Feedback.objects.filter(user=request.user)
 
     if request.method == "POST":
         if "button" in request.POST:
@@ -153,6 +164,8 @@ def feedbacks(request):
     return render(request, 'dashboard/feedbacks.html',{
         'feedbacks': feedbacks,
         'form': form,
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+
     })
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -225,6 +238,8 @@ def users(request):
     return render(request,'dashboard/users.html', {
         'users': users,
         'form': form,
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+
     })
 
 @user_passes_test(lambda u: u.is_superuser )
