@@ -4,6 +4,8 @@ from homepage import views
 
 urlpatterns = [
     path('', views.landing_page, name='landing_page'),
+    path('listings/bhouse/', views.bhouse_listings, name='bhouse_listings'),
+
 
 
 

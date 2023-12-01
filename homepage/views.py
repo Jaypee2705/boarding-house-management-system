@@ -237,3 +237,11 @@ def landing_page(request):
     return render(request, 'landing_page/landing_page.html',{
         'boardinghouses': boardinghouses,
     })
+
+
+def bhouse_listings(request):
+    boardinghouses = BoardingHouse.objects.all()
+
+    return render(request, 'landing_page/bhouse_listings.html',{
+        'boardinghouses': boardinghouses,
+    })
