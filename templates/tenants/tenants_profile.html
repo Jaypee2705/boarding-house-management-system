@@ -57,6 +57,9 @@
                             <th hidden>ID</th>
                             <th>Tenant Name</th>
                             <th>Email</th>
+                            {% if request.user.is_superuser %}
+                            	<th>Owner</th>
+                            {% endif %}
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -69,6 +72,9 @@
                                 <td hidden>{{ tenant.id }}</td>
                                 <td>{{ tenant.name.get_full_name }}</td>
                                 <td>{{ tenant.name.email }}</td>
+                                {% if request.user.is_superuser %}
+                                	<td>{{ tenant.owner }}</td>
+                                {% endif %}
                                 <td class="text-right">
                                     <button type="button" class="btn btn-sm btn-danger delete"
                                             data-bs-toggle="modal"

@@ -74,11 +74,15 @@
                         <thead class="btn-cancel">
                         <tr>
                             <th>ID</th>
+
                             <th>Tenant Name</th>
                             <th>Boarding House</th>
                             <th>Room ID</th>
                             <th>Room Number</th>
                             <th>Date Started</th>
+                            {% if request.user.is_superuser %}
+                            	<th>Owner</th>
+                            {% endif %}
                             <th>Actions</th>
 
                         </tr>
@@ -95,6 +99,9 @@
                                 <td>{{ tenant.room.id }}</td>
                                 <td>{{ tenant.room }}</td>
                                 <td>{{ tenant.date_start }}</td>
+                                {% if request.user.is_superuser %}
+                                	<td>{{ tenant.room.boardinghouse.owner }}</td>
+                                {% endif %}
 
                                 <td class="text-right">
                                     <button type="button" class="btn btn-sm btn-success edit" data-bs-toggle="modal"

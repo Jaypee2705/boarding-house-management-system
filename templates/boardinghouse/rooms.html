@@ -57,9 +57,7 @@
                         <thead class="btn-cancel">
                         <tr>
                             <th hidden>ID</th>
-                            {% if request.user.is_superuser %}
-                            	<th>Owner</th>
-                            {% endif %}
+
                             <th>Boarding House</th>
                             <th>Name</th>
                             <th>Price</th>
@@ -67,6 +65,9 @@
                             <th>Male/Female</th>
                             <th>Vacant</th>
                             <th>Image</th>
+                            {% if request.user.is_superuser %}
+                            	<th>Owner</th>
+                            {% endif %}
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -75,9 +76,6 @@
 
                             <tr>
                                 <td hidden>{{ room.id }}</td>
-                                {% if request.user.is_superuser %}
-                                	<td>{{ room.boardinghouse.owner }}</td>
-                                {% endif %}
                                 <td>{{ room.boardinghouse.name }}</td>
                                 <td>{{ room.name }}</td>
                                 <td>{{ room.price }}</td>
@@ -86,6 +84,9 @@
                                 <td>{{ room.vacant }}</td>
                                 <td><img src="{{ room.image.url }}" height="60" style="border: 2px solid gray">
                                 </td>
+                                {% if request.user.is_superuser %}
+                                	<td>{{ room.boardinghouse.owner }}</td>
+                                {% endif %}
                                 <td class="text-right">
                                     <a class="btn btn-sm btn-success" href="{% url 'room_detail' room.id %}"><i
                                             class="fa fa-eye"></i></a>

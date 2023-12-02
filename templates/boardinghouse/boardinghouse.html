@@ -104,14 +104,14 @@
                         <thead class="btn-cancel">
                         <tr>
                             <th >ID</th>
-                            {% if request.user.is_superuser %}
-                            	<th>Owner</th>
-                            {% endif %}
                             <th>Name</th>
                             <th>Address</th>
                             <th>Beds</th>
                             <th>Baths</th>
                             <th>Image</th>
+                            {% if request.user.is_superuser %}
+                            	<th>Owner</th>
+                            {% endif %}
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -120,15 +120,15 @@
 
                             <tr>
                                 <td>{{ boardinghouse.id }}</td>
-                                {% if request.user.is_superuser %}
-                                	<td>{{ boardinghouse.owner }}</td>
-                                {% endif %}
                                 <td>{{ boardinghouse.name }}</td>
                                 <td>{{ boardinghouse.address }}</td>
                                 <td>{{ boardinghouse.num_beds }}</td>
                                 <td>{{ boardinghouse.num_baths }}</td>
                                 <td><img src="{{ boardinghouse.image.url }}" height="60" style="border: 2px solid gray">
                                 </td>
+                                {% if request.user.is_superuser %}
+                                	<td>{{ boardinghouse.owner }}</td>
+                                {% endif %}
                                 <td class="text-right">
                                     <a class="btn btn-sm btn-success"
                                        href="{% url 'boardinghouse_detail' boardinghouse.id %}"><i
@@ -238,7 +238,7 @@
                     {% csrf_token %}
                     <div class="modal-body">
                         <p>Are you sure you want to delete this boarding house?</p>
-                        <input type="text" name="delete_id" id="delete_id" hidden>
+                        <input type="text" name="delete_id" id="delete_id" >
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

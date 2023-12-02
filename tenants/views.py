@@ -11,9 +11,11 @@ from .models import Tenant
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def tenants_profile(request):
-    # get all Users that is not a superuser and staff
     users = User.objects.filter(tenant__isnull=True).exclude(is_superuser=True).exclude(is_staff=True)
-    tenants = Tenant.objects.filter(owner=request.user, is_archive=False)
+    if request.user.is_superuser:
+        tenants = Tenant.objects.filter(is_archive=False)
+    else:
+        tenants = Tenant.objects.filter(owner=request.user, is_archive=False)
     if request.method == "POST":
         if request.POST.get("button") == "add":
             try:
@@ -52,9 +54,9 @@ def tenants_profile(request):
 
     })
 
-
+@user_passes_test(lambda u: u.is_superuser)
 def tenant_archive(request):
-    tenants = Tenant.objects.filter(owner=request.user, is_archive=True)
+    tenants = Tenant.objects.filter(is_archive=True)
 
     if request.method == "POST":
         if request.POST.get("button") == "restore":

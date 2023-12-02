@@ -271,9 +271,14 @@ def rooms_detail(request, id):
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def manage_rooms(request):
-    tenants = Tenant.objects.filter(owner=request.user, room__isnull=False)
-    users = Tenant.objects.filter(owner=request.user, room__isnull=True)
-    rooms = Room.objects.filter(boardinghouse__owner=request.user, owner=request.user)
+    if request.user.is_superuser:
+        tenants = Tenant.objects.filter( room__isnull=False)
+        users = Tenant.objects.filter( room__isnull=True)
+        rooms = Room.objects.filter(boardinghouse__owner=request.user, owner=request.user)
+    else:
+        tenants = Tenant.objects.filter(owner=request.user, room__isnull=False)
+        users = Tenant.objects.filter(owner=request.user, room__isnull=True)
+        rooms = Room.objects.filter(boardinghouse__owner=request.user, owner=request.user)
 
     if request.method == "POST":
         if "button" in request.POST:
