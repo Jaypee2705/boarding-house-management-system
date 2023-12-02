@@ -259,7 +259,7 @@ def feedbacks_archive(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def users(request):
-    users = User.objects.all()
+    users = User.objects.filter(is_active=True)
 
     form = UserForm()
 
@@ -291,7 +291,8 @@ def users(request):
             elif request.POST.get("button") == "delete":
                 try:
                     user = User.objects.get(id=request.POST.get("delete_id"))
-                    user.delete()
+                    user.is_active = False
+                    user.save()
                     messages.success(request, 'User Deleted Successfully')
                     return redirect('users')
                 except Exception as e:
@@ -329,6 +330,40 @@ def users(request):
         'form': form,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
 
+    })
+
+
+
+def users_archive(request):
+    users = User.objects.filter(is_active=False)
+
+    if request.method == "POST":
+        if request.POST.get("button") == "restore":
+            try:
+                user = User.objects.get(id=request.POST.get("restore_id"))
+                user.is_active = True
+                user.save()
+                messages.success(request, 'User Restored Successfully')
+                return redirect('users_archive')
+            except Exception as e:
+                messages.error(request, 'User Restoration Failed')
+                print(e)
+                return redirect('users_archive')
+        elif request.POST.get("button") == "delete":
+            try:
+                user = User.objects.get(id=request.POST.get("delete_id"))
+                user.delete()
+                messages.success(request, 'User Deleted Successfully')
+                return redirect('users_archive')
+            except Exception as e:
+                messages.error(request, 'User Deletion Failed')
+                print(e)
+                return redirect('users_archive')
+
+    return render(request, 'dashboard/users_archive.html',{
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
+        'users': users,
     })
 
 @user_passes_test(lambda u: u.is_superuser )
