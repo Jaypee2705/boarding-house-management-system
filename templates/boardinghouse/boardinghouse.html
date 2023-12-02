@@ -103,7 +103,10 @@
                     <table id="example1" class="table table-bordered table-hover">
                         <thead class="btn-cancel">
                         <tr>
-                            <th hidden>ID</th>
+                            <th >ID</th>
+                            {% if request.user.is_superuser %}
+                            	<th>Owner</th>
+                            {% endif %}
                             <th>Name</th>
                             <th>Address</th>
                             <th>Beds</th>
@@ -116,7 +119,10 @@
                         {% for boardinghouse in boardinghouses %}
 
                             <tr>
-                                <td hidden>{{ boardinghouse.id }}</td>
+                                <td>{{ boardinghouse.id }}</td>
+                                {% if request.user.is_superuser %}
+                                	<td>{{ boardinghouse.owner }}</td>
+                                {% endif %}
                                 <td>{{ boardinghouse.name }}</td>
                                 <td>{{ boardinghouse.address }}</td>
                                 <td>{{ boardinghouse.num_beds }}</td>

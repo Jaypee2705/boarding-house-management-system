@@ -45,8 +45,9 @@ def dashboard(request):
 
 @user_passes_test(lambda u: u.is_authenticated)
 def notice(request):
-
-    if request.user.is_superuser or request.user.is_staff:
+    if request.user.is_superuser:
+        notices = Notice.objects.filter(is_archived=False)
+    elif request.user.is_staff:
         notices = Notice.objects.filter(boardinghouse__owner=request.user, is_archived=False)
     else:
         user = User.objects.get(id=request.user.id)
@@ -92,14 +93,10 @@ def notice(request):
 
     })
 
-@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+@user_passes_test(lambda u: u.is_superuser)
 def notice_archive(request):
-    if request.user.is_superuser or request.user.is_staff:
-        notices = Notice.objects.filter(boardinghouse__owner=request.user, is_archived=True)
-    else:
-        user = User.objects.get(id=request.user.id)
-        tenant_instance = Tenant.objects.get(name__id=user.id)
-        notices = Notice.objects.filter(boardinghouse=tenant_instance.room.boardinghouse, is_archived=True)
+    notices = Notice.objects.filter(boardinghouse__owner=request.user, is_archived=True)
+
 
     if request.method == "POST":
         if request.POST.get("button") == "recover":
@@ -161,8 +158,7 @@ def notice_detail(request, id):
 
 @user_passes_test(lambda u: u.is_authenticated)
 def feedbacks(request):
-
-    if request.user.is_superuser or request.user.is_staff:
+    if request.user.is_superuser:
         feedbacks = Feedback.objects.filter(is_archived=False)
         for feeds in feedbacks:
             feeds.is_viewed = True
@@ -221,7 +217,7 @@ def feedbacks(request):
 
     })
 
-@user_passes_test(lambda u: u.is_authenticated)
+@user_passes_test(lambda u: u.is_superuser)
 def feedbacks_archive(request):
     feedbacks = Feedback.objects.filter(user=request.user, is_archived=True)
 
@@ -333,7 +329,7 @@ def users(request):
     })
 
 
-
+@user_passes_test(lambda u: u.is_superuser)
 def users_archive(request):
     users = User.objects.filter(is_active=False)
 
@@ -366,9 +362,7 @@ def users_archive(request):
         'users': users,
     })
 
-@user_passes_test(lambda u: u.is_superuser )
-def user_detail(request):
-    return None
+
 
 
 def landing_page(request):

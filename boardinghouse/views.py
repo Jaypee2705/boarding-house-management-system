@@ -13,7 +13,10 @@ from .models import BoardingHouse, Room
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def boardinghouse(request):
-    boardinghouses = BoardingHouse.objects.filter(owner=request.user, is_archive=False)
+    if request.user.is_superuser:
+        boardinghouses = BoardingHouse.objects.filter(is_archive=False)
+    else:
+        boardinghouses = BoardingHouse.objects.filter(owner=request.user, is_archive=False)
 
     if request.method == 'POST':
         forms = BoardingHouseForms(request.POST, request.FILES)
