@@ -25,3 +25,9 @@ class Payments(models.Model):
 
     def __str__(self):
         return self.amount
+
+    def save(self, *args, **kwargs):
+        tenant = Tenant.objects.get(id=self.tenant.id)
+        tenant.amount_paid = float(tenant.amount_paid) + float(self.amount)
+        tenant.save()
+        super(Payments, self).save(*args, **kwargs)

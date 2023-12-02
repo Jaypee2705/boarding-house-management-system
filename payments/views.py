@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
@@ -185,33 +185,34 @@ def income(request):
 
 @user_passes_test(lambda u: u.is_staff)
 def collectibles(request):
+    #########################
+    tenants = Tenant.objects.filter(owner=request.user)
+    for tenant in tenants:
+        if tenant.add_month < datetime.now().date():
+            print("add month is less than now")
+            print("late")
+            tenant.previous_balance += tenant.current_balance
+            tenant.current_balance = 0
+            tenant.add_month = tenant.add_month + timedelta(days=30)
+
+            tenant.save()
+        else:
+            print("add month is greater than now")
+            print("not late")
+            # get all payments
+            payments = Payments.objects.filter(tenant=tenant)
+            print(payments)
+            total = 0
+            print(total)
+            for payment in payments:
+                total += float(payment.amount)
+            tenant.amount_paid = total
+            tenant.save()
+
+
+    #########################
     tenants = Tenant.objects.filter(room__isnull=False, owner=request.user)
 
-    """
-    [
-        {
-            tenant: 'John Doe',
-            room: 'Room 1',
-            monthly_due: 1000,
-            previous_balance: 1000,
-            total_due: 2000,
-            amount_paid: 1000,
-            current_balance: 1000,
-        },
-        {
-            tenent: 'Jane Doe',
-            room: 'Room 2',
-            monthly_due: 1000,
-            previous_balance: 1000,
-            total_due: 2000,
-            amount_paid: 1000,
-            current_balance: 1000,
-        }
-    
-    
-    ]
-    
-    """
     collectibles_lists = []
 
     for tenant in tenants:
@@ -231,16 +232,19 @@ def collectibles(request):
 
         current_balance = 0
         try:
-            current_balance = total_due - amount_paid
-        except:
-            pass
+            current_balance = float(total_due) - float(tenant.amount_paid)
+            tenant.current_balance = current_balance
+            tenant.save()
+        except Exception as e:
+            print("error")
+            print(e)
         collectibles_lists.append({
             'tenant': tenant.name.get_full_name(),
             'room': tenant.room.name,
             'monthly_due': Bills.objects.get(room=tenant.room).rate,
             'previous_balance': tenant.previous_balance,
             'total_due': total_due,
-            'amount_paid': amount_paid,
+            'amount_paid': tenant.amount_paid,
             'current_balance': current_balance,
         })
 
