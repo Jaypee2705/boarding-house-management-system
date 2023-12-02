@@ -59,6 +59,9 @@
                             <th>Beds</th>
                             <th>Baths</th>
                             <th>Image</th>
+                            {% if request.user.is_superuser %}
+                                <th>Owner</th>
+                            {% endif %}
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -73,6 +76,9 @@
                                 <td>{{ boardinghouse.num_baths }}</td>
                                 <td><img src="{{ boardinghouse.image.url }}" height="60" style="border: 2px solid gray">
                                 </td>
+                                {% if request.user.is_superuser %}
+                                    <td>{{ boardinghouse.owner }}</td>
+                                {% endif %}
                                 <td class="text-right">
 
                                     <button type="button" class="btn btn-sm btn-success restore"

@@ -39,6 +39,8 @@
 
 
 {% block modal %}
+        {% if not request.user.is_superuser %}
+
     <div class="col-sm-6">
         <div class="float-sm-right">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -47,6 +49,7 @@
             </button>
         </div>
     </div>
+        {% endif %}
 {% endblock %}
 
 

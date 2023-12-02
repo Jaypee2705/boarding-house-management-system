@@ -24,6 +24,8 @@
 
 
 {% block modal %}
+    {% if not request.user.is_superuser %}
+
     <div class="col-sm-6">
         <div class="float-sm-right">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -32,6 +34,7 @@
             </button>
         </div>
     </div>
+    {% endif %}
 {% endblock %}
 
 
@@ -66,7 +69,7 @@
                             <th>Vacant</th>
                             <th>Image</th>
                             {% if request.user.is_superuser %}
-                            	<th>Owner</th>
+                                <th>Owner</th>
                             {% endif %}
                             <th>Action</th>
                         </tr>
@@ -85,7 +88,7 @@
                                 <td><img src="{{ room.image.url }}" height="60" style="border: 2px solid gray">
                                 </td>
                                 {% if request.user.is_superuser %}
-                                	<td>{{ room.boardinghouse.owner }}</td>
+                                    <td>{{ room.boardinghouse.owner }}</td>
                                 {% endif %}
                                 <td class="text-right">
                                     <a class="btn btn-sm btn-success" href="{% url 'room_detail' room.id %}"><i
@@ -100,9 +103,12 @@
 
                         </tbody>
                     </table>
-                    <div class="text-right pb-3">
-                        <a href="{% url 'rooms_archive' %}">View Archived Rooms</a>
-                    </div>
+                    {% if request.user.is_superuser %}
+
+                        <div class="text-right pb-3">
+                            <a href="{% url 'rooms_archive' %}">View Archived Rooms</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

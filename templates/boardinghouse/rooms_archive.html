@@ -57,6 +57,9 @@
                             <th>Male/Female</th>
                             <th>Vacant</th>
                             <th>Image</th>
+                            {% if request.user.is_superuser %}
+                                <th>Owner</th>
+                            {% endif %}
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -73,11 +76,15 @@
                                 <td>{{ room.vacant }}</td>
                                 <td><img src="{{ room.image.url }}" height="60" style="border: 2px solid gray">
                                 </td>
+
+                                {% if request.user.is_superuser %}
+                                    <td>{{ room.boardinghouse.owner }}</td>
+                                {% endif %}
                                 <td class="text-right">
                                     <button type="button" class="btn btn-sm btn-success restore"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#restore"><i
-                                                class="fa fa-recycle"></i></button>
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#restore"><i
+                                            class="fa fa-recycle"></i></button>
                                     <a class="btn btn-sm btn-danger delete" href="#" data-bs-toggle="modal"
                                        data-bs-target="#delete"><i
                                             class="fa fa-trash-alt"></i></a>

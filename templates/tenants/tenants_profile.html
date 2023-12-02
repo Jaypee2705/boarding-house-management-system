@@ -23,6 +23,8 @@
 {% endblock %}
 
 {% block modal %}
+        {% if not request.user.is_superuser %}
+
     <div class="col-sm-6">
         <div class="float-sm-right">
             <button type="button" class="btn btn-primary" onclick="myFunctionModal()" data-bs-toggle="modal"
@@ -31,6 +33,7 @@
             </button>
         </div>
     </div>
+        {% endif %}
 {% endblock %}
 
 
@@ -58,7 +61,7 @@
                             <th>Tenant Name</th>
                             <th>Email</th>
                             {% if request.user.is_superuser %}
-                            	<th>Owner</th>
+                                <th>Owner</th>
                             {% endif %}
                             <th>Action</th>
                         </tr>
@@ -73,7 +76,7 @@
                                 <td>{{ tenant.name.get_full_name }}</td>
                                 <td>{{ tenant.name.email }}</td>
                                 {% if request.user.is_superuser %}
-                                	<td>{{ tenant.owner }}</td>
+                                    <td>{{ tenant.owner }}</td>
                                 {% endif %}
                                 <td class="text-right">
                                     <button type="button" class="btn btn-sm btn-danger delete"
@@ -88,9 +91,13 @@
 
                         </tbody>
                     </table>
-                    <div class="text-right pb-3">
-                        <a href="{% url 'tenant_archive' %}">View Archived Tenants</a>
-                    </div>
+                    {% if request.user.is_superuser %}
+
+                        <div class="text-right pb-3">
+                            <a href="{% url 'tenant_archive' %}">View Archived Tenants</a>
+                        </div>
+                    {% endif %}
+
                 </div>
             </div>
         </div>
