@@ -77,15 +77,15 @@ def boardinghouse(request):
 
     })
 
-
+@user_passes_test(lambda u: u.is_superuser )
 def boardinghouse_archive(request):
-    boardinghouses = BoardingHouse.objects.filter(owner=request.user, is_archive=True)
+    boardinghouses = BoardingHouse.objects.filter(is_archive=True)
 
     if request.method == "POST":
         if request.POST.get("button") == "restore":
             try:
                 id = request.POST.get('restore_id')
-                boardinghouse = get_object_or_404(BoardingHouse, id=id, owner=request.user)
+                boardinghouse = get_object_or_404(BoardingHouse, id=id)
                 boardinghouse.is_archive = False
                 boardinghouse.save()
                 rooms = Room.objects.filter(boardinghouse=boardinghouse)
@@ -107,7 +107,7 @@ def boardinghouse_archive(request):
         elif request.POST.get("button") == "delete":
             try:
                 id = request.POST.get('delete_id')
-                boardinghouse = get_object_or_404(BoardingHouse, id=id, owner=request.user)
+                boardinghouse = get_object_or_404(BoardingHouse, id=id)
                 boardinghouse.delete()
                 messages.success(request, 'Boarding House has been deleted successfully')
                 print('Boarding House has been deleted successfully')
@@ -128,7 +128,7 @@ def boardinghouse_archive(request):
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def boardinghouse_detail(request, id):
-    boardinghouse = get_object_or_404(BoardingHouse, id=id, owner=request.user)
+    boardinghouse = get_object_or_404(BoardingHouse, id=id)
     form = BoardingHouseForms(instance=boardinghouse)
     if request.method == "POST":
         form = BoardingHouseForms(request.POST, request.FILES, instance=boardinghouse)
@@ -152,7 +152,10 @@ def boardinghouse_detail(request, id):
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def rooms(request):
-    rooms = Room.objects.filter(owner=request.user, is_archive=False)
+    if request.user.is_superuser:
+        rooms = Room.objects.filter(is_archive=False)
+    else:
+        rooms = Room.objects.filter(owner=request.user, is_archive=False)
 
     if request.method == "POST":
         forms = RoomForm(request.POST, request.FILES)
@@ -172,7 +175,7 @@ def rooms(request):
             elif request.POST.get("button") == "delete_room":
                 try:
                     id = request.POST.get('delete_id')
-                    room = get_object_or_404(Room, id=id, owner=request.user)
+                    room = get_object_or_404(Room, id=id)
                     room.is_archive = True
                     room.save()
                     tenants = Tenant.objects.filter(room=room)
@@ -198,14 +201,15 @@ def rooms(request):
 
     })
 
+@user_passes_test(lambda u: u.is_superuser)
 def rooms_archive(request):
-    rooms = Room.objects.filter(owner=request.user, is_archive=True)
+    rooms = Room.objects.filter( is_archive=True)
 
     if request.method == "POST":
         if request.POST.get("button") == "restore":
             try:
                 id = request.POST.get('restore_id')
-                room = get_object_or_404(Room, id=id, owner=request.user)
+                room = get_object_or_404(Room, id=id)
                 room.is_archive = False
                 room.save()
                 # get all tenants of room
@@ -223,7 +227,7 @@ def rooms_archive(request):
         elif request.POST.get("button") == "delete":
             try:
                 id = request.POST.get('delete_id')
-                room = get_object_or_404(Room, id=id, owner=request.user)
+                room = get_object_or_404(Room, id=id)
                 room.delete()
                 messages.success(request, 'Room has been deleted successfully')
                 print('Room has been deleted successfully')
@@ -241,7 +245,7 @@ def rooms_archive(request):
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def rooms_detail(request, id):
-    room = get_object_or_404(Room, id=id, owner=request.user)
+    room = get_object_or_404(Room, id=id)
     form = RoomForm(instance=room)
 
     if request.method == "POST":

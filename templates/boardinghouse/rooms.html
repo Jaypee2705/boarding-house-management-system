@@ -57,6 +57,9 @@
                         <thead class="btn-cancel">
                         <tr>
                             <th hidden>ID</th>
+                            {% if request.user.is_superuser %}
+                            	<th>Owner</th>
+                            {% endif %}
                             <th>Boarding House</th>
                             <th>Name</th>
                             <th>Price</th>
@@ -72,6 +75,9 @@
 
                             <tr>
                                 <td hidden>{{ room.id }}</td>
+                                {% if request.user.is_superuser %}
+                                	<td>{{ room.boardinghouse.owner }}</td>
+                                {% endif %}
                                 <td>{{ room.boardinghouse.name }}</td>
                                 <td>{{ room.name }}</td>
                                 <td>{{ room.price }}</td>
