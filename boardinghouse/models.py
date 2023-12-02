@@ -12,6 +12,7 @@ class BoardingHouse(models.Model):
     longitude = models.DecimalField(max_digits=25, decimal_places=20)
     image = models.ImageField(upload_to='boardinghouse', blank=True)
     owner = models.ForeignKey('auth.User', related_name='boardinghouses', on_delete=models.CASCADE)
+    is_archive = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -33,6 +34,7 @@ class Room(models.Model):
     vacant = models.BooleanField(default=True)
     image = models.ImageField(upload_to='room', blank=True)
     owner = models.ForeignKey('auth.User', related_name='rooms', on_delete=models.CASCADE)
+    is_archive = models.BooleanField(default=False)
 
 
     def __str__(self):

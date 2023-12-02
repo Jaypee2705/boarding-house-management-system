@@ -13,7 +13,7 @@ from .models import BoardingHouse, Room
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def boardinghouse(request):
-    boardinghouses = BoardingHouse.objects.filter(owner=request.user)
+    boardinghouses = BoardingHouse.objects.filter(owner=request.user, is_archive=False)
 
     if request.method == 'POST':
         forms = BoardingHouseForms(request.POST, request.FILES)
@@ -43,7 +43,19 @@ def boardinghouse(request):
                 try:
                     id = request.POST.get('delete_id')
                     boardinghouse = get_object_or_404(BoardingHouse, id=id, owner=request.user)
-                    boardinghouse.delete()
+                    boardinghouse.is_archive = True
+                    boardinghouse.save()
+                    # get all rooms of boarding house
+                    rooms = Room.objects.filter(boardinghouse=boardinghouse)
+                    for r in rooms:
+                        r.is_archive = True
+                        r.save()
+                        # get all tenants of boarding house
+                        tenants = Tenant.objects.filter(room=r)
+                        for t in tenants:
+                            t.is_archive = True
+                            t.save()
+                    # get all tenants of boarding house
                     messages.success(request, 'Boarding House has been deleted successfully')
                     print('Boarding House has been deleted successfully')
                     return redirect('boardinghouse')
@@ -61,6 +73,55 @@ def boardinghouse(request):
         'notice': Notice.objects.filter(is_viewed=False).count(),
 
     })
+
+
+def boardinghouse_archive(request):
+    boardinghouses = BoardingHouse.objects.filter(owner=request.user, is_archive=True)
+
+    if request.method == "POST":
+        if request.POST.get("button") == "restore":
+            try:
+                id = request.POST.get('restore_id')
+                boardinghouse = get_object_or_404(BoardingHouse, id=id, owner=request.user)
+                boardinghouse.is_archive = False
+                boardinghouse.save()
+                rooms = Room.objects.filter(boardinghouse=boardinghouse)
+                for r in rooms:
+                    r.is_archive = False
+                    r.save()
+                    # get all tenants of boarding house
+                    tenants = Tenant.objects.filter(room=r)
+                    for t in tenants:
+                        t.is_archive = False
+                        t.save()
+                messages.success(request, 'Boarding House has been restored successfully')
+                print('Boarding House has been restored successfully')
+                return redirect('boardinghouse_archive')
+            except Exception as e:
+                messages.error(request, 'Error restoring boarding house')
+                print('Error restoring boarding house', e)
+                return redirect('boardinghouse_archive')
+        elif request.POST.get("button") == "delete":
+            try:
+                id = request.POST.get('delete_id')
+                boardinghouse = get_object_or_404(BoardingHouse, id=id, owner=request.user)
+                boardinghouse.delete()
+                messages.success(request, 'Boarding House has been deleted successfully')
+                print('Boarding House has been deleted successfully')
+                return redirect('boardinghouse_archive')
+            except Exception as e:
+                messages.error(request, 'Error deleting boarding house')
+                print('Error deleting boarding house', e)
+                return redirect('boardinghouse_archive')
+
+    return render(request, 'boardinghouse/boardinghouse_archive.html',{
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
+        'boardinghouses': boardinghouses,
+    })
+
+
+
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def boardinghouse_detail(request, id):

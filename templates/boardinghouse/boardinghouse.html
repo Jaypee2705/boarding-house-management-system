@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% block page-title %}
-    My Listings
+    Boarding Houses
 {% endblock %}
 
 {% block style %}
@@ -137,6 +137,9 @@
 
                         </tbody>
                     </table>
+                    <div class="text-right pb-3">
+                        <a href="{% url 'boardinghouse_archive' %}">View Archived Boarding Houses</a>
+                    </div>
                 </div>
             </div>
         </div>

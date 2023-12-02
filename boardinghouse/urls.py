@@ -4,6 +4,7 @@ from boardinghouse import views
 
 urlpatterns = [
     path('boardinghouse/', views.boardinghouse, name='boardinghouse'),
+    path('boardinghouse/archive/', views.boardinghouse_archive, name='boardinghouse_archive'),
     path('boardinghouse/<int:id>/', views.boardinghouse_detail, name='boardinghouse_detail'),
     path('rooms/', views.rooms, name='rooms'),
     path('rooms/<int:id>/', views.rooms_detail, name='room_detail'),
