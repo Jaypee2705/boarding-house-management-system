@@ -8,6 +8,8 @@ class Tenant(models.Model):
     date_start = models.DateField(null=True, blank=True)
     current_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     previous_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    is_archive = models.BooleanField(default=False)
+
     def __str__(self):
         return self.name.get_full_name()
 
