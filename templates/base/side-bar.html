@@ -1,11 +1,11 @@
 {% load static %}
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-<div class="text-center">
-    <a href="{% url 'homepage' %}" class="brand-link">
-        <img src="{% static 'img/BBHMS logo 5.png' %}" alt="Logo" style="height: 50px">
-    </a>
-</div>
+    <div class="text-center">
+        <a href="{% url 'homepage' %}" class="brand-link">
+            <img src="{% static 'img/BBHMS logo 5.png' %}" alt="Logo" style="height: 50px">
+        </a>
+    </div>
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Sidebar Menu -->
@@ -94,43 +94,50 @@
                             </p>
                         </a>
                     </li>
-                    <hr>
-                    <li class="nav-item">
-                        <a href="{% url 'utility-bill' %}" class="nav-link" id="nav-utility-bills">
-                            <i class="nav-icon fa fa-money-bill"></i>
-                            <p>
-                                Utility Bills
-                            </p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'collectibles' %}" class="nav-link" id="nav-collectibles">
-                            <i class="nav-icon fa fa-table"></i>
-                            <p>
-                                Collectibles
-                            </p>
-                        </a>
-                    </li>
+                    {% if not request.user.is_superuser %}
+                        <hr>
+                        <li class="nav-item">
+                            <a href="{% url 'utility-bill' %}" class="nav-link" id="nav-utility-bills">
+                                <i class="nav-icon fa fa-money-bill"></i>
+                                <p>
+                                    Utility Bills
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'collectibles' %}" class="nav-link" id="nav-collectibles">
+                                <i class="nav-icon fa fa-table"></i>
+                                <p>
+                                    Collectibles
+                                </p>
+                            </a>
+                        </li>
+                    {% endif %}
                 {% endif %}
 
-                <li class="nav-item">
-                    <a href="{% url 'payments' %}" class="nav-link" id="payments">
-                        <i class="nav-icon fa fa-file-invoice"></i>
-                        <p>
-                            Payments
-                        </p>
-                    </a>
-                </li>
-                {% if request.user.is_superuser or request.user.is_staff %}
+                {% if not request.user.is_superuser %}
+
                     <li class="nav-item">
-                        <a href="{% url 'income' %}" class="nav-link" id="nav-income">
-                            <i class="nav-icon fa fa-chart-bar"></i>
+                        <a href="{% url 'payments' %}" class="nav-link" id="payments">
+                            <i class="nav-icon fa fa-file-invoice"></i>
                             <p>
-                                Income Report
+                                Payments
                             </p>
                         </a>
                     </li>
+
+                    {% if request.user.is_superuser or request.user.is_staff %}
+                        <li class="nav-item">
+                            <a href="{% url 'income' %}" class="nav-link" id="nav-income">
+                                <i class="nav-icon fa fa-chart-bar"></i>
+                                <p>
+                                    Income Report
+                                </p>
+                            </a>
+                        </li>
+                    {% endif %}
                 {% endif %}
+
                 <li class="nav-item">
                     <a href="{% url 'landing_page' %}" class="nav-link">
                         <i class="nav-icon fa fa-arrow-left"></i>
