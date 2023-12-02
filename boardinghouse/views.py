@@ -247,11 +247,11 @@ def rooms_detail(request, id):
             form.save()
             messages.success(request, 'Room has been updated successfully')
             print('Room has been updated successfully')
-            return redirect('rooms_detail', id=id)
+            return redirect('room_detail', id=id)
         else:
             messages.error(request, 'Error updating room')
             print('Error updating room', form.errors)
-            return redirect('rooms_detail', id=id)
+            return redirect('room_detail', id=id)
 
 
     return render(request, 'boardinghouse/rooms_detail.html',{

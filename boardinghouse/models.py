@@ -1,4 +1,9 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+from payments.models import Bills
+
 
 # Create your models here.
 
@@ -39,3 +44,21 @@ class Room(models.Model):
 
     def __str__(self):
         return self.name
+
+
+
+
+@receiver(post_save, sender=Room)
+def update_bills(sender, instance, created, **kwargs):
+    # check if room is in Bills
+    bills = Bills.objects.filter(room=instance)
+    if bills:
+        for bill in bills:
+            bill.rate = instance.price
+            bill.save()
+    else:
+        Bills.objects.create(
+            room=instance,
+            bills="Rent",
+            rate=instance.price
+        )
