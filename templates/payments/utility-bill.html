@@ -36,6 +36,20 @@
 
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get the select element
+            var selectElement = document.getElementById('id_bills');
+
+            // Find the option with value="Rent"
+            var optionToRemove = selectElement.querySelector('option[value="Rent"]');
+
+            // Remove the option if it exists
+            if (optionToRemove) {
+                optionToRemove.remove();
+            }
+        });
+    </script>
 {% endblock %}
 
 
@@ -75,11 +89,11 @@
                     <table id="example1" class="table table-bordered table-hover">
                         <thead class="btn-cancel">
                         <tr>
-                            <th  hidden>Room ID</th>
+                            <th hidden>Room ID</th>
                             <th>Room</th>
                             <th>Bills</th>
                             <th>Rate</th>
-                            <th  hidden>Utility ID</th>
+                            <th hidden>Utility ID</th>
                             <th>Actions</th>
 
                         </tr>
@@ -87,16 +101,17 @@
                         <tbody>
                         {% for bill in bills %}
                             <tr>
-                                <td  hidden>{{ bill.room.id }}</td>
+                                <td hidden>{{ bill.room.id }}</td>
                                 <td>{{ bill.room }}</td>
                                 <td>{{ bill.bills }}</td>
                                 <td>{{ bill.rate }}</td>
-                                <td  hidden>{{ bill.id }}</td>
+                                <td hidden>{{ bill.id }}</td>
 
                                 <td class="text-right">
                                     <button type="button" class="btn btn-sm btn-warning edit" data-bs-toggle="modal"
                                             data-bs-target="#editUtilityBills"><i class="fa fa-edit"></i></button>
-                                    <a class="btn btn-sm btn-danger delete" href="#" data-bs-toggle="modal" data-bs-target="#deleteUtilityBill"><i
+                                    <a class="btn btn-sm btn-danger delete" href="#" data-bs-toggle="modal"
+                                       data-bs-target="#deleteUtilityBill"><i
                                             class="fa fa-trash-alt"></i></a>
                                 </td>
                             </tr>
@@ -146,18 +161,20 @@
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-body">
-                        <input type="text" name="edit_id" class="form-control" maxlength="100" id="edit_id"  hidden>
+                        <input type="text" name="edit_id" class="form-control" maxlength="100" id="edit_id" hidden>
                         <label for="id_room">Room:</label>
                         <select name="edit_room" class="form-control" required="" id="edit_room">
                             <option value="" selected="">---------</option>
                             {% for room in rooms %}
-                            <option value="{{ room.id }}">{{ room.name }}</option>
+                                <option value="{{ room.id }}">{{ room.name }}</option>
                             {% endfor %}
                         </select>
                         <label for="id_bills">Bills:</label>
-                        <input type="text" name="edit_bills" class="form-control" maxlength="100" required="" id="edit_bills">
+                        <input type="text" name="edit_bills" class="form-control" maxlength="100" required=""
+                               id="edit_bills">
                         <label for="id_rate">Rate:</label>
-                        <input type="text" name="edit_rate" class="form-control" maxlength="100" required="" id="edit_rate">
+                        <input type="text" name="edit_rate" class="form-control" maxlength="100" required=""
+                               id="edit_rate">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

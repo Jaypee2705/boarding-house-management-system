@@ -216,10 +216,15 @@ def collectibles(request):
     collectibles_lists = []
 
     for tenant in tenants:
+        bills = Bills.objects.filter(room=tenant.room)
+        total_bills = 0
+        if bills:
+            for bill in bills:
+                total_bills += float(bill.rate)
 
         total_due = 0
         try:
-            total_due = float(tenant.previous_balance) + float(Bills.objects.get(room=tenant.room).rate)
+            total_due = float(tenant.previous_balance) + float(total_bills)
         except:
             pass
 
@@ -238,10 +243,14 @@ def collectibles(request):
         except Exception as e:
             print("error")
             print(e)
+
+
+
+
         collectibles_lists.append({
             'tenant': tenant.name.get_full_name(),
             'room': tenant.room.name,
-            'monthly_due': Bills.objects.get(room=tenant.room).rate,
+            'monthly_due': total_bills,
             'previous_balance': tenant.previous_balance,
             'total_due': total_due,
             'amount_paid': tenant.amount_paid,
