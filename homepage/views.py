@@ -73,6 +73,7 @@ def notice(request):
                 try:
                     notice = Notice.objects.get(id=request.POST.get("delete_id"))
                     notice.is_archived = True
+                    notice.is_viewed = True
                     notice.save()
                     messages.success(request, 'Notice Archived Successfully')
                     return redirect('notice')
@@ -105,6 +106,7 @@ def notice_archive(request):
             try:
                 notice = Notice.objects.get(id=request.POST.get("recover_id"))
                 notice.is_archived = False
+                notice.is_viewed = False
                 notice.save()
                 messages.success(request, 'Notice Recovered Successfully')
                 return redirect('notice_archive')
@@ -161,12 +163,12 @@ def notice_detail(request, id):
 def feedbacks(request):
 
     if request.user.is_superuser or request.user.is_staff:
-        feedbacks = Feedback.objects.all()
+        feedbacks = Feedback.objects.filter(is_archived=False)
         for feeds in feedbacks:
             feeds.is_viewed = True
             feeds.save()
     else:
-        feedbacks = Feedback.objects.filter(user=request.user)
+        feedbacks = Feedback.objects.filter(user=request.user, is_archived=False)
 
     if request.method == "POST":
         if "button" in request.POST:
@@ -186,11 +188,13 @@ def feedbacks(request):
             elif request.POST.get("button") == "delete":
                 try:
                     feedback = Feedback.objects.get(id=request.POST.get("delete_id"))
-                    feedback.delete()
-                    messages.success(request, 'Feedback Deleted Successfully')
+                    feedback.is_archived = True
+                    feedback.is_viewed = True
+                    feedback.save()
+                    messages.success(request, 'Feedback Archived Successfully')
                     return redirect('feedbacks')
                 except Exception as e:
-                    messages.error(request, 'Feedback Deletion Failed')
+                    messages.error(request, 'Feedback Archived Failed')
                     print(e)
                     return redirect('feedbacks')
             elif request.POST.get("button") == "edit":
@@ -215,6 +219,42 @@ def feedbacks(request):
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
 
+    })
+
+@user_passes_test(lambda u: u.is_authenticated)
+def feedbacks_archive(request):
+    feedbacks = Feedback.objects.filter(user=request.user, is_archived=True)
+
+    if request.method == "POST":
+        if request.POST.get("button") == "restore":
+            try:
+                feedback = Feedback.objects.get(id=request.POST.get("restore_id"))
+                feedback.is_archived = False
+                feedback.is_viewed = False
+                feedback.save()
+                messages.success(request, 'Feedback Restored Successfully')
+                return redirect('feedbacks_archive')
+            except Exception as e:
+                messages.error(request, 'Feedback Restoration Failed')
+                print(e)
+                return redirect('feedbacks_archive')
+        elif request.POST.get("button") == "delete":
+            try:
+                feedback = Feedback.objects.get(id=request.POST.get("delete_id"))
+                feedback.delete()
+                messages.success(request, 'Feedback Deleted Successfully')
+                return redirect('feedbacks_archive')
+            except Exception as e:
+                messages.error(request, 'Feedback Deletion Failed')
+                print(e)
+                return redirect('feedbacks_archive')
+
+
+
+    return render(request, 'dashboard/feedbacks_archive.html',{
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
+        'feedbacks': feedbacks,
     })
 
 @user_passes_test(lambda u: u.is_superuser)

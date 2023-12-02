@@ -20,5 +20,6 @@ urlpatterns = [
     path('notice/archive/', views.notice_archive, name='notice_archive'),
     path('notice/<int:id>/', views.notice_detail, name='notice_detail'),
     path('feedbacks/', views.feedbacks, name='feedbacks'),
+    path('feedbacks/archive/', views.feedbacks_archive, name='feedbacks_archive'),
 
 ]

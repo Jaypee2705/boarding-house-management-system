@@ -7,6 +7,7 @@ class Feedback(models.Model):
     feedback = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
     is_viewed = models.BooleanField(default=False)
+    is_archived = models.BooleanField(default=False)
 
 
     def __str__(self):
