@@ -17,6 +17,7 @@ urlpatterns = [
     path('users/', views.users, name='users'),
     path('users/<int:id>/', views.user_detail, name='user_detail'),
     path('notice/', views.notice, name='notice'),
+    path('notice/archive/', views.notice_archive, name='notice_archive'),
     path('notice/<int:id>/', views.notice_detail, name='notice_detail'),
     path('feedbacks/', views.feedbacks, name='feedbacks'),
 

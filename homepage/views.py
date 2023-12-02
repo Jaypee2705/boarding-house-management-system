@@ -47,11 +47,11 @@ def dashboard(request):
 def notice(request):
 
     if request.user.is_superuser or request.user.is_staff:
-        notices = Notice.objects.filter(boardinghouse__owner=request.user)
+        notices = Notice.objects.filter(boardinghouse__owner=request.user, is_archived=False)
     else:
         user = User.objects.get(id=request.user.id)
         tenant_instance = Tenant.objects.get(name__id=user.id)
-        notices = Notice.objects.filter(boardinghouse = tenant_instance.room.boardinghouse)
+        notices = Notice.objects.filter(boardinghouse = tenant_instance.room.boardinghouse, is_archived=False)
         for noti in notices:
             noti.is_viewed = True
             noti.save()
@@ -72,11 +72,12 @@ def notice(request):
             elif request.POST.get("button") == "delete_notice":
                 try:
                     notice = Notice.objects.get(id=request.POST.get("delete_id"))
-                    notice.delete()
-                    messages.success(request, 'Notice Deleted Successfully')
+                    notice.is_archived = True
+                    notice.save()
+                    messages.success(request, 'Notice Archived Successfully')
                     return redirect('notice')
                 except Exception as e:
-                    messages.error(request, 'Notice Deletion Failed')
+                    messages.error(request, 'Notice Archived Failed')
                     print(e)
                     return redirect('notice')
     else:
@@ -90,6 +91,46 @@ def notice(request):
 
     })
 
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+def notice_archive(request):
+    if request.user.is_superuser or request.user.is_staff:
+        notices = Notice.objects.filter(boardinghouse__owner=request.user, is_archived=True)
+    else:
+        user = User.objects.get(id=request.user.id)
+        tenant_instance = Tenant.objects.get(name__id=user.id)
+        notices = Notice.objects.filter(boardinghouse=tenant_instance.room.boardinghouse, is_archived=True)
+
+    if request.method == "POST":
+        if request.POST.get("button") == "recover":
+            try:
+                notice = Notice.objects.get(id=request.POST.get("recover_id"))
+                notice.is_archived = False
+                notice.save()
+                messages.success(request, 'Notice Recovered Successfully')
+                return redirect('notice_archive')
+            except Exception as e:
+                messages.error(request, 'Notice Recovery Failed')
+                print(e)
+                return redirect('notice_archive')
+        elif request.POST.get("button") == "delete":
+            try:
+                notice = Notice.objects.get(id=request.POST.get("delete_id"))
+                notice.delete()
+                messages.success(request, 'Notice Deleted Successfully')
+                return redirect('notice_archive')
+            except Exception as e:
+                messages.error(request, 'Notice Deletion Failed')
+                print(e)
+                return redirect('notice_archive')
+
+
+
+    return render(request, 'dashboard/notice_archive.html',{
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
+        'notices': notices,
+
+    })
 
 
 @user_passes_test(lambda u: u.is_authenticated)
