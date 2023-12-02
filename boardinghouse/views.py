@@ -149,7 +149,7 @@ def boardinghouse_detail(request, id):
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def rooms(request):
-    rooms = Room.objects.filter(owner=request.user)
+    rooms = Room.objects.filter(owner=request.user, is_archive=False)
 
     if request.method == "POST":
         forms = RoomForm(request.POST, request.FILES)
@@ -170,7 +170,12 @@ def rooms(request):
                 try:
                     id = request.POST.get('delete_id')
                     room = get_object_or_404(Room, id=id, owner=request.user)
-                    room.delete()
+                    room.is_archive = True
+                    room.save()
+                    tenants = Tenant.objects.filter(room=room)
+                    for t in tenants:
+                        t.is_archive = True
+                        t.save()
                     messages.success(request, 'Room has been deleted successfully')
                     print('Room has been deleted successfully')
                     return redirect('rooms')
@@ -188,6 +193,47 @@ def rooms(request):
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
 
+    })
+
+def rooms_archive(request):
+    rooms = Room.objects.filter(owner=request.user, is_archive=True)
+
+    if request.method == "POST":
+        if request.POST.get("button") == "restore":
+            try:
+                id = request.POST.get('restore_id')
+                room = get_object_or_404(Room, id=id, owner=request.user)
+                room.is_archive = False
+                room.save()
+                # get all tenants of room
+                tenants = Tenant.objects.filter(room=room)
+                for t in tenants:
+                    t.is_archive = False
+                    t.save()
+                messages.success(request, 'Room has been restored successfully')
+                print('Room has been restored successfully')
+                return redirect('rooms_archive')
+            except Exception as e:
+                messages.error(request, 'Error restoring room')
+                print('Error restoring room', e)
+                return redirect('rooms_archive')
+        elif request.POST.get("button") == "delete":
+            try:
+                id = request.POST.get('delete_id')
+                room = get_object_or_404(Room, id=id, owner=request.user)
+                room.delete()
+                messages.success(request, 'Room has been deleted successfully')
+                print('Room has been deleted successfully')
+                return redirect('rooms_archive')
+            except Exception as e:
+                messages.error(request, 'Error deleting room')
+                print('Error deleting room', e)
+                return redirect('rooms_archive')
+
+    return render(request, 'boardinghouse/rooms_archive.html',{
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
+        'rooms': rooms,
     })
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)

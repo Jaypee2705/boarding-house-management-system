@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% block page-title %}
-    Rooms
+    Rooms Archive
 {% endblock %}
 
 {% block style %}
@@ -19,19 +19,11 @@
             var id = $(this).closest('tr').find('td:nth-child(1)').text();
             $('#delete_id').val(id);
         });
+        $(document).on('click', '.restore', function () {
+            var id = $(this).closest('tr').find('td:nth-child(1)').text();
+            $('#restore_id').val(id);
+        });
     </script>
-{% endblock %}
-
-
-{% block modal %}
-    <div class="col-sm-6">
-        <div class="float-sm-right">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#exampleModal">
-                Add Rooms
-            </button>
-        </div>
-    </div>
 {% endblock %}
 
 
@@ -48,6 +40,7 @@
 
                 {% endfor %}
             {% endif %}
+
 
 
             <div class="card card-info elevation-2">
@@ -81,8 +74,10 @@
                                 <td><img src="{{ room.image.url }}" height="60" style="border: 2px solid gray">
                                 </td>
                                 <td class="text-right">
-                                    <a class="btn btn-sm btn-success" href="{% url 'room_detail' room.id %}"><i
-                                            class="fa fa-eye"></i></a>
+                                    <button type="button" class="btn btn-sm btn-success restore"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#restore"><i
+                                                class="fa fa-recycle"></i></button>
                                     <a class="btn btn-sm btn-danger delete" href="#" data-bs-toggle="modal"
                                        data-bs-target="#delete"><i
                                             class="fa fa-trash-alt"></i></a>
@@ -94,7 +89,7 @@
                         </tbody>
                     </table>
                     <div class="text-right pb-3">
-                        <a href="{% url 'rooms_archive' %}">View Archived Rooms</a>
+                        <a href="{% url 'rooms' %}">Back to Rooms</a>
                     </div>
                 </div>
             </div>
@@ -175,7 +170,30 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" name="button" value="delete_room">Save changes
+                        <button type="submit" class="btn btn-primary" name="button" value="delete">Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="restore" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Restore Room</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <p>Are you sure you want to restore this room?</p>
+                        <input type="text" name="restore_id" id="restore_id" hidden>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" name="button" value="restore">Save changes
                         </button>
                     </div>
                 </form>
