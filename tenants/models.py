@@ -12,6 +12,8 @@ class Tenant(models.Model):
     current_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     previous_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    address = models.CharField(max_length=100, null=True, blank=True)
+    contact_number = models.CharField(max_length=20, null=True, blank=True)
     is_archive = models.BooleanField(default=False)
 
     def __str__(self):

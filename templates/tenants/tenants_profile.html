@@ -60,6 +60,8 @@
                             <th hidden>ID</th>
                             <th>Tenant Name</th>
                             <th>Email</th>
+                            <th>Contact Number</th>
+                            <th>Address</th>
                             {% if request.user.is_superuser %}
                                 <th>Owner</th>
                             {% endif %}
@@ -75,6 +77,8 @@
                                 <td hidden>{{ tenant.id }}</td>
                                 <td>{{ tenant.name.get_full_name }}</td>
                                 <td>{{ tenant.name.email }}</td>
+                                <td>{{ tenant.contact_number }}</td>
+                                <td>{{ tenant.address }}</td>
                                 {% if request.user.is_superuser %}
                                     <td>{{ tenant.owner }}</td>
                                 {% endif %}
@@ -125,6 +129,11 @@
                                         <option value="{{ user.id }}">{{ user.get_full_name }}</option>
                                     {% endfor %}
                                 </select>
+                                <label for="">Contact Number: </label>
+                                <input type="text" name="number" id="id_number" required class="form-control">
+                                <label for="">Address: </label>
+                                <input type="text" name="address" id="id_address" required class="form-control">
+
                             </div>
                         </div>
                     </div>

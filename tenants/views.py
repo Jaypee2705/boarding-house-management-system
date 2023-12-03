@@ -24,6 +24,8 @@ def tenants_profile(request):
                 # create tenant object
                 tenant = Tenant(name=user_instance)
                 tenant.owner = request.user
+                tenant.address = request.POST.get('address')
+                tenant.contact_number = request.POST.get('number')
                 tenant.save()
                 messages.success(request, 'Tenant added successfully!')
                 return redirect('tenants_profile')
