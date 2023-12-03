@@ -148,13 +148,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Archive Notice</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Notice</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-body">
-                        <p>Are you sure you want to archive this notice?</p>
+                        <p>Are you sure you want to delete this notice?</p>
 
                         <input type="text" name="delete_id" id="delete_id" hidden>
                     </div>
