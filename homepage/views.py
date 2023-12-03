@@ -18,20 +18,22 @@ def homepage(request):
     if request.user.is_superuser:
         return redirect('dashboard')
     elif request.user.is_staff:
-        return redirect('dashboard')
+        return redirect('dashboard_owner')
     elif request.user.is_active:
-        return redirect('dashboard')
+        return redirect('dashboard_tenant')
 
 @user_passes_test(lambda u: u.is_authenticated )
 def dashboard(request):
-    tenants = Tenant.objects.all()
-    tenants_count = tenants.count()
-    boardinghouses = BoardingHouse.objects.all()
-    boardinghouses_count = boardinghouses.count()
-    rooms = Room.objects.all()
-    rooms_count = rooms.count()
-    owner = User.objects.filter(is_superuser=False, is_staff=True).count()
-
+    if request.user.is_superuser:
+        tenants = Tenant.objects.all()
+        tenants_count = tenants.count()
+        boardinghouses = BoardingHouse.objects.all()
+        boardinghouses_count = boardinghouses.count()
+        rooms = Room.objects.all()
+        rooms_count = rooms.count()
+        owner = User.objects.filter(is_superuser=False, is_staff=True).count()
+    else:
+        return redirect('homepage')
 
 
     return render(request, 'dashboard/dashboard.html',{
@@ -41,6 +43,119 @@ def dashboard(request):
         'owner': owner,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
+
+    })
+
+@user_passes_test(lambda u: u.is_authenticated)
+def dashboard_owner(request):
+    # get all Payments in Payment
+    if request.user.is_staff:
+        income = 0
+        payments = Payments.objects.filter(room__boardinghouse__owner=request.user)
+        for payment in payments:
+            income = float(income) + float(payment.amount)
+        # get all tenants in Tenant
+        tenants = Tenant.objects.filter(room__boardinghouse__owner=request.user).count()
+        # get all rooms in Room
+        rooms = Room.objects.filter(boardinghouse__owner=request.user).count()
+        # get all boardinghouses in BoardingHouse
+        boardinghouses = BoardingHouse.objects.filter(owner=request.user).count()
+
+
+        """
+            [
+                {
+                    "month: "January",
+                    "income": 10000
+                },
+                {
+                    "month: "February",
+                    "income": 10000
+                },
+                {
+                    "month: "March",
+                    "income": 10000
+                },
+                {
+                    "month: "April",
+                    "income": 10000
+                },
+                {
+                    "month: "May",
+                    "income": 10000
+                },
+                {
+                    "month: "June",
+                    "income": 10000
+                },
+                {
+                    "month: "July",
+                    "income": 10000
+                },
+                {
+                    "month: "August",
+                    "income": 10000
+                },
+                {
+                    "month: "September",
+                    "income": 10000
+                },
+                {
+                    "month: "October",
+                    "income": 10000
+                },
+                {
+                    "month: "November",
+                    "income": 10000
+                },
+                {
+                    "month: "December",
+                    "income": 10000
+                },
+            ]
+        """
+        # get all payments in Payments
+        payments = Payments.objects.filter(room__boardinghouse__owner=request.user)
+
+        monthly_income = []
+        for i in range(1,13):
+            monthly_income.append({
+                "month": datetime(2021, i, 1).strftime("%B"),
+                "income": 0,
+            })
+        for payment in payments:
+            monthly_income[payment.date.month-1]["income"] += float(payment.amount)
+
+        print(monthly_income)
+
+
+    else:
+        return redirect('homepage')
+
+
+    return render(request, 'dashboard/dashboard.html',{
+        'income': income,
+        'tenants': tenants,
+        'rooms': rooms,
+        'boardinghouses': boardinghouses,
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
+        'monthly_income': monthly_income,
+
+    })
+
+@user_passes_test(lambda u: u.is_authenticated)
+def dashboard_tenant(request):
+    if not request.user.is_superuser and not request.user.is_staff:
+        tenant = Tenant.objects.get(name__id=request.user.id)
+        room = Room.objects.get(tenant=tenant)
+    else:
+        return redirect('homepage')
+    return render(request, 'dashboard/dashboard.html',{
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
+        'tenant': tenant,
+        'room': room,
 
     })
 

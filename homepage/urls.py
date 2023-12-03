@@ -14,6 +14,8 @@ urlpatterns = [
 
     path('homepage/', views.homepage, name='homepage'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('dashboard/owner/', views.dashboard_owner, name='dashboard_owner'),
+    path('dashboard/tenant/', views.dashboard_tenant, name='dashboard_tenant'),
     path('users/', views.users, name='users'),
     path('users/archive/', views.users_archive, name='users_archive'),
     path('notice/', views.notice, name='notice'),

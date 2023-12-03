@@ -1,7 +1,14 @@
 {% extends 'base/base.html' %}
 
 {% block page-title %}
-    Dashboard
+    {% if request.user.is_superuser or request.user.is_staff %}
+
+        Dashboard
+
+    {% else %}
+        Tenant Information
+
+    {% endif %}
 {% endblock %}
 
 {% block style %}
@@ -13,81 +20,252 @@
         // add active class to nav-dashboard
         document.getElementById("nav-dashboard").className += " active";
     </script>
+    <script>
+        const xValues = [{% for month in monthly_income %} '{{ month.month }}', {% endfor %}];
+        const yValues = [{% for month in monthly_income %} {{ month.income }}, {% endfor %}];
+
+        new Chart("myChart", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    fill: false,
+                    lineTension: 0,
+                    backgroundColor: "rgba(0,0,255,1.0)",
+                    borderColor: "rgba(0,0,255,0.1)",
+                    data: yValues
+                }]
+            },
+            options: {
+                legend: {display: false},
+                scales: {
+                    yAxes: [{ticks: {min: 0}}],
+                }
+            }
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
     {% if request.user.is_superuser %}
-    <section class="content">
-        <div class="container-fluid">
-            <!-- Small boxes (Stat box) -->
-            <div class="row">
-                <div class="col-lg-3 col-12">
-                    <!-- small box -->
-                    <div class="small-box bg-info">
-                        <div class="inner">
-                            <h3>{{ tenants_count }}</h3>
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Small boxes (Stat box) -->
+                <div class="row">
+                    <div class="col-lg-3 col-12">
+                        <!-- small box -->
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3>{{ tenants_count }}</h3>
 
-                            <p>Number of Tenants</p>
+                                <p>Number of Tenants</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-bag"></i>
+                            </div>
+                            <a href="{% url 'tenants_profile' %}" class="small-box-footer">More info <i
+                                    class="fas fa-arrow-circle-right"></i></a>
                         </div>
-                        <div class="icon">
-                            <i class="ion ion-bag"></i>
-                        </div>
-                        <a href="{% url 'tenants_profile' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
-                </div>
-                <div class="col-lg-3 col-12">
-                    <!-- small box -->
-                    <div class="small-box bg-secondary">
-                        <div class="inner">
-                            <h3>{{ owner }}</h3>
+                    <div class="col-lg-3 col-12">
+                        <!-- small box -->
+                        <div class="small-box bg-secondary">
+                            <div class="inner">
+                                <h3>{{ owner }}</h3>
 
-                            <p>Number of Owners</p>
+                                <p>Number of Owners</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-bag"></i>
+                            </div>
+                            <a href="{% url 'users' %}" class="small-box-footer">More info <i
+                                    class="fas fa-arrow-circle-right"></i></a>
                         </div>
-                        <div class="icon">
-                            <i class="ion ion-bag"></i>
-                        </div>
-                        <a href="{% url 'users' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
-                </div>
-                <!-- ./col -->
-                <div class="col-lg-3 col-12">
-                    <!-- small box -->
-                    <div class="small-box bg-success">
-                        <div class="inner">
-                            <h3>{{ boardinghouses_count }}<sup style="font-size: 20px"></sup></h3>
+                    <!-- ./col -->
+                    <div class="col-lg-3 col-12">
+                        <!-- small box -->
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3>{{ boardinghouses_count }}<sup style="font-size: 20px"></sup></h3>
 
-                            <p>Number of Boarding Houses</p>
+                                <p>Number of Boarding Houses</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-stats-bars"></i>
+                            </div>
+                            <a href="{% url 'boardinghouse' %}" class="small-box-footer">More info <i
+                                    class="fas fa-arrow-circle-right"></i></a>
                         </div>
-                        <div class="icon">
-                            <i class="ion ion-stats-bars"></i>
-                        </div>
-                        <a href="{% url 'boardinghouse' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
-                </div>
-                <!-- ./col -->
-                <div class="col-lg-3 col-12">
-                    <!-- small box -->
-                    <div class="small-box bg-warning">
-                        <div class="inner">
-                            <h3>{{ rooms_count }}</h3>
+                    <!-- ./col -->
+                    <div class="col-lg-3 col-12">
+                        <!-- small box -->
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3>{{ rooms_count }}</h3>
 
-                            <p>Number of Rooms</p>
+                                <p>Number of Rooms</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-person-add"></i>
+                            </div>
+                            <a href="{% url 'rooms' %}" class="small-box-footer">More info <i
+                                    class="fas fa-arrow-circle-right"></i></a>
                         </div>
-                        <div class="icon">
-                            <i class="ion ion-person-add"></i>
-                        </div>
-                        <a href="{% url 'rooms' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
+                    <!-- ./col -->
                 </div>
-                <!-- ./col -->
-            </div>
 
-        </div><!-- /.container-fluid -->
-    </section>
+            </div><!-- /.container-fluid -->
+        </section>
 
     {% elif request.user.is_staff %}
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Small boxes (Stat box) -->
+                <div class="row">
+                    <div class="col-lg-3 col-12">
+                        <!-- small box -->
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3>{{ income | floatformat:2 }}</h3>
+
+                                <p>Total Income</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-bag"></i>
+                            </div>
+                            <a href="{% url 'income' %}" class="small-box-footer">More info <i
+                                    class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-12">
+                        <!-- small box -->
+                        <div class="small-box bg-secondary">
+                            <div class="inner">
+                                <h3>{{ tenants }}</h3>
+
+                                <p>Number of Tenants</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-bag"></i>
+                            </div>
+                            <a href="{% url 'tenants_profile' %}" class="small-box-footer">More info <i
+                                    class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                    <div class="col-lg-3 col-12">
+                        <!-- small box -->
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3>{{ boardinghouses }}<sup style="font-size: 20px"></sup></h3>
+
+                                <p>Number of Boarding Houses</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-stats-bars"></i>
+                            </div>
+                            <a href="{% url 'boardinghouse' %}" class="small-box-footer">More info <i
+                                    class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                    <div class="col-lg-3 col-12">
+                        <!-- small box -->
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3>{{ rooms }}</h3>
+
+                                <p>Number of Rooms</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-person-add"></i>
+                            </div>
+                            <a href="{% url 'rooms' %}" class="small-box-footer">More info <i
+                                    class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <canvas id="myChart" style="width:100%"></canvas>
+                        </div>
+                    </div>
 
 
+                </div>
+
+
+            </div><!-- /.container-fluid -->
+        </section>
+    {% else %}
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Small boxes (Stat box) -->
+                <div class="row">
+                    <div class="col-lg-3 col-12">
+                        <!-- small box -->
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3>{{ room.boardinghouse.name }}</h3>
+
+                                <p>Boarding House Name</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-bag"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-12">
+                        <!-- small box -->
+                        <div class="small-box bg-secondary">
+                            <div class="inner">
+                                <h3>{{ room.name }}</h3>
+
+                                <p>Room Assignment</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-bag"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                    <div class="col-lg-3 col-12">
+                        <!-- small box -->
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3>{{ tenant.date_start }}<sup style="font-size: 20px"></sup></h3>
+
+                                <p>Date Started</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-stats-bars"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                    <div class="col-lg-3 col-12">
+                        <!-- small box -->
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3>{{ tenant.add_month }}</h3>
+
+                                <p>Due Date</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-person-add"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                </div>
+
+            </div><!-- /.container-fluid -->
+        </section>
     {% endif %}
 
 {% endblock %}
