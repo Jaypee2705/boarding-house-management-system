@@ -137,6 +137,13 @@
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-body">
+                        <label for="id_room" class="form-label">Room</label>
+                        <select name="room" class="form-control" required="" id="id_room">
+                            <option value="" selected="">---------</option>
+                            {% for room in form_room %}
+                                <option value="{{ room.id }}">{{ room.name }}</option>
+                            {% endfor %}
+                        </select>
                         {{ form }}
 
                     </div>
@@ -165,13 +172,23 @@
                         <label for="id_room">Room:</label>
                         <select name="edit_room" class="form-control" required="" id="edit_room">
                             <option value="" selected="">---------</option>
-                            {% for room in rooms %}
+                            {% for room in form_room %}
                                 <option value="{{ room.id }}">{{ room.name }}</option>
                             {% endfor %}
                         </select>
                         <label for="id_bills">Bills:</label>
-                        <input type="text" name="edit_bills" class="form-control" maxlength="100" required=""
-                               id="edit_bills">
+                        <select name="bills" class="form-control" maxlength="100" id="id_bills">
+                            <option value="Electricity">Electricity</option>
+
+                            <option value="Water">Water</option>
+
+                            <option value="Internet">Internet</option>
+
+                            <option value="Cable">Cables</option>
+
+                            <option value="Others">Others</option>
+
+                        </select>
                         <label for="id_rate">Rate:</label>
                         <input type="text" name="edit_rate" class="form-control" maxlength="100" required=""
                                id="edit_rate">

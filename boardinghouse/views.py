@@ -156,7 +156,7 @@ def rooms(request):
         rooms = Room.objects.filter(is_archive=False)
     else:
         rooms = Room.objects.filter(owner=request.user, is_archive=False)
-
+    bhouses = BoardingHouse.objects.filter(owner=request.user, is_archive=False)
     if request.method == "POST":
         forms = RoomForm(request.POST, request.FILES)
         if "button" in request.POST:
@@ -164,6 +164,7 @@ def rooms(request):
                 if forms.is_valid():
                     room = forms.save(commit=False)
                     room.owner = request.user
+                    room.boardinghouse = BoardingHouse.objects.get(id=request.POST.get('boardinghouse'))
                     room.save()
                     messages.success(request, 'Room has been added successfully')
                     print('Room has been added successfully')
@@ -198,6 +199,7 @@ def rooms(request):
         'form': forms,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
+        'bhouses': bhouses,
 
     })
 
@@ -247,11 +249,13 @@ def rooms_archive(request):
 def rooms_detail(request, id):
     room = get_object_or_404(Room, id=id)
     form = RoomForm(instance=room)
-
+    bhouses = BoardingHouse.objects.filter(owner=request.user, is_archive=False)
     if request.method == "POST":
         form = RoomForm(request.POST, request.FILES, instance=room)
         if form.is_valid():
-            form.save()
+            instance = form.save(commit=False)
+            instance.boardinghouse = BoardingHouse.objects.get(id=request.POST.get('boardinghouse'))
+            instance.save()
             messages.success(request, 'Room has been updated successfully')
             print('Room has been updated successfully')
             return redirect('room_detail', id=id)
@@ -266,6 +270,7 @@ def rooms_detail(request, id):
         'form': form,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
+        'bhouses': bhouses,
 
     })
 

@@ -38,7 +38,7 @@
                         <i class="nav-icon fa fa-bell"></i>
                         <p>
                             Notice Board
-                            {% if not request.user.is_superuser and notice != 0 %}
+                            {% if not request.user.is_superuser and not request.user.is_staff and notice != 0 %}
                                 <span class="badge badge-danger">{{ notice }}</span>
                             {% endif %}
                         </p>

@@ -18,11 +18,15 @@ def utility_bill(request):
     rooms = Room.objects.filter(owner=request.user)
     bills = Bills.objects.filter(room__owner=request.user)
 
+    form_room = Room.objects.filter(owner=request.user, is_archive=False)
+
     if request.method == "POST":
         if "button" in request.POST:
             if request.POST.get("button") == "add_utility":
                 form = BillsForm(request.POST)
                 if form.is_valid():
+                    form = form.save(commit=False)
+                    form.room = Room.objects.get(id=request.POST.get('room'))
                     form.save()
                     messages.success(request, 'Utility bill added successfully')
                     return redirect('utility-bill')
@@ -61,6 +65,8 @@ def utility_bill(request):
         'form': form,
         'bills': bills,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
+        'form_room': form_room,
 
     })
 
@@ -72,12 +78,19 @@ def payments(request):
     else:
         tenant = Tenant.objects.get(name__id=request.user.id)
         payments = Payments.objects.filter(tenant=tenant)
+
+    form_tenant = Tenant.objects.filter(owner=request.user, is_archive=False)
+    form_room = Room.objects.filter(owner=request.user, is_archive=False)
+
     if request.method == "POST":
         if "button" in request.POST:
             if request.POST.get("button") == 'add_payment':
 
                 form = PaymentsForm(request.POST)
                 if form.is_valid():
+                    form = form.save(commit=False)
+                    form.room = Room.objects.get(id=request.POST.get('room'))
+                    form.tenant = Tenant.objects.get(id=request.POST.get('tenant'))
                     form.save()
                     messages.success(request, 'Payment added successfully')
                     return redirect('payments')
@@ -102,6 +115,8 @@ def payments(request):
         'form': form,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
+        'form_tenant': form_tenant,
+        'form_room': form_room,
 
     })
 

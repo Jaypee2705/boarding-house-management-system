@@ -26,14 +26,14 @@
 {% block modal %}
     {% if not request.user.is_superuser %}
 
-    <div class="col-sm-6">
-        <div class="float-sm-right">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#exampleModal">
-                Add Rooms
-            </button>
+        <div class="col-sm-6">
+            <div class="float-sm-right">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">
+                    Add Rooms
+                </button>
+            </div>
         </div>
-    </div>
     {% endif %}
 {% endblock %}
 
@@ -129,7 +129,15 @@
                         <div class="row">
                             <div class="col-12">
                                 <label for="id_name">Boarding House: </label>
-                                {{ form.boardinghouse }}
+                                <select name="boardinghouse" class="form-control" required="" id="id_boardinghouse">
+                                    <option value="" selected="">---------</option>
+                                    {% for bhouse in bhouses %}
+
+                                        <option value="{{ bhouse.id }}">{{ bhouse.name }}</option>
+
+                                    {% endfor %}
+
+                                </select>
                             </div>
 
                             <div class="col-6">

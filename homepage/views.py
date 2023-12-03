@@ -50,6 +50,7 @@ def notice(request):
         notices = Notice.objects.filter(is_archived=False)
     elif request.user.is_staff:
         notices = Notice.objects.filter(boardinghouse__owner=request.user, is_archived=False)
+
     else:
         user = User.objects.get(id=request.user.id)
         tenant_instance = Tenant.objects.get(name__id=user.id)
@@ -57,6 +58,7 @@ def notice(request):
         for noti in notices:
             noti.is_viewed = True
             noti.save()
+    bhouses = BoardingHouse.objects.filter(owner=request.user, is_archive=False)
 
     if request.method == "POST":
         form = NoticeForms(request.POST)
@@ -65,6 +67,7 @@ def notice(request):
 
                 if form.is_valid():
                     notice = form.save(commit=False)
+                    notice.boardinghouse = BoardingHouse.objects.get(id=request.POST.get("boardinghouse"))
                     notice.save()
                     messages.success(request, 'Notice Submitted Successfully')
                     return redirect('notice')
@@ -91,6 +94,7 @@ def notice(request):
         'form': form,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
+        'bhouses': bhouses,
 
     })
 

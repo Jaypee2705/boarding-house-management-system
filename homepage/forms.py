@@ -15,11 +15,10 @@ class FeedbackForms(forms.ModelForm):
 class NoticeForms(forms.ModelForm):
     class Meta:
         model = Notice
-        fields = ('title', 'notice', 'boardinghouse')
+        fields = ('title', 'notice')
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'notice': forms.Textarea(attrs={'class': 'form-control'}),
-            'boardinghouse': forms.Select(attrs={'class': 'form-control'}),
         }
 
 
