@@ -88,8 +88,10 @@
                             </div>
                         </div>
                         <div class="text-center align-content-center">
+                            {% if not request.user.is_superuser %}
                             <button type="submit" class="btn btn-primary" name="button" value="add_bhouse">Save changes
                             </button>
+                            {% endif %}
                             <a class="btn btn-secondary" href="{% url 'rooms' %}" > Back to Rooms
                             </a>
                         </div>
