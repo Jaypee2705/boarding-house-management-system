@@ -205,27 +205,29 @@ def income(request):
 def collectibles(request):
     #########################
     tenants = Tenant.objects.filter(owner=request.user)
+    print("tenants", tenants)
     for tenant in tenants:
-        if tenant.add_month < datetime.now().date():
-            print("add month is less than now")
-            print("late")
-            tenant.previous_balance += tenant.current_balance
-            tenant.current_balance = 0
-            tenant.add_month = tenant.add_month + timedelta(days=30)
+        if tenant.add_month is not None:
+            if tenant.add_month < datetime.now().date():
+                print("add month is less than now")
+                print("late")
+                tenant.previous_balance += tenant.current_balance
+                tenant.current_balance = 0
+                tenant.add_month = tenant.add_month + timedelta(days=30)
 
-            tenant.save()
-        else:
-            print("add month is greater than now")
-            print("not late")
-            # get all payments
-            payments = Payments.objects.filter(tenant=tenant)
-            print(payments)
-            total = 0
-            print(total)
-            for payment in payments:
-                total += float(payment.amount)
-            tenant.amount_paid = total
-            tenant.save()
+                tenant.save()
+            else:
+                print("add month is greater than now")
+                print("not late")
+                # get all payments
+                payments = Payments.objects.filter(tenant=tenant)
+                print(payments)
+                total = 0
+                print(total)
+                for payment in payments:
+                    total += float(payment.amount)
+                tenant.amount_paid = total
+                tenant.save()
 
 
     #########################

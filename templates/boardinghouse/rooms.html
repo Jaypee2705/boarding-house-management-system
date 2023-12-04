@@ -88,7 +88,7 @@
                                 <td><img src="{{ room.image.url }}" height="60" style="border: 2px solid gray">
                                 </td>
                                 {% if request.user.is_superuser %}
-                                    <td>{{ room.boardinghouse.owner }}</td>
+                                    <td>{{ room.boardinghouse.owner.get_full_name }}</td>
                                 {% endif %}
                                 <td class="text-right">
                                     <a class="btn btn-sm btn-success" href="{% url 'room_detail' room.id %}"><i

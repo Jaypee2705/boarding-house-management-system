@@ -80,7 +80,7 @@
                                 <td>{{ tenant.contact_number }}</td>
                                 <td>{{ tenant.address }}</td>
                                 {% if request.user.is_superuser %}
-                                    <td>{{ tenant.owner }}</td>
+                                    <td>{{ tenant.owner.get_full_name }}</td>
                                 {% endif %}
                                 <td class="text-right">
                                     <button type="button" class="btn btn-sm btn-danger delete"

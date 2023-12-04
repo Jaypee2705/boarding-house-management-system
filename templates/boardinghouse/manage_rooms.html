@@ -103,7 +103,7 @@
                                 <td>{{ tenant.room }}</td>
                                 <td>{{ tenant.date_start }}</td>
                                 {% if request.user.is_superuser %}
-                                	<td>{{ tenant.room.boardinghouse.owner }}</td>
+                                	<td>{{ tenant.room.boardinghouse.owner.get_full_name }}</td>
                                 {% endif %}
 
                                 <td class="text-right">
