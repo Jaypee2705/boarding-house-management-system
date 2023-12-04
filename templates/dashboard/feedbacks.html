@@ -115,7 +115,7 @@
                     </table>
 
                     <br>
-                    {% if not request.user.is_superuser %}
+                    {% if request.user.is_superuser %}
                         <div class="text-right pb-3">
                             <a href="{% url 'feedbacks_archive' %}">View Archived Feedbacks</a>
                         </div>
