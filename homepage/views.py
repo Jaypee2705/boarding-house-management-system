@@ -147,8 +147,12 @@ def dashboard_owner(request):
 @user_passes_test(lambda u: u.is_authenticated)
 def dashboard_tenant(request):
     if not request.user.is_superuser and not request.user.is_staff:
-        tenant = Tenant.objects.get(name__id=request.user.id)
-        room = Room.objects.get(tenant=tenant)
+        try:
+            tenant = Tenant.objects.get(name__id=request.user.id)
+            room = Room.objects.get(tenant=tenant)
+        except Exception as e:
+            tenant = None
+            room = None
     else:
         return redirect('homepage')
     return render(request, 'dashboard/dashboard.html',{
@@ -168,11 +172,14 @@ def notice(request):
 
     else:
         user = User.objects.get(id=request.user.id)
-        tenant_instance = Tenant.objects.get(name__id=user.id)
-        notices = Notice.objects.filter(boardinghouse = tenant_instance.room.boardinghouse, is_archived=False)
-        for noti in notices:
-            noti.is_viewed = True
-            noti.save()
+        try:
+            tenant_instance = Tenant.objects.get(name__id=user.id)
+            notices = Notice.objects.filter(boardinghouse = tenant_instance.room.boardinghouse, is_archived=False)
+            for noti in notices:
+                noti.is_viewed = True
+                noti.save()
+        except Exception as e:
+            notices = None
     bhouses = BoardingHouse.objects.filter(owner=request.user, is_archive=False)
 
     if request.method == "POST":
@@ -391,10 +398,10 @@ def users(request):
                     if role == "admin":
                         user.is_superuser = True
                         user.is_staff = True
-                    elif role == "manager":
+                    elif role == "owner":
                         user.is_superuser = False
                         user.is_staff = True
-                    else:
+                    elif role == "tenant":
                         user.is_superuser = False
                         user.is_staff = False
                     user.save()
@@ -429,7 +436,7 @@ def users(request):
                     elif role == "owner":
                         user.is_superuser = False
                         user.is_staff = True
-                    else:
+                    elif role == "tenant":
                         user.is_superuser = False
                         user.is_staff = False
 

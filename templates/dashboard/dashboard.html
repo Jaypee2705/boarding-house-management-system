@@ -211,7 +211,11 @@
                         <!-- small box -->
                         <div class="small-box bg-info">
                             <div class="inner">
+                                {% if room != None %}
                                 <h3>{{ room.boardinghouse.name }}</h3>
+                                {% else %}
+                                <h3>N/A</h3>
+                                {% endif %}
 
                                 <p>Boarding House Name</p>
                             </div>
@@ -224,7 +228,12 @@
                         <!-- small box -->
                         <div class="small-box bg-secondary">
                             <div class="inner">
+                                {% if room != None %}
                                 <h3>{{ room.name }}</h3>
+                                    {% else %}
+                                <h3>N/A</h3>
+                                {% endif %}
+
 
                                 <p>Room Assignment</p>
                             </div>
@@ -238,7 +247,11 @@
                         <!-- small box -->
                         <div class="small-box bg-success">
                             <div class="inner">
+                                {% if tenant != None %}
                                 <h3>{{ tenant.date_start }}<sup style="font-size: 20px"></sup></h3>
+                                {% else %}
+                                <h3>N/A</h3>
+                                {% endif %}
 
                                 <p>Date Started</p>
                             </div>
@@ -252,7 +265,11 @@
                         <!-- small box -->
                         <div class="small-box bg-warning">
                             <div class="inner">
+                                {% if tenant != None %}
                                 <h3>{{ tenant.add_month }}</h3>
+                                    {% else %}
+                                <h3>N/A</h3>
+                                {% endif %}
 
                                 <p>Due Date</p>
                             </div>

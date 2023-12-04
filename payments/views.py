@@ -76,9 +76,12 @@ def payments(request):
     if request.user.is_superuser or request.user.is_staff:
         payments = Payments.objects.filter(room__owner=request.user)
     else:
-        tenant = Tenant.objects.get(name__id=request.user.id)
-        payments = Payments.objects.filter(tenant=tenant)
-
+        try:
+            tenant = Tenant.objects.get(name__id=request.user.id)
+            payments = Payments.objects.filter(tenant=tenant)
+        except:
+            tenant = None
+            payments = None
     form_tenant = Tenant.objects.filter(owner=request.user, is_archive=False)
     form_room = Room.objects.filter(owner=request.user, is_archive=False)
 
