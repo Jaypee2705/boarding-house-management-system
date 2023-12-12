@@ -50,7 +50,7 @@ Income Report
                         {% for month in months %}
                             <tr>
                                 <td>{{ month.month }}</td>
-                                <td>{{ month.income }}</td>
+                                <td>{{ month.income |floatformat:2 }}</td>
                             </tr>
 
                         {% endfor %}

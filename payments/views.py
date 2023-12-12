@@ -92,8 +92,8 @@ def payments(request):
                 form = PaymentsForm(request.POST)
                 if form.is_valid():
                     form = form.save(commit=False)
-                    form.room = Room.objects.get(id=request.POST.get('room'))
                     form.tenant = Tenant.objects.get(id=request.POST.get('tenant'))
+                    form.room = Tenant.objects.get(id=request.POST.get('tenant')).room
                     form.save()
                     messages.success(request, 'Payment added successfully')
                     return redirect('payments')

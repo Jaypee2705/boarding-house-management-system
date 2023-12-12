@@ -56,11 +56,11 @@ Collectibles
                             <tr>
                                 <td>{{ collectibles.tenant }}</td>
                                 <td>{{ collectibles.room }}</td>
-                                <td>{{ collectibles.monthly_due }}</td>
-                                <td>{{ collectibles.previous_balance }}</td>
-                                <td>{{ collectibles.total_due }}0</td>
-                                <td>{{ collectibles.amount_paid }}0</td>
-                                <td>{{ collectibles.current_balance }}</td>
+                                <td>{{ collectibles.monthly_due|floatformat:2 }}</td>
+                                <td>{{ collectibles.previous_balance|floatformat:2 }}</td>
+                                <td>{{ collectibles.total_due|floatformat:2 }}</td>
+                                <td>{{ collectibles.amount_paid|floatformat:2 }}</td>
+                                <td>{{ collectibles.current_balance|floatformat:2 }}</td>
                             </tr>
 
                         {% endfor %}

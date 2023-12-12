@@ -130,7 +130,7 @@
                                     {% endfor %}
                                 </select>
                                 <label for="">Contact Number: </label>
-                                <input type="text" name="number" id="id_number" required class="form-control">
+                                <input type="text" name="number" id="id_number" required class="form-control" placeholder="09123456789" pattern="(^\+639\d{9}$)|(^\d{11}$)" title="Please enter a valid Philippine contact number in the format: +639123456789 or 09123456789">
                                 <label for="">Address: </label>
                                 <input type="text" name="address" id="id_address" required class="form-control">
 

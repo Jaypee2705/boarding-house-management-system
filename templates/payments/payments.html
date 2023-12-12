@@ -81,7 +81,7 @@
                                 <td>{{ payment.date }}</td>
                                 <td>{{ payment.tenant }}</td>
                                 <td>{{ payment.room }}</td>
-                                <td>{{ payment.amount }}</td>
+                                <td>{{ payment.amount|floatformat:2 }}</td>
                                 <td>{{ payment.note }}</td>
 
                                 <td class="text-right">
@@ -116,13 +116,6 @@
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-body">
-                        <label for="id_room" class="form-label">Room</label>
-                        <select name="room" class="form-control" required="" id="id_room">
-                            <option value="" selected="">---------</option>
-                            {% for room in form_room %}
-                            	<option value="{{ room.id }}">{{ room.name }}</option>
-                            {% endfor %}
-                        </select>
                         <label for="id_tenant" class="form-label">Tenant</label>
                         <select name="tenant" class="form-control" required="" id="id_tenant">
                             <option value="" selected="">---------</option>
