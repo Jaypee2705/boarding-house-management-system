@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% block page-title %}
-    Tenant Payments
+    Transient Payments
 {% endblock %}
 
 {% block style %}
@@ -11,7 +11,7 @@
 {% block js %}
     <script>
         // add active class to nav-dashboard
-        document.getElementById("payments").className += " active";
+        document.getElementById("trans_payments").className += " active";
     </script>
     <script>
         {#        when delete button in action clicked, get the username of user#}
@@ -65,7 +65,7 @@
                         <thead class="btn-cancel">
                         <tr>
                             <th hidden>ID</th>
-                            <th>Date</th>
+                            <th>Days</th>
                             <th>Tenant</th>
                             <th>Room</th>
                             <th>Amount</th>
@@ -78,19 +78,19 @@
                         {% for payment in payments %}
                             <tr>
                                 <td hidden>{{ payment.id }}</td>
-                                <td>{{ payment.date }}</td>
-                                <td>{{ payment.tenant }}</td>
+                                <td>{{ payment.days }}</td>
+                                <td>{{ payment.transient }}</td>
                                 <td>{{ payment.room }}</td>
                                 <td>{{ payment.amount|floatformat:2 }}</td>
                                 <td>{{ payment.note }}</td>
 
                                 <td class="text-right">
                                     <a type="button" class="btn btn-sm btn-primary"
-                                       href="{% url 'payments-info' payment.id %}"><i class="fa fa-eye"></i></a>
+                                       href="{% url 'transient-info' payment.id %}"><i class="fa fa-eye"></i></a>
                                     {% if request.user.is_superuser or request.user.is_staff %}
-                                    <a class="btn btn-sm btn-danger delete" href="#" data-bs-toggle="modal"
-                                       data-bs-target="#deletePayment"><i
-                                            class="fa fa-trash-alt"></i></a>
+                                        <a class="btn btn-sm btn-danger delete" href="#" data-bs-toggle="modal"
+                                           data-bs-target="#deletePayment"><i
+                                                class="fa fa-trash-alt"></i></a>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -117,15 +117,7 @@
                     {% csrf_token %}
                     <div class="modal-body">
                         <label for="id_tenant" class="form-label">Tenant</label>
-                        <select name="tenant" class="form-control" required="" id="id_tenant">
-                            <option value="" selected="">---------</option>
-                            {% for tenant in form_tenant %}
-                            	<option value="{{ tenant.id }}">{{ tenant.name.get_full_name }}</option>
-                            {% endfor %}
 
-
-
-                        </select>
                         {{ form }}
 
                     </div>

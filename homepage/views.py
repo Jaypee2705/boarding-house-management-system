@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from boardinghouse.models import BoardingHouse, Room
 from homepage.forms import FeedbackForms, NoticeForms, UserForm
 from homepage.models import Feedback, Notice
-from payments.models import Payments
+from payments.models import Payments, TransientPayment
 from tenants.models import Tenant
 
 
@@ -116,6 +116,7 @@ def dashboard_owner(request):
         """
         # get all payments in Payments
         payments = Payments.objects.filter(room__boardinghouse__owner=request.user)
+        transient_payments = TransientPayment.objects.filter(room__boardinghouse__owner=request.user)
 
         monthly_income = []
         for i in range(1,13):
@@ -125,6 +126,9 @@ def dashboard_owner(request):
             })
         for payment in payments:
             monthly_income[payment.date.month-1]["income"] += float(payment.amount)
+        for transient_payment in transient_payments:
+            monthly_income[transient_payment.date.month-1]["income"] += float(transient_payment.amount)
+
 
         print(monthly_income)
 

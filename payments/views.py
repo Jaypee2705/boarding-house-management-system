@@ -6,8 +6,8 @@ from django.shortcuts import render, redirect
 
 from boardinghouse.models import Room
 from homepage.models import Feedback, Notice
-from payments.forms import BillsForm, PaymentsForm
-from payments.models import Bills, Payments
+from payments.forms import BillsForm, PaymentsForm, TransientPaymentForm
+from payments.models import Bills, Payments, TransientPayment
 from tenants.models import Tenant
 from dateutil.relativedelta import relativedelta
 
@@ -172,6 +172,7 @@ def income(request):
     # create a list of dictionaries of names of the months and income
     # get all the months of payments
     payments = Payments.objects.filter(room__owner=request.user)
+    transient_payments = TransientPayment.objects.filter(room__owner=request.user)
     months = []
     for payment in payments:
         total_amount = 0
@@ -190,6 +191,15 @@ def income(request):
             if month["month"] == payment.date.strftime('%B'):
                 total_amount += float(payment.amount)
         month["income"] = total_amount
+
+    # get the total amount of transient payments per month
+    for month in months:
+        total_amount = 0
+        for transient_payment in transient_payments:
+            if month["month"] == transient_payment.date.strftime('%B'):
+                total_amount += float(transient_payment.amount)
+        month["income"] += total_amount
+
 
 
 
@@ -289,4 +299,78 @@ def collectibles(request):
         'collectibles_lists': collectibles_lists,
         'feedback': Feedback.objects.filter(is_viewed=False).count(),
 
+    })
+
+
+def transient(request):
+    if request.user.is_superuser or request.user.is_staff:
+        payments = TransientPayment.objects.filter(room__owner=request.user)
+    else:
+        try:
+            tenant = Tenant.objects.get(name__id=request.user.id)
+            payments = TransientPayment.objects.filter(tenant=tenant)
+        except:
+            tenant = None
+            payments = None
+    form_tenant = Tenant.objects.filter(owner=request.user, is_archive=False)
+    form_room = Room.objects.filter(owner=request.user, is_archive=False)
+
+    if request.method == "POST":
+        if "button" in request.POST:
+            if request.POST.get("button") == 'add_payment':
+
+                form = TransientPaymentForm(request.POST)
+                if form.is_valid():
+                    form = form.save(commit=False)
+                    form.save()
+                    messages.success(request, 'Payment added successfully')
+                    return redirect('transient')
+                else:
+                    messages.error(request, 'Error adding payment')
+                    return redirect('transient')
+            elif request.POST.get("button") == 'delete_payment':
+                try:
+                    payment = TransientPayment.objects.get(id=request.POST.get('id_delete'))
+                    payment.delete()
+                    messages.success(request, 'Payment deleted successfully')
+                    return redirect('transient')
+                except:
+                    messages.error(request, 'Error deleting payment')
+                    return redirect('transient')
+    else:
+        form = TransientPaymentForm()
+
+    return render (request, 'payments/transient.html',{
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
+        'payments': payments,
+        'form': form,
+        'form_tenant': form_tenant,
+        'form_room': form_room,
+
+
+    })
+
+
+def transient_info(request, id):
+    payment = TransientPayment.objects.get(id=id)
+
+    form = TransientPaymentForm(instance=payment)
+
+    if request.method == "POST":
+        form = TransientPaymentForm(request.POST, instance=payment)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Payment edited successfully')
+            return redirect('transient')
+        else:
+            messages.error(request, 'Error editing payment')
+            return redirect('transient')
+
+
+    return render(request, 'payments/transient-info.html',{
+        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
+        'payment': payment,
+        'form': form,
     })

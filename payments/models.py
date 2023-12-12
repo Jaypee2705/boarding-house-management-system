@@ -31,3 +31,15 @@ class Payments(models.Model):
         tenant.amount_paid = float(tenant.amount_paid) + float(self.amount)
         tenant.save()
         super(Payments, self).save(*args, **kwargs)
+
+
+class TransientPayment(models.Model):
+    room = models.ForeignKey('boardinghouse.Room', on_delete=models.CASCADE)
+    transient = models.CharField(max_length=100)
+    address = models.CharField(max_length=100)
+    contact = models.CharField(max_length=100)
+    days = models.IntegerField(default=0)
+    amount = models.CharField(max_length=100)
+    note = models.CharField(max_length=100, blank=True, null=True)
+    mode = models.CharField(max_length=100, blank=True, null=True)
+    date = models.DateField(auto_now_add=True)
