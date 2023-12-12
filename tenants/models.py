@@ -1,5 +1,6 @@
 from datetime import timedelta, datetime
 
+from dateutil.relativedelta import relativedelta
 from django.db import models
 
 # Create your models here.
@@ -24,7 +25,7 @@ class Tenant(models.Model):
             date_start = str(self.date_start)
             date_start = date_start.split('-')
             date_start = datetime(int(date_start[0]), int(date_start[1]), int(date_start[2]))
-            self.add_month = date_start + timedelta(days = 30)
+            self.add_month = date_start + relativedelta(months=1)
         super(Tenant, self).save(*args, **kwargs)
 
 

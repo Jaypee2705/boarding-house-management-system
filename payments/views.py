@@ -9,6 +9,7 @@ from homepage.models import Feedback, Notice
 from payments.forms import BillsForm, PaymentsForm
 from payments.models import Bills, Payments
 from tenants.models import Tenant
+from dateutil.relativedelta import relativedelta
 
 
 # Create your views here.
@@ -215,6 +216,7 @@ def collectibles(request):
                 print("late")
                 tenant.previous_balance += tenant.current_balance
                 tenant.current_balance = 0
+
                 tenant.add_month = tenant.add_month + timedelta(days=30)
 
                 tenant.save()
@@ -270,7 +272,7 @@ def collectibles(request):
 
 
         collectibles_lists.append({
-            'tenant': tenant.name.get_full_name(),
+            'tenant': tenant,
             'room': tenant.room.name,
             'monthly_due': total_bills,
             'previous_balance': tenant.previous_balance,

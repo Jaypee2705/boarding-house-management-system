@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from dateutil.relativedelta import relativedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
@@ -328,6 +331,8 @@ def manage_rooms(request):
                     tenant = get_object_or_404(Tenant, name__username=name, owner=request.user)
                     tenant.room = room
                     tenant.date_start = date
+                    print(date)
+                    tenant.add_month = datetime.strptime(date, '%Y-%m-%d') + relativedelta(months=1)
                     tenant.save()
                     messages.success(request, 'Tenant has been edited successfully')
                     print('Tenant has been edited successfully')
