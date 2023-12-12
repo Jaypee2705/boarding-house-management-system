@@ -60,6 +60,15 @@
         }
 
     </script>
+    <script>
+        const idImageInput = document.getElementById('id_image');
+
+        // Remove the 'required' attribute
+        idImageInput.removeAttribute('required');
+    </script>
+
+
+    </script>
 {% endblock %}
 
 {% block modal %}
@@ -150,10 +159,11 @@
                         </div>
                         <div class="text-center align-content-center">
                             {% if not  request.user.is_superuser %}
-                            <button type="submit" class="btn btn-primary" name="button" value="add_bhouse">Save changes
-                            </button>
+                                <button type="submit" class="btn btn-primary" name="button" value="add_bhouse">Save
+                                    changes
+                                </button>
                             {% endif %}
-                            <a class="btn btn-secondary" href="{% url 'boardinghouse' %}" > Back to Listings
+                            <a class="btn btn-secondary" href="{% url 'boardinghouse' %}"> Back to Listings
                             </a>
                         </div>
 

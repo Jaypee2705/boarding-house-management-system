@@ -136,11 +136,11 @@ def boardinghouse_detail(request, id):
             form.save()
             messages.success(request, 'Boarding House has been updated successfully')
             print('Boarding House has been updated successfully')
-            return redirect('boardinghouse_detail', id=id)
+            return redirect('boardinghouse')
         else:
             messages.error(request, 'Error updating boarding house')
             print('Error updating boarding house', form.errors)
-            return redirect('boardinghouse_detail', id=id)
+            return redirect('boardinghouse')
 
     return render(request, 'boardinghouse/boardinghouse_detail.html', {
         'boardinghouse': boardinghouse,
@@ -258,11 +258,11 @@ def rooms_detail(request, id):
             instance.save()
             messages.success(request, 'Room has been updated successfully')
             print('Room has been updated successfully')
-            return redirect('room_detail', id=id)
+            return redirect('rooms')
         else:
             messages.error(request, 'Error updating room')
             print('Error updating room', form.errors)
-            return redirect('room_detail', id=id)
+            return redirect('rooms')
 
 
     return render(request, 'boardinghouse/rooms_detail.html',{

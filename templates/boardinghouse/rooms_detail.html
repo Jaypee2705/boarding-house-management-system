@@ -13,9 +13,15 @@
 {% endblock %}
 
 {% block js %}
-<script>
+    <script>
         // add active class to nav-dashboard
         document.getElementById("nav-room-listings").className += " active";
+    </script>
+    <script>
+        const idImageInput = document.getElementById('id_image');
+
+        // Remove the 'required' attribute
+        idImageInput.removeAttribute('required');
     </script>
 {% endblock %}
 
@@ -52,7 +58,14 @@
                                     <option value="" selected="">---------</option>
                                     {% for bhouse in bhouses %}
 
-                                        <option value="{{ bhouse.id }}">{{ bhouse.name }}</option>
+                                        {% if bhouse.id == room.boardinghouse.id %}
+                                            <option selected value="{{ bhouse.id }}">{{ bhouse.name }}</option>
+                                        {% else %}
+
+                                            <option value="{{ bhouse.id }}">{{ bhouse.name }} </option>
+                                        {% endif %}
+
+
 
                                     {% endfor %}
 
@@ -89,10 +102,11 @@
                         </div>
                         <div class="text-center align-content-center">
                             {% if not request.user.is_superuser %}
-                            <button type="submit" class="btn btn-primary" name="button" value="add_bhouse">Save changes
-                            </button>
+                                <button type="submit" class="btn btn-primary" name="button" value="add_bhouse">Save
+                                    changes
+                                </button>
                             {% endif %}
-                            <a class="btn btn-secondary" href="{% url 'rooms' %}" > Back to Rooms
+                            <a class="btn btn-secondary" href="{% url 'rooms' %}"> Back to Rooms
                             </a>
                         </div>
                         <br>
