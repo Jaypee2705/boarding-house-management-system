@@ -50,6 +50,28 @@
             }
         });
     </script>
+    <script>
+
+        // Get all table rows except the header row
+        const rows = document.querySelectorAll("#example1 tbody tr");
+
+        // Loop through each row
+        rows.forEach(row => {
+            const billType = row.cells[2].textContent.trim(); // Assuming "Bills" column is at index 2
+
+            // Check if the bill type is "Rent"
+            if (billType === "Rent") {
+                const deleteButton = row.querySelector(".delete");
+                if (deleteButton) {
+                    deleteButton.remove(); // Remove the delete button
+                }
+                const editButton = row.querySelector(".edit");
+                if (editButton) {
+                    editButton.remove(); // Remove the delete button
+                }
+            }
+        });
+    </script>
 {% endblock %}
 
 

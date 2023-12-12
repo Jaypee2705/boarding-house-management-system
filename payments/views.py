@@ -44,18 +44,20 @@ def utility_bill(request):
                     return redirect('utility-bill')
             elif request.POST.get("button") == "edit_utility":
                 try:
+                    print("request.POST.get('id_bills'", request.POST.get('id_bills'))
                     room = Room.objects.get(id=request.POST.get('edit_room'))
                     bill = Bills.objects.get(id=request.POST.get('edit_id'))
                     bill.room = room
-                    bill.bills = request.POST.get('edit_bills')
+                    bill.bills = request.POST.get('bills')
                     bill.rate = request.POST.get('edit_rate')
                     bill.save()
                     room.price = request.POST.get('edit_rate')
                     room.save()
                     messages.success(request, 'Utility bill edited successfully')
                     return redirect('utility-bill')
-                except:
+                except Exception as e:
                     messages.error(request, 'Error editing utility bill')
+                    print(e)
                     return redirect('utility-bill')
     else:
         form = BillsForm()
