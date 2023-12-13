@@ -27,6 +27,7 @@
         let marker = L.marker([{{ bhouse.latitude }}, {{ bhouse.longitude }}]).addTo(map);
 
 
+
         map.invalidateSize();
 
 
@@ -78,7 +79,7 @@
                 <div class="col-lg-7">
                     <div class="img-property-slide-wrap">
                         <div class="img-property-slide">
-                            <img src="{{ bhouse.image.url }}" alt="Image" class="img-fluid-1">
+                            <img src="{{ bhouse.image.url }}" alt="Image" class="img-fluid-1" style="pointer-events: none;">
                         </div>
                     </div>
                 </div>
@@ -143,7 +144,7 @@
                                 <div class="property-item">
 
                                     <a href="property-single.html" class="img">
-                                        <img src="{{ room.image.url }}" alt="Image"
+                                        <img src="{{ room.image.url }}" alt="Image" style="pointer-events: none;"
                                              class="img-fluid">
                                     </a>
 

@@ -45,7 +45,7 @@
                     <h2 class="font-weight-bold text-primary heading">Popular Boarding Houses</h2>
                 </div>
                 <div class="col-lg-6 text-lg-end">
-                    <p><a href="#" target="_blank" class="btn btn-primary text-white py-3 px-4">View all boarding
+                    <p><a href="{% url 'bhouse_listings' %}" target="_blank" class="btn btn-primary text-white py-3 px-4">View all boarding
                         houses</a>
                     </p>
                 </div>
@@ -64,8 +64,7 @@
                                 <div class="property-item">
 
                                     <a href="property-single.html" class="img">
-                                        <img src="{{ boardinghouse.image.url }}" alt="Image"
-                                             class="img-fluid">
+                                        <img src="{{ boardinghouse.image.url }}" style="pointer-events: none;" alt="Image" class="img-fluid">
                                     </a>
 
                                     <div class="property-content">
