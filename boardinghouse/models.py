@@ -22,6 +22,13 @@ class BoardingHouse(models.Model):
     def __str__(self):
         return self.name
 
+class BoardingHouseImage(models.Model):
+    boardinghouse = models.ForeignKey(BoardingHouse, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='boardinghouse', blank=True)
+
+    def __str__(self):
+        return self.boardinghouse.name
+
 
 
 class Room(models.Model):

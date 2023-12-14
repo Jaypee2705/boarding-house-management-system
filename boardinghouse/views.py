@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from homepage.models import Feedback, Notice
 from tenants.models import Tenant
 from .forms import BoardingHouseForms, RoomForm
-from .models import BoardingHouse, Room
+from .models import BoardingHouse, Room, BoardingHouseImage
 
 
 # Create your views here.
@@ -33,6 +33,9 @@ def boardinghouse(request):
                         boardinghouse = forms.save(commit=False)
                         boardinghouse.owner = request.user
                         boardinghouse.save()
+                        if request.FILES.get('more_image'):
+                            for image in request.FILES.getlist('more_image'):
+                                BoardingHouseImage.objects.create(boardinghouse=boardinghouse, image=image)
                         messages.success(request, 'Boarding House has been added successfully')
                         print('Boarding House has been added successfully')
                         return redirect('boardinghouse')
@@ -80,7 +83,8 @@ def boardinghouse(request):
 
     })
 
-@user_passes_test(lambda u: u.is_superuser )
+
+@user_passes_test(lambda u: u.is_superuser)
 def boardinghouse_archive(request):
     boardinghouses = BoardingHouse.objects.filter(is_archive=True)
 
@@ -120,23 +124,25 @@ def boardinghouse_archive(request):
                 print('Error deleting boarding house', e)
                 return redirect('boardinghouse_archive')
 
-    return render(request, 'boardinghouse/boardinghouse_archive.html',{
+    return render(request, 'boardinghouse/boardinghouse_archive.html', {
         'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
         'boardinghouses': boardinghouses,
     })
 
 
-
-
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def boardinghouse_detail(request, id):
     boardinghouse = get_object_or_404(BoardingHouse, id=id)
+    boardinghouse_images = BoardingHouseImage.objects.filter(boardinghouse=boardinghouse)
     form = BoardingHouseForms(instance=boardinghouse)
     if request.method == "POST":
         form = BoardingHouseForms(request.POST, request.FILES, instance=boardinghouse)
         if form.is_valid():
             form.save()
+            if request.FILES.get('more_image'):
+                for image in request.FILES.getlist('more_image'):
+                    BoardingHouseImage.objects.create(boardinghouse=boardinghouse, image=image)
             messages.success(request, 'Boarding House has been updated successfully')
             print('Boarding House has been updated successfully')
             return redirect('boardinghouse')
@@ -150,8 +156,19 @@ def boardinghouse_detail(request, id):
         'form': form,
         'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
+        'boardinghouse_images': boardinghouse_images,
 
     })
+
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+def delete_image(request, id):
+    image = get_object_or_404(BoardingHouseImage, id=id)
+    image.delete()
+    messages.success(request, 'Image has been deleted successfully')
+    print('Image has been deleted successfully')
+    return redirect('boardinghouse_detail', id=image.boardinghouse.id)
+
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def rooms(request):
@@ -206,9 +223,10 @@ def rooms(request):
 
     })
 
+
 @user_passes_test(lambda u: u.is_superuser)
 def rooms_archive(request):
-    rooms = Room.objects.filter( is_archive=True)
+    rooms = Room.objects.filter(is_archive=True)
 
     if request.method == "POST":
         if request.POST.get("button") == "restore":
@@ -242,11 +260,12 @@ def rooms_archive(request):
                 print('Error deleting room', e)
                 return redirect('rooms_archive')
 
-    return render(request, 'boardinghouse/rooms_archive.html',{
+    return render(request, 'boardinghouse/rooms_archive.html', {
         'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
         'rooms': rooms,
     })
+
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def rooms_detail(request, id):
@@ -267,8 +286,7 @@ def rooms_detail(request, id):
             print('Error updating room', form.errors)
             return redirect('rooms')
 
-
-    return render(request, 'boardinghouse/rooms_detail.html',{
+    return render(request, 'boardinghouse/rooms_detail.html', {
         'room': room,
         'form': form,
         'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
@@ -277,11 +295,12 @@ def rooms_detail(request, id):
 
     })
 
+
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def manage_rooms(request):
     if request.user.is_superuser:
-        tenants = Tenant.objects.filter( room__isnull=False)
-        users = Tenant.objects.filter( room__isnull=True)
+        tenants = Tenant.objects.filter(room__isnull=False)
+        users = Tenant.objects.filter(room__isnull=True)
         rooms = Room.objects.filter(boardinghouse__owner=request.user, owner=request.user)
     else:
         tenants = Tenant.objects.filter(owner=request.user, room__isnull=False)
@@ -345,12 +364,6 @@ def manage_rooms(request):
                     print('Error editing tenant', e)
                     return redirect('manage_rooms')
 
-
-
-
-
-
-
     return render(request, 'boardinghouse/manage_rooms.html', {
 
         'tenants': tenants,
@@ -361,12 +374,11 @@ def manage_rooms(request):
 
     })
 
+
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def manage_rooms_detail(request, id):
-
-
-
     return render(request, 'boardinghouse/manage_rooms_detail.html')
+
 
 def beds(request):
     return render(request, 'boardinghouse/beds.html')
@@ -374,5 +386,3 @@ def beds(request):
 
 def beds_assignment(request):
     return render(request, 'boardinghouse/beds_assignment.html')
-
-

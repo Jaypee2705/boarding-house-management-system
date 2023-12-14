@@ -135,6 +135,30 @@
                                 {{ form.image }}
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="id_name">Image: </label>
+                                <input type="file" name="more_image" class="form-control" accept="image/*"
+                                       id="more_image">
+
+                                {% for boardinghouse_image in boardinghouse_images %}
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <img src="{{ boardinghouse_image.image.url }}" alt="" width="100px"
+                                                     height="100px">
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'delete_image' boardinghouse_image.id %}"
+                                                   class="btn btn-danger">Delete</a>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                {% endfor %}
+
+                            </div>
+                        </div>
                         <br>
                         <div class="mb-3 form-group">
                             <h5>Boarding House Location</h5>

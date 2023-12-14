@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 
-from boardinghouse.models import BoardingHouse, Room
+from boardinghouse.models import BoardingHouse, Room, BoardingHouseImage
 from homepage.forms import FeedbackForms, NoticeForms, UserForm, UserChangePassword
 from homepage.models import Feedback, Notice
 from payments.models import Payments, TransientPayment
@@ -577,12 +577,14 @@ def bhouse_listings(request):
 
 def bhouse_listings_detail(request, id):
     bhouse = get_object_or_404(BoardingHouse, id=id)
+    bhouse_images = BoardingHouseImage.objects.filter(boardinghouse=bhouse)
     rooms = Room.objects.filter(boardinghouse=bhouse)
 
 
     return render(request, 'landing_page/bhouse_listings_detail.html',{
         'bhouse': bhouse,
         'rooms': rooms,
+        'bhouse_images': bhouse_images,
     })
 
 

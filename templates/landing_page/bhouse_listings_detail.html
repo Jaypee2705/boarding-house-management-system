@@ -79,7 +79,13 @@
                 <div class="col-lg-7">
                     <div class="img-property-slide-wrap">
                         <div class="img-property-slide">
-                            <img src="{{ bhouse.image.url }}" alt="Image" class="img-fluid-1" style="pointer-events: none;">
+                            <img src="{{ bhouse.image.url }}" alt="Image" class="img-fluid" >
+
+                            {% for bhouse_image in bhouse_images %}
+                                <img src="{{ bhouse_image.image.url }}" alt="Image" class="img-fluid">
+                            {% endfor %}
+                            
+
                         </div>
                     </div>
                 </div>
@@ -119,70 +125,5 @@
             </div>
         </div>
     </div>
-    <div class="section">
-        <div class="container">
-            <div class="row mb-5 align-items-center">
-                <div class="col-lg-6">
-                    <h2 class="font-weight-bold text-primary heading">{{ bhouse.name }} Rooms</h2>
-                </div>
-                <div class="col-lg-6 text-lg-end">
-                    <p><a href="#" target="_blank" class="btn btn-primary text-white py-3 px-4">View other rooms</a>
-                    </p>
-                </div>
-            </div>
-            <div class="row">
 
-                <div class="col-12">
-
-
-                    <div class="property-slider-wrap">
-
-
-                        <div class="property-slider">
-
-                            {% for room in rooms %}
-                                <div class="property-item">
-
-                                    <a href="property-single.html" class="img">
-                                        <img src="{{ room.image.url }}" alt="Image" style="pointer-events: none;"
-                                             class="img-fluid">
-                                    </a>
-
-                                    <div class="property-content">
-                                        <div>
-                                            <span class="city d-block mb-3">{{ room.name }}</span>
-                                            <span class="d-block mb-2 text-black-50">{{ room.boardinghouse }}</span>
-                                            <span class="d-block mb-2 text-black-50">{{ room.boardinghouse.address }}</span>
-
-                                            <div class="specs d-flex mb-4">
-											<span class="d-block d-flex align-items-center me-3">
-												<span class="icon-bed me-2"></span>
-												<span class="caption">{{ room.num_bed }} beds</span>
-											</span>
-                                                <span class="d-block d-flex align-items-center">
-												<span class="icon-user me-2"></span>
-												<span class="caption">{{ room.male_female }} </span>
-											</span>
-                                            </div>
-
-                                            <a href="{% url 'room_listings_detail' room.id %}" class="btn btn-primary py-2 px-3">See
-                                                details</a>
-                                        </div>
-                                    </div>
-                                </div> <!-- .item -->
-                            {% endfor %}
-                        </div>
-
-
-                        <div id="property-nav" class="controls" tabindex="0" aria-label="Carousel Navigation">
-                            <span class="prev" data-controls="prev" aria-controls="property" tabindex="-1">Prev</span>
-                            <span class="next" data-controls="next" aria-controls="property" tabindex="-1">Next</span>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
 {% endblock %}
