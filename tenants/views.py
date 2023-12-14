@@ -52,7 +52,7 @@ def tenants_profile(request):
     return render(request, 'tenants/tenants_profile.html',{
         'users': users,
         'tenants': tenants,
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
 
     })
 
@@ -84,6 +84,6 @@ def tenant_archive(request):
                 return redirect('tenants_profile')
 
     return render(request, 'tenants/tenant_archive.html',{
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'tenants': tenants,
     })

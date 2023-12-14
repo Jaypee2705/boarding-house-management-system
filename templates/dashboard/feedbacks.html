@@ -63,65 +63,110 @@
             {% endif %}
 
 
-
-            <div class="card card-info elevation-2">
-                <br>
-                <div class="col-md-12 table-responsive">
-                    <table id="example1" class="table table-bordered table-hover">
-                        <thead class="btn-cancel">
-                        <tr>
-                            <th hidden>id</th>
-                            <th>Date</th>
-                            <th>Feedback</th>
-                            {% if request.user.is_superuser %}
-                                <th>User</th>
-                            {% endif %}
-                            {% if not request.user.is_superuser %}
-                                <th>Actions</th>
-                            {% endif %}
-
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for feedback in feedbacks %}
+            {% if my_feedbacks %}
 
 
-
-                            <tr>
-                                <td hidden>{{ feedback.id }}</td>
-                                <td>{{ feedback.date }}</td>
-                                <td>{{ feedback.feedback }}</td>
-                                {% if request.user.is_superuser %}
-                                    <th>{{ feedback.user.get_full_name }}</th>
-                                {% endif %}
-
-                                {% if not request.user.is_superuser %}
-
-                                    <td class="text-right">
-                                        <button type="button" class="btn btn-sm btn-warning edit" data-bs-toggle="modal"
-                                                data-bs-target="#editFeedback"><i class="fa fa-edit"></i></button>
-                                        <button type="button" class="btn btn-sm btn-danger delete"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#deleteFeedback"><i
-                                                class="fa fa-trash-alt"></i></button>
-                                    </td>
-                                {% endif %}
-                            </tr>
-
-                        {% endfor %}
-
-
-                        </tbody>
-                    </table>
-
+                <div class="card card-info elevation-2">
                     <br>
-                    {% if request.user.is_superuser %}
-                        <div class="text-right pb-3">
-                            <a href="{% url 'feedbacks_archive' %}">View Archived Feedbacks</a>
-                        </div>
-                    {% endif %}
+                    <div class="col-md-12 table-responsive">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <h3>My Feedbacks</h3>
+                            <thead class="btn-cancel">
+                            <tr>
+                                <th hidden>id</th>
+                                <th>Date</th>
+                                <th>Feedback</th>
+                                <th>Recipient</th>
+                                {% if request.user.is_superuser %}
+                                    <th>User</th>
+                                {% endif %}
+                                {% if not request.user.is_superuser %}
+                                    <th>Actions</th>
+                                {% endif %}
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for feedback in my_feedbacks %}
+
+                                <tr>
+                                    <td hidden>{{ feedback.id }}</td>
+                                    <td>{{ feedback.date }}</td>
+                                    <td>{{ feedback.feedback }}</td>
+                                    <td>{{ feedback.feedback_to|title }}</td>
+                                    {% if request.user.is_superuser %}
+                                        <th>{{ feedback.user.get_full_name }}</th>
+                                    {% endif %}
+
+                                    {% if not request.user.is_superuser %}
+
+                                        <td class="text-right">
+                                            <button type="button" class="btn btn-sm btn-warning edit"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editFeedback"><i class="fa fa-edit"></i></button>
+                                            <button type="button" class="btn btn-sm btn-danger delete"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deleteFeedback"><i
+                                                    class="fa fa-trash-alt"></i></button>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+
+                            {% endfor %}
+
+
+                            </tbody>
+                        </table>
+
+                        <br>
+                        {% if request.user.is_superuser %}
+                            <div class="text-right pb-3">
+                                <a href="{% url 'feedbacks_archive' %}">View Archived Feedbacks</a>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
+            {% endif %}
+
+            {% if received_feedbacks %}
+                <div class="card card-info elevation-2">
+                    <br>
+                    <div class="col-md-12 table-responsive">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <h3>Received Feedbacks</h3>
+                            <thead class="btn-cancel">
+                            <tr>
+                                <th hidden>id</th>
+                                <th>Date</th>
+                                <th>Feedback</th>
+                                <th>User</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for feedback in received_feedbacks %}
+                                <tr>
+                                    <td hidden>{{ feedback.id }}</td>
+                                    <td>{{ feedback.date }}</td>
+                                    <td>{{ feedback.feedback }}</td>
+                                    <td>{{ feedback.user.get_full_name }}</td>
+                                </tr>
+
+                            {% endfor %}
+
+
+                            </tbody>
+                        </table>
+
+                        <br>
+                        {% if request.user.is_superuser %}
+                            <div class="text-right pb-3">
+                                <a href="{% url 'feedbacks_archive' %}">View Archived Feedbacks</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </section>
 
@@ -137,6 +182,22 @@
                     {% csrf_token %}
                     <div class="modal-body">
                         {{ form }}
+                        {% if request.user.is_superuser or request.user.is_staff %}
+
+                            <select name="feedback_to" id="feedback_to" class="form-control" required hidden>
+                                <option selected value="admin">Admin</option>
+                            </select>
+                        {% else %}
+                            <select name="feedback_to" id="feedback_to" class="form-control" required>
+                                <option value="" disabled selected>Select Recipient of Feedback</option>
+                                <option value="admin">Admin</option>
+                                {% if room %}
+                                    <option value="owner">Owner</option>
+                                {% endif %}
+                            </select>
+
+                        {% endif %}
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -152,7 +213,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add Feedback</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Feedback</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="post" enctype="multipart/form-data">
@@ -162,6 +223,20 @@
                         <label for="edit_feedback">Feedback:</label>
                         <textarea name="edit_feedback" cols="40" rows="10" class="form-control" required=""
                                   id="edit_feedback" spellcheck="false"></textarea>
+                        {% if request.user.is_superuser or request.user.is_staff %}
+                            <select name="edit_feedback_to" id="edit_feedback_to" class="form-control" required hidden>
+                                <option selected value="admin">Admin</option>
+                            </select>
+                        {% else %}
+                            <select name="edit_feedback_to" id="edit_feedback_to" class="form-control" required>
+                                <option value="" disabled selected>Select Recipient of Feedback</option>
+                                <option value="admin">Admin</option>
+                                {% if room %}
+                                    <option value="owner">Owner</option>
+                                {% endif %}
+                            </select>
+                        {% endif %}
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -183,7 +258,7 @@
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-body">
-                        <p>Are you sure you want to delete this feedback?</p>
+                        <p class="text-black">Are you sure you want to delete this feedback?</p>
                         <input type="text" name="delete_id" id="delete_id" hidden>
                     </div>
                     <div class="modal-footer">

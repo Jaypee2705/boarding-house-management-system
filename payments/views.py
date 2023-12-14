@@ -67,7 +67,7 @@ def utility_bill(request):
         'rooms': rooms,
         'form': form,
         'bills': bills,
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
         'form_room': form_room,
 
@@ -119,7 +119,7 @@ def payments(request):
     return render(request, 'payments/payments.html',{
         'payments': payments,
         'form': form,
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
         'form_tenant': form_tenant,
         'form_room': form_room,
@@ -147,7 +147,7 @@ def payments_info(request, id):
     return render(request, 'payments/payments-info.html',{
         'payment': payment,
         'form': form,
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
 
     })
@@ -210,7 +210,7 @@ def income(request):
     return render(request, 'payments/income.html',{
         # 'income_list': income_list,
         'months': months,
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
 
     })
 
@@ -297,7 +297,7 @@ def collectibles(request):
     return render(request, 'payments/collectibles.html',{
         'tenants': tenants,
         'collectibles_lists': collectibles_lists,
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
 
     })
 
@@ -341,7 +341,7 @@ def transient(request):
         form = TransientPaymentForm()
 
     return render (request, 'payments/transient.html',{
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
         'payments': payments,
         'form': form,
@@ -369,7 +369,7 @@ def transient_info(request, id):
 
 
     return render(request, 'payments/transient-info.html',{
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
         'payment': payment,
         'form': form,

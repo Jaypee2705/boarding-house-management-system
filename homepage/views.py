@@ -41,7 +41,7 @@ def dashboard(request):
         'boardinghouses_count': boardinghouses_count,
         'rooms_count': rooms_count,
         'owner': owner,
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
 
     })
@@ -142,7 +142,7 @@ def dashboard_owner(request):
         'tenants': tenants,
         'rooms': rooms,
         'boardinghouses': boardinghouses,
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
         'monthly_income': monthly_income,
 
@@ -160,7 +160,7 @@ def dashboard_tenant(request):
     else:
         return redirect('homepage')
     return render(request, 'dashboard/dashboard.html',{
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
         'tenant': tenant,
         'room': room,
@@ -218,7 +218,7 @@ def notice(request):
     return render(request, 'dashboard/notice.html',{
         'notices': notices,
         'form': form,
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
         'bhouses': bhouses,
 
@@ -256,7 +256,7 @@ def notice_archive(request):
 
 
     return render(request, 'dashboard/notice_archive.html',{
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
         'notices': notices,
 
@@ -283,68 +283,151 @@ def notice_detail(request, id):
     return render(request, 'dashboard/notice_detail.html',{
         'notice': notice,
         'form': form,
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
 
     })
 
 @user_passes_test(lambda u: u.is_authenticated)
 def feedbacks(request):
+
     if request.user.is_superuser:
-        feedbacks = Feedback.objects.filter(is_archived=False)
-        for feeds in feedbacks:
+        my_feedbacks = None
+        received_feedbacks = Feedback.objects.filter(feedback_to=request.user, is_archived=False)
+        for feeds in received_feedbacks:
             feeds.is_viewed = True
             feeds.save()
+    elif request.user.is_staff:
+        my_feedbacks = Feedback.objects.filter(user=request.user, is_archived=False)
+        received_feedbacks = Feedback.objects.filter(feedback_to=request.user, is_archived=False)
+        for feeds in received_feedbacks:
+            feeds.is_viewed = True
+            feeds.save()
+
     else:
-        feedbacks = Feedback.objects.filter(user=request.user, is_archived=False)
+        my_feedbacks = Feedback.objects.filter(user=request.user, is_archived=False)
+        received_feedbacks = None
+
+    form = FeedbackForms()
+    room = Room.objects.filter(tenant__name__id=request.user.id)
 
     if request.method == "POST":
-        if "button" in request.POST:
-            if request.POST.get("button") == "add":
+        if request.POST.get("button") == "add":
+            form = FeedbackForms(request.POST)
+            if form.is_valid():
+                save = form.save(commit=False)
+                save.user = request.user
+                recipient = request.POST.get("feedback_to")
+                if recipient == "admin":
+                    save.feedback_to = User.objects.filter(is_superuser=True)[0]
+                elif recipient == "owner":
+                    save.feedback_to = User.objects.get(id=room[0].boardinghouse.owner.id)
+                save.save()
+                messages.success(request, 'Feedback Submitted Successfully')
+                return redirect('feedbacks')
+        elif request.POST.get("button") == "edit":
+            try:
+                feedback = Feedback.objects.get(id=request.POST.get("edit_id"))
+                feedback.feedback = request.POST.get("edit_feedback")
+                recipient = request.POST.get("edit_feedback_to")
+                if recipient == "admin":
+                    feedback.feedback_to = User.objects.filter(is_superuser=True)[0]
+                elif recipient == "owner":
+                    feedback.feedback_to = User.objects.get(id=room[0].boardinghouse.owner.id)
+                feedback.date = datetime.now()
+                feedback.save()
+                messages.success(request, 'Feedback Updated Successfully')
+                return redirect('feedbacks')
+            except Exception as e:
+                messages.error(request, 'Feedback Update Failed')
+                print(e)
+                return redirect('feedbacks')
+        elif request.POST.get("button") == "delete":
+            try:
+                feedback = Feedback.objects.get(id=request.POST.get("delete_id"))
+                feedback.is_archived = True
+                feedback.is_viewed = True
+                feedback.save()
+                messages.success(request, 'Feedback Archived Successfully')
+                return redirect('feedbacks')
+            except Exception as e:
+                messages.error(request, 'Feedback Archived Failed')
+                print(e)
+                return redirect('feedbacks')
 
 
-                form = FeedbackForms(request.POST)
-                if form.is_valid():
-                    feedback = form.save(commit=False)
-                    feedback.user = request.user
-                    feedback.save()
-                    messages.success(request, 'Feedback Submitted Successfully')
-                    return redirect('feedbacks')
-                else:
-                    messages.error(request, 'Feedback Submission Failed')
-                    return redirect('feedbacks')
-            elif request.POST.get("button") == "delete":
-                try:
-                    feedback = Feedback.objects.get(id=request.POST.get("delete_id"))
-                    feedback.is_archived = True
-                    feedback.is_viewed = True
-                    feedback.save()
-                    messages.success(request, 'Feedback Archived Successfully')
-                    return redirect('feedbacks')
-                except Exception as e:
-                    messages.error(request, 'Feedback Archived Failed')
-                    print(e)
-                    return redirect('feedbacks')
-            elif request.POST.get("button") == "edit":
-                try:
-                    feedback = Feedback.objects.get(id=request.POST.get("edit_id"))
-                    feedback.feedback = request.POST.get("edit_feedback")
-                    feedback.date = datetime.now()
-                    feedback.save()
-                    messages.success(request, 'Feedback Updated Successfully')
-                    return redirect('feedbacks')
-                except Exception as e:
-                    messages.error(request, 'Feedback Update Failed')
-                    print(e)
-                    return redirect('feedbacks')
 
-    else:
-        form = FeedbackForms()
+
+
+    # if request.user.is_superuser:
+    #     feedbacks = Feedback.objects.filter(is_archived=False, feedback_to=request.user)
+    #     for feeds in feedbacks:
+    #         feeds.is_viewed = True
+    #         feeds.save()
+    # else:
+    #     feedbacks = Feedback.objects.filter(user=request.user, is_archived=False)
+    #
+    # if request.method == "POST":
+    #     if "button" in request.POST:
+    #         if request.POST.get("button") == "add":
+    #
+    #
+    #             form = FeedbackForms(request.POST)
+    #             if form.is_valid():
+    #                 feedback = form.save(commit=False)
+    #                 feedback.user = request.user
+    #                 if request.user.is_staff and not request.user.is_superuser:
+    #                     recepient = User.objects.filter(is_superuser=True)[0]
+    #                     feedback.feedback_to = User.objects.get(id=recepient.id)
+    #                 else:
+    #                     feedback_to = request.POST.get("feedback_to")
+    #                     if feedback_to == "admin":
+    #                         recepient = User.objects.filter(is_superuser=True)[0]
+    #                     elif feedback_to == "owner":
+    #                         # owner of the room of the tenant user
+    #                         recepient = User.objects.get(id=room[0].boardinghouse.owner.id)
+    #                     feedback.feedback_to = User.objects.get(id=recepient.id)
+    #                 feedback.save()
+    #                 messages.success(request, 'Feedback Submitted Successfully')
+    #                 return redirect('feedbacks')
+    #             else:
+    #                 messages.error(request, 'Feedback Submission Failed')
+    #                 return redirect('feedbacks')
+    #         elif request.POST.get("button") == "delete":
+    #             try:
+    #                 feedback = Feedback.objects.get(id=request.POST.get("delete_id"))
+    #                 feedback.is_archived = True
+    #                 feedback.is_viewed = True
+    #                 feedback.save()
+    #                 messages.success(request, 'Feedback Archived Successfully')
+    #                 return redirect('feedbacks')
+    #             except Exception as e:
+    #                 messages.error(request, 'Feedback Archived Failed')
+    #                 print(e)
+    #                 return redirect('feedbacks')
+    #         elif request.POST.get("button") == "edit":
+    #             try:
+    #                 feedback = Feedback.objects.get(id=request.POST.get("edit_id"))
+    #                 feedback.feedback = request.POST.get("edit_feedback")
+    #                 feedback.date = datetime.now()
+    #                 feedback.save()
+    #                 messages.success(request, 'Feedback Updated Successfully')
+    #                 return redirect('feedbacks')
+    #             except Exception as e:
+    #                 messages.error(request, 'Feedback Update Failed')
+    #                 print(e)
+    #                 return redirect('feedbacks')
+    #
+    # else:
+    #     form = FeedbackForms()
 
     return render(request, 'dashboard/feedbacks.html',{
-        'feedbacks': feedbacks,
-        'form': form,
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
+        'my_feedbacks': my_feedbacks,
+        'form': form,
+        'room': room,
+        'received_feedbacks': received_feedbacks,
+
 
     })
 
@@ -379,7 +462,7 @@ def feedbacks_archive(request):
 
 
     return render(request, 'dashboard/feedbacks_archive.html',{
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
         'feedbacks': feedbacks,
     })
@@ -455,7 +538,7 @@ def users(request):
     return render(request,'dashboard/users.html', {
         'users': users,
         'form': form,
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
 
     })
 
@@ -488,7 +571,7 @@ def users_archive(request):
                 return redirect('users_archive')
 
     return render(request, 'dashboard/users_archive.html',{
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
         'users': users,
     })

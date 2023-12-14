@@ -209,12 +209,12 @@
                 <div class="row">
                     <div class="col-lg-3 col-12">
                         <!-- small box -->
-                        <div class="small-box ">
+                        <div class="small-box bg-secondary ">
                             <div class="inner">
                                 {% if room != None %}
-                                <h3>{{ room.boardinghouse.name }}</h3>
+                                <h4>{{ room.boardinghouse.name }}</h4>
                                 {% else %}
-                                <h3>N/A</h3>
+                                <h4>N/A</h4>
                                 {% endif %}
 
                                 <p>Boarding House Name</p>
@@ -229,9 +229,9 @@
                         <div class="small-box bg-secondary">
                             <div class="inner">
                                 {% if room != None %}
-                                <h3>{{ room.name }}</h3>
+                                <h4>{{ room.name }}</h4>
                                     {% else %}
-                                <h3>N/A</h3>
+                                <h4>N/A</h4>
                                 {% endif %}
 
 
@@ -248,9 +248,9 @@
                         <div class="small-box bg-success">
                             <div class="inner">
                                 {% if tenant != None %}
-                                <h3>{{ tenant.date_start }}<sup style="font-size: 20px"></sup></h3>
+                                <h4>{{ tenant.date_start }}<sup style="font-size: 20px"></sup></h4>
                                 {% else %}
-                                <h3>N/A</h3>
+                                <h4>N/A</h4>
                                 {% endif %}
 
                                 <p>Date Started</p>
@@ -263,12 +263,12 @@
                     <!-- ./col -->
                     <div class="col-lg-3 col-12">
                         <!-- small box -->
-                        <div class="small-box bg-warning">
+                        <div class="small-box bg-success">
                             <div class="inner">
                                 {% if tenant != None %}
-                                <h3>{{ tenant.add_month }}</h3>
+                                <h4>{{ tenant.add_month }}</h4>
                                     {% else %}
-                                <h3>N/A</h3>
+                                <h4>N/A</h4>
                                 {% endif %}
 
                                 <p>Due Date</p>

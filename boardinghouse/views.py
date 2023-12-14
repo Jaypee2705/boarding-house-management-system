@@ -75,7 +75,7 @@ def boardinghouse(request):
     return render(request, 'boardinghouse/boardinghouse.html', {
         'form': forms,
         'boardinghouses': boardinghouses,
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
 
     })
@@ -121,7 +121,7 @@ def boardinghouse_archive(request):
                 return redirect('boardinghouse_archive')
 
     return render(request, 'boardinghouse/boardinghouse_archive.html',{
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
         'boardinghouses': boardinghouses,
     })
@@ -148,7 +148,7 @@ def boardinghouse_detail(request, id):
     return render(request, 'boardinghouse/boardinghouse_detail.html', {
         'boardinghouse': boardinghouse,
         'form': form,
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
 
     })
@@ -200,7 +200,7 @@ def rooms(request):
     return render(request, 'boardinghouse/rooms.html', {
         'rooms': rooms,
         'form': forms,
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
         'bhouses': bhouses,
 
@@ -243,7 +243,7 @@ def rooms_archive(request):
                 return redirect('rooms_archive')
 
     return render(request, 'boardinghouse/rooms_archive.html',{
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
         'rooms': rooms,
     })
@@ -271,7 +271,7 @@ def rooms_detail(request, id):
     return render(request, 'boardinghouse/rooms_detail.html',{
         'room': room,
         'form': form,
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
         'bhouses': bhouses,
 
@@ -356,7 +356,7 @@ def manage_rooms(request):
         'tenants': tenants,
         'users': users,
         'rooms': rooms,
-        'feedback': Feedback.objects.filter(is_viewed=False).count(),
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
         'notice': Notice.objects.filter(is_viewed=False).count(),
 
     })

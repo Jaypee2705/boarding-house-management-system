@@ -8,6 +8,7 @@ class Feedback(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     is_viewed = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
+    feedback_to = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='feedback_to')
 
 
     def __str__(self):
