@@ -20,24 +20,61 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossorigin=""/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style type="text/css">
+        *{font-family: Poppins, sans-serif;
+        }
         td p {
             margin: -0.3rem;
             font-size: 0.9rem;
         }
 
         aside.main-sidebar {
-            background-color: #05445E;
-            color: #ddd;
+            background-color: #093035;
+        }
+        nav.main-header{
+            background-color: #73e7dd;
         }
 
         nav ul li a p {
-            color: #ddd;
+            color: #ffffff;
+            font-weight: 400;
         }
+        .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active, .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
+            background-color: #0f8073;
+            color: #fff;
+            border-radius: 10px;
+}
 
         nav ul li a i {
-            color: #ddd;
+            color: #ffffff;
         }
+
+        .small-box{
+            background: linear-gradient(45deg, rgba(47,112,106,1) 0%, rgba(68,145,137,1) 50%, rgba(47,112,106,1) 100%);
+            box-shadow: 2px 2px #c2c2c2;
+        }
+        .small-box h3,p{
+            color: #d6ffe5
+        }
+        .content-wrapper{
+            background-color: #cffce6;
+        }
+
+        {% comment %}Buttons{% endcomment %}
+        .btn-primary{
+            background-color: rgb(10, 129, 116);
+            border: none;
+        }
+        .btn-primary:hover{
+             background-color: rgba(31, 161, 149, 0.91);
+        }
+
+
+
+
     </style>
     {% block style %}
 
@@ -83,10 +120,6 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-    <footer class="main-footer">
-
-    </footer>
-
     <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">
         <!-- Control sidebar content goes here -->

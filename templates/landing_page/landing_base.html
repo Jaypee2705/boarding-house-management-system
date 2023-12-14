@@ -12,7 +12,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 
     <link rel="stylesheet" href="{% static 'landing/fonts/icomoon/style.css' %}">
@@ -25,6 +25,9 @@
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossorigin=""/>
     <style>
+         *{ font-family: Poppins, sans-serif;
+
+        }
         #map {
             height: 300px;
         }
@@ -55,7 +58,7 @@
                     {% if request.user.is_authenticated %}
                         <li><a href="{% url 'homepage' %}">Dashboard</a></li>
                     {% else %}
-                        <li><a href="{% url 'login' %}">Login/Signup</a></li>
+                        <li><a href="{% url 'login' %}">Login</a></li>
                     {% endif %}
                 </ul>
 
@@ -81,10 +84,15 @@
             <div class="col-lg-4">
                 <div class="widget">
                     <h3>Contact</h3>
-                    <address>Obrero,Bulan, Sorsogon</address>
+                    <address>Jaypee G. Dionela</address>
                     <ul class="list-unstyled links">
                         <li><a href="tel://11234567890">090063531669</a></li>
                         <li><a href="mailto:jaypeedionela55@gmail.com">jaypeedionela55@gmail.com</a></li>
+{#                        <ul class="list-unstyled social">#}
+{#                            <li><a href="#"><span class="icon-instagram"></span></a></li>#}
+{#                            <li><a href="#"><span class="icon-twitter"></span></a></li>#}
+{#                             <li><a href="#"><span class="icon-facebook"></span></a></li>#}
+{#                        </ul>#}
                     </ul>
                 </div> <!-- /.widget -->
             </div> <!-- /.col-lg-4 -->
