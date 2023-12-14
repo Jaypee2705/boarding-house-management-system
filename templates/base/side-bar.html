@@ -1,7 +1,6 @@
 {% load static %}
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-
     <div class="text-center">
         <a href="{% url 'homepage' %}" class="brand-link">
             <img src="{% static 'img/LOGOwhite.png' %}" alt="Logo" style="height: 50px">
@@ -34,19 +33,19 @@
 
 
                 {% endif %}
-            {% if not request.user.is_superuser %}
-                <li class="nav-item">
-                    <a href="{% url 'notice' %} " class="nav-link" id="nav-notice">
-                        <i class="nav-icon fa fa-bell"></i>
-                        <p>
-                            Notice Board
-                            {% if not request.user.is_superuser and not request.user.is_staff and notice != 0 %}
-                                <span class="badge badge-danger">{{ notice }}</span>
-                            {% endif %}
-                        </p>
-                    </a>
-                </li>
-            {% endif %}
+                {% if not request.user.is_superuser %}
+                    <li class="nav-item">
+                        <a href="{% url 'notice' %} " class="nav-link" id="nav-notice">
+                            <i class="nav-icon fa fa-bell"></i>
+                            <p>
+                                 Notice Board
+                                {% if not request.user.is_superuser and not request.user.is_staff and notice != 0 %}
+                                    <span class="badge badge-danger">{{ notice }}</span>
+                                {% endif %}
+                            </p>
+                        </a>
+                    </li>
+                {% endif %}
                 <li class="nav-item">
                     <a href="{% url 'feedbacks' %}" class="nav-link" id="nav-feedbacks">
                         <i class="nav-icon fa fa-file-invoice"></i>
@@ -72,37 +71,37 @@
                                 Boarding House
                             </p>
                         </a>
-                    </li>
                     {% if not request.user.is_superuser %}
-                        <li class="nav-item">
+                        </li>
+                          <li class="nav-item">
                             <a href="{% url 'rooms' %}" class="nav-link" id="nav-room-listings">
-                                <i class="nav-icon fa fa-home"></i>
+                                 <i class="nav-icon fa fa-door-closed"></i>
                                 <p>
-                                    Rooms
-                                 </p>
+                                  Room listings
+                                </p>
                             </a>
                         </li>
                     {% endif %}
-                    {% if not request.user.is_superuser %}
-                        <li class="nav-item">
-                             <a href="{% url 'tenants_profile' %}" class="nav-link" id="nav-tenants">
-                                <i class="nav-icon fa fa-user"></i>
-                                 <p>
-                                    Tenants
-                                 </p>
-                            </a>
-                        </li>
-                    {% endif %}
-                    {% if not request.user.is_superuser %}
+                    <li class="nav-item">
+                        <a href="{% url 'tenants_profile' %}" class="nav-link" id="nav-tenants">
+                            <i class="nav-icon fa fa-user"></i>
+                            <p>
+                                Tenants
+                            </p>
+                        </a>
+                    </li>
+                     {% if not request.user.is_superuser %}
                         <li class="nav-item">
                             <a href="{% url 'manage_rooms' %}" class="nav-link" id="nav-room-management">
-                                <i class="nav-icon fa fa-home"></i>
-                                    <p>
-                                         Room Management
-                                    </p>
-                                </a>
+                                <i class="nav-icon fa fa-door-open"></i>
+                                 <p>
+                                      Room Assignment
+                                 </p>
+                            </a>
                         </li>
-                    {% endif %}
+                     {% endif %}
+
+
                     {% if not request.user.is_superuser %}
                         <hr>
                         <li class="nav-item">
@@ -128,7 +127,7 @@
 
                     <li class="nav-item">
                         <a href="{% url 'payments' %}" class="nav-link" id="payments">
-                            <i class="nav-icon fa fa-file-invoice"></i>
+                            <i class="nav-icon fa fa-money-bill"></i>
                             <p>
                                 Tenant Payments
                             </p>
