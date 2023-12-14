@@ -38,7 +38,7 @@
                         <a href="{% url 'notice' %} " class="nav-link" id="nav-notice">
                             <i class="nav-icon fa fa-bell"></i>
                             <p>
-                                 Notice Board
+                                Notice Board
                                 {% if not request.user.is_superuser and not request.user.is_staff and notice != 0 %}
                                     <span class="badge badge-danger">{{ notice }}</span>
                                 {% endif %}
@@ -71,17 +71,17 @@
                                 Boarding House
                             </p>
                         </a>
-                    {% if not request.user.is_superuser %}
-                        </li>
-                          <li class="nav-item">
-                            <a href="{% url 'rooms' %}" class="nav-link" id="nav-room-listings">
-                                 <i class="nav-icon fa fa-door-closed"></i>
-                                <p>
-                                  Room listings
-                                </p>
-                            </a>
-                        </li>
-                    {% endif %}
+                        {% if not request.user.is_superuser %}
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'rooms' %}" class="nav-link" id="nav-room-listings">
+                                    <i class="nav-icon fa fa-door-closed"></i>
+                                    <p>
+                                        Room listings
+                                    </p>
+                                </a>
+                            </li>
+                        {% endif %}
                     <li class="nav-item">
                         <a href="{% url 'tenants_profile' %}" class="nav-link" id="nav-tenants">
                             <i class="nav-icon fa fa-user"></i>
@@ -90,16 +90,16 @@
                             </p>
                         </a>
                     </li>
-                     {% if not request.user.is_superuser %}
+                    {% if not request.user.is_superuser %}
                         <li class="nav-item">
                             <a href="{% url 'manage_rooms' %}" class="nav-link" id="nav-room-management">
                                 <i class="nav-icon fa fa-door-open"></i>
-                                 <p>
-                                      Room Assignment
-                                 </p>
+                                <p>
+                                    Room Assignment
+                                </p>
                             </a>
                         </li>
-                     {% endif %}
+                    {% endif %}
 
 
                     {% if not request.user.is_superuser %}
@@ -134,14 +134,14 @@
                         </a>
                     </li>
                     {% if request.user.is_superuser or request.user.is_staff %}
-                    <li class="nav-item">
-                        <a href="{% url 'transient' %}" class="nav-link" id="trans_payments">
-                            <i class="nav-icon fa fa-file-invoice"></i>
-                            <p>
-                                Transient Payments
-                            </p>
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a href="{% url 'transient' %}" class="nav-link" id="trans_payments">
+                                <i class="nav-icon fa fa-file-invoice"></i>
+                                <p>
+                                    Transient Payments
+                                </p>
+                            </a>
+                        </li>
 
 
                         <li class="nav-item">
@@ -154,6 +154,14 @@
                         </li>
                     {% endif %}
                 {% endif %}
+                <li class="nav-item">
+                    <a href="{% url 'myaccount' %}" class="nav-link" id="nav-income">
+                        <i class="nav-icon fa fa-user-edit"></i>
+                        <p>
+                            My Profile
+                        </p>
+                    </a>
+                </li>
 
                 <li class="nav-item">
                     <a href="{% url 'landing_page' %}" class="nav-link">

@@ -1,0 +1,146 @@
+{% extends 'base/base.html' %}
+
+{% block page-title %}
+    My Profile
+{% endblock %}
+
+{% block style %}
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        // add active class to nav-dashboard
+        document.getElementById("nav-income").className += " active";
+    </script>
+
+    <script>
+        {#        when delete button in action clicked, get the username of user#}
+        $(document).on('click', '.delete', function () {
+            var id = $(this).closest('tr').find('td:nth-child(1)').text();
+            $('#delete_id').val(id);
+        });
+    </script>
+    <script>
+        {#        when delete button in action clicked, get the username of user#}
+        $(document).on('click', '.edit', function () {
+            var id = $(this).closest('tr').find('td:nth-child(1)').text();
+            var first_name = $(this).closest('tr').find('td:nth-child(3)').text();
+            var last_name = $(this).closest('tr').find('td:nth-child(4)').text();
+            var email = $(this).closest('tr').find('td:nth-child(5)').text();
+            var username = $(this).closest('tr').find('td:nth-child(2)').text();
+            $('#edit_first_name').val(first_name);
+            $('#edit_last_name').val(last_name);
+            $('#edit_email').val(email);
+            $('#edit_username').val(username);
+            $('#edit_id').val(id);
+            var role = $(this).closest('tr').find('td:nth-child(6)').text();
+            if (role === 'Admin') {
+                $('#edit_role').val('admin');
+            } else if (role === 'Owner') {
+                $('#edit_role').val('owner');
+            } else {
+                $('#edit_role').val('tenant');
+            }
+        });
+        const oldpassword = document.getElementById('id_old_password');
+        const newpassword1 = document.getElementById('id_new_password1');
+        const newpassword2 = document.getElementById('id_new_password2');
+
+        oldpassword.classList.add('form-control');
+        newpassword1.classList.add('form-control');
+        newpassword2.classList.add('form-control');
+        oldpassword.removeAttribute('required');
+        newpassword1.removeAttribute('required');
+        newpassword2.removeAttribute('required');
+
+
+        oldpassword.addEventListener('input', function () {
+            if (oldpassword.value.trim() !== '') {
+                newpassword1.setAttribute('required', true);
+                newpassword2.setAttribute('required', true);
+            } else {
+                newpassword1.removeAttribute('required');
+                newpassword2.removeAttribute('required');
+            }
+        });
+
+
+    </script>
+{% endblock %}
+
+{% block modal %}
+    <div class="col-sm-6">
+        <div class="float-sm-right">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#addNotice">
+                Add User
+            </button>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block content %}
+
+    <section class="content">
+        <div class="container-fluid">
+
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" role="alert">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+            {% endif %}
+
+
+
+            <div class="card card-success">
+                <!-- form start -->
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8 offset-md-2">
+                                <div class="form-group">
+                                    {{ form }}
+
+                                </div>
+                            </div>
+                            <div class="col-md-8 offset-md-2">
+                                <div class="form-group">
+
+                                    {{ change_password_form.old_password.label_tag }}
+                                    {{ change_password_form.old_password.errors }}
+
+                                    {{ change_password_form.old_password }} <br>
+                                    {{ change_password_form.new_password1.label_tag }}
+                                    {{ change_password_form.new_password1.errors }}
+                                    {{ change_password_form.new_password1 }}
+
+                                    {{ change_password_form.new_password1.help_text }} <br>
+
+                                    {{ change_password_form.new_password2.label_tag }}
+                                    {{ change_password_form.new_password2.errors }}
+                                    {{ change_password_form.new_password2 }}
+                                    {{ change_password_form.new_password2.help_text }}
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer align-center text-center">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}

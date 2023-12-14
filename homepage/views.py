@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 
 from boardinghouse.models import BoardingHouse, Room
-from homepage.forms import FeedbackForms, NoticeForms, UserForm
+from homepage.forms import FeedbackForms, NoticeForms, UserForm, UserChangePassword
 from homepage.models import Feedback, Notice
 from payments.models import Payments, TransientPayment
 from tenants.models import Tenant
@@ -16,11 +16,55 @@ from tenants.models import Tenant
 @login_required(login_url='login')
 def homepage(request):
     if request.user.is_superuser:
-        return redirect('dashboard')
+        if request.user.first_name == "" and request.user.last_name == "":
+            return redirect('myaccount')
+        else:
+            return redirect('dashboard')
     elif request.user.is_staff:
-        return redirect('dashboard_owner')
+        if request.user.first_name == "" and request.user.last_name == "":
+            return redirect('myaccount')
+        else:
+            return redirect('dashboard_owner')
     elif request.user.is_active:
-        return redirect('dashboard_tenant')
+        if request.user.first_name == "" and request.user.last_name == "":
+            return redirect('myaccount')
+        else:
+            return redirect('dashboard_tenant')
+
+
+@login_required(login_url='login')
+def myaccount(request):
+    form = UserForm(instance=request.user)
+    change_password_form = UserChangePassword(request.user)
+
+
+    # Change password form
+
+
+    if request.method == "POST":
+        form = UserForm(request.POST, instance=request.user)
+        change_password_form = UserChangePassword(data=request.POST, user=request.user)
+        if form.is_valid() and change_password_form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            if request.POST.get("old_password") and request.POST.get("new_password1") and request.POST.get("new_password2"):
+                change_password_form.save()
+
+            messages.success(request, 'Account Updated Successfully')
+            return redirect('homepage')
+        else:
+            errors = str(form.errors) + str(change_password_form.errors)
+            print(errors)
+            messages.error(request, 'Account Update Failed:' + errors)
+            return redirect('myaccount')
+
+
+    return render(request, 'dashboard/myaccount.html',{
+        'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
+        'notice': Notice.objects.filter(is_viewed=False).count(),
+        'form':form,
+        'change_password_form': change_password_form,
+    })
 
 @user_passes_test(lambda u: u.is_authenticated )
 def dashboard(request):
@@ -356,69 +400,6 @@ def feedbacks(request):
 
 
 
-
-
-    # if request.user.is_superuser:
-    #     feedbacks = Feedback.objects.filter(is_archived=False, feedback_to=request.user)
-    #     for feeds in feedbacks:
-    #         feeds.is_viewed = True
-    #         feeds.save()
-    # else:
-    #     feedbacks = Feedback.objects.filter(user=request.user, is_archived=False)
-    #
-    # if request.method == "POST":
-    #     if "button" in request.POST:
-    #         if request.POST.get("button") == "add":
-    #
-    #
-    #             form = FeedbackForms(request.POST)
-    #             if form.is_valid():
-    #                 feedback = form.save(commit=False)
-    #                 feedback.user = request.user
-    #                 if request.user.is_staff and not request.user.is_superuser:
-    #                     recepient = User.objects.filter(is_superuser=True)[0]
-    #                     feedback.feedback_to = User.objects.get(id=recepient.id)
-    #                 else:
-    #                     feedback_to = request.POST.get("feedback_to")
-    #                     if feedback_to == "admin":
-    #                         recepient = User.objects.filter(is_superuser=True)[0]
-    #                     elif feedback_to == "owner":
-    #                         # owner of the room of the tenant user
-    #                         recepient = User.objects.get(id=room[0].boardinghouse.owner.id)
-    #                     feedback.feedback_to = User.objects.get(id=recepient.id)
-    #                 feedback.save()
-    #                 messages.success(request, 'Feedback Submitted Successfully')
-    #                 return redirect('feedbacks')
-    #             else:
-    #                 messages.error(request, 'Feedback Submission Failed')
-    #                 return redirect('feedbacks')
-    #         elif request.POST.get("button") == "delete":
-    #             try:
-    #                 feedback = Feedback.objects.get(id=request.POST.get("delete_id"))
-    #                 feedback.is_archived = True
-    #                 feedback.is_viewed = True
-    #                 feedback.save()
-    #                 messages.success(request, 'Feedback Archived Successfully')
-    #                 return redirect('feedbacks')
-    #             except Exception as e:
-    #                 messages.error(request, 'Feedback Archived Failed')
-    #                 print(e)
-    #                 return redirect('feedbacks')
-    #         elif request.POST.get("button") == "edit":
-    #             try:
-    #                 feedback = Feedback.objects.get(id=request.POST.get("edit_id"))
-    #                 feedback.feedback = request.POST.get("edit_feedback")
-    #                 feedback.date = datetime.now()
-    #                 feedback.save()
-    #                 messages.success(request, 'Feedback Updated Successfully')
-    #                 return redirect('feedbacks')
-    #             except Exception as e:
-    #                 messages.error(request, 'Feedback Update Failed')
-    #                 print(e)
-    #                 return redirect('feedbacks')
-    #
-    # else:
-    #     form = FeedbackForms()
 
     return render(request, 'dashboard/feedbacks.html',{
         'feedback': Feedback.objects.filter(is_viewed=False, feedback_to=request.user).count(),
