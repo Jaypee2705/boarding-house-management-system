@@ -71,17 +71,7 @@
                                 Boarding House
                             </p>
                         </a>
-                        {% if not request.user.is_superuser %}
-                            </li>
-                            <li class="nav-item">
-                                <a href="{% url 'rooms' %}" class="nav-link" id="nav-room-listings">
-                                    <i class="nav-icon fa fa-door-closed"></i>
-                                    <p>
-                                        Room listings
-                                    </p>
-                                </a>
-                            </li>
-                        {% endif %}
+
                     <li class="nav-item">
                         <a href="{% url 'tenants_profile' %}" class="nav-link" id="nav-tenants">
                             <i class="nav-icon fa fa-user"></i>
@@ -90,12 +80,25 @@
                             </p>
                         </a>
                     </li>
+
+                    {% if not request.user.is_superuser %}
+
+                            <li class="nav-item">
+                                <a href="{% url 'rooms' %}" class="nav-link" id="nav-room-listings">
+                                    <i class="nav-icon fa fa-door-closed"></i>
+                                    <p>
+                                        Rooms
+                                    </p>
+                                </a>
+                            </li>
+                    {% endif %}
+
                     {% if not request.user.is_superuser %}
                         <li class="nav-item">
                             <a href="{% url 'manage_rooms' %}" class="nav-link" id="nav-room-management">
                                 <i class="nav-icon fa fa-door-open"></i>
                                 <p>
-                                    Room Assignment
+                                    Room Management
                                 </p>
                             </a>
                         </li>
