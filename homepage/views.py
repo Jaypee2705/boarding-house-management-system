@@ -44,19 +44,29 @@ def myaccount(request):
     if request.method == "POST":
         form = UserForm(request.POST, instance=request.user)
         change_password_form = UserChangePassword(data=request.POST, user=request.user)
-        if form.is_valid() and change_password_form.is_valid():
-            user = form.save(commit=False)
-            user.save()
-            if request.POST.get("old_password") and request.POST.get("new_password1") and request.POST.get("new_password2"):
+        if request.POST.get("old_password") and request.POST.get("new_password1") and request.POST.get("new_password2"):
+
+            if form.is_valid() and change_password_form.is_valid():
+                user = form.save(commit=False)
+                user.save()
                 change_password_form.save()
 
-            messages.success(request, 'Account Updated Successfully')
-            return redirect('homepage')
+                messages.success(request, 'Account Updated Successfully')
+                return redirect('homepage')
+            else:
+                errors = str(form.errors) + str(change_password_form.errors)
+                print(errors)
+                messages.error(request, 'Account Update Failed:' + errors)
+                return redirect('myaccount')
         else:
-            errors = str(form.errors) + str(change_password_form.errors)
-            print(errors)
-            messages.error(request, 'Account Update Failed:' + errors)
-            return redirect('myaccount')
+            if form.is_valid():
+                user = form.save(commit=False)
+                user.save()
+                messages.success(request, 'Account Updated Successfully')
+                return redirect('myaccount')
+            else:
+                messages.error(request, 'Account Update Failed')
+                return redirect('myaccount')
 
 
     return render(request, 'dashboard/myaccount.html',{
@@ -70,7 +80,7 @@ def myaccount(request):
 def dashboard(request):
     if request.user.is_superuser:
         tenants = Tenant.objects.all()
-        tenants_count = tenants.count()
+        tenants_count = User.objects.all().count()
         boardinghouses = BoardingHouse.objects.all()
         boardinghouses_count = boardinghouses.count()
         rooms = Room.objects.all()
