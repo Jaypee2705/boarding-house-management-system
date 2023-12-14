@@ -52,8 +52,6 @@ def utility_bill(request):
                     bill.bills = request.POST.get('bills')
                     bill.rate = request.POST.get('edit_rate')
                     bill.save()
-                    room.price = request.POST.get('edit_rate')
-                    room.save()
                     messages.success(request, 'Utility bill edited successfully')
                     return redirect('utility-bill')
                 except Exception as e:

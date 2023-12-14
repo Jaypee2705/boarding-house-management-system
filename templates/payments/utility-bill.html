@@ -111,7 +111,7 @@
                     <table id="example1" class="table table-bordered table-hover">
                         <thead class="btn-cancel">
                         <tr>
-                            <th hidden>Room ID</th>
+                            <th>Room ID</th>
                             <th>Room</th>
                             <th>Bills</th>
                             <th>Rate</th>
@@ -123,7 +123,7 @@
                         <tbody>
                         {% for bill in bills %}
                             <tr>
-                                <td hidden>{{ bill.room.id }}</td>
+                                <td>{{ bill.id }}</td>
                                 <td>{{ bill.room }}</td>
                                 <td>{{ bill.bills }}</td>
                                 <td>{{ bill.rate|floatformat:2 }}</td>
@@ -190,7 +190,7 @@
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-body">
-                        <input type="text" name="edit_id" class="form-control" maxlength="100" id="edit_id" hidden>
+                        <input type="text" name="edit_id" class="form-control" maxlength="100" id="edit_id" >
                         <label for="id_room">Room:</label>
                         <select name="edit_room" class="form-control" required="" id="edit_room">
                             <option value="" selected="">---------</option>
